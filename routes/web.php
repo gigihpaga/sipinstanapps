@@ -20,7 +20,7 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('dashboardArfa');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -33,5 +33,5 @@ require __DIR__ . '/auth.php';
 
 Route::middleware(['auth'])->group(function () {
     // role
-    Route::resource('roles', RoleController::class);
+    Route::resource('konfigurasi/roles', RoleController::class);
 });
