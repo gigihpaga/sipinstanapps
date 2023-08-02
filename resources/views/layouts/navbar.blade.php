@@ -34,7 +34,8 @@
                       </a>
                       <ul class="sub-menu {{ request()->segment(1) == 'konfigurasi' ? 'expand' : '' }}">
                           @can('read permission')
-                              <li>
+                              <li
+                                  class="{{ request()->segment(1) == 'konfigurasi' && request()->segment(2) == 'roles' ? 'active' : '' }}">
                                   <a href="{{ url('konfigurasi/roles') }}" class="link">
                                       <span>Roles</span>
                                   </a>
