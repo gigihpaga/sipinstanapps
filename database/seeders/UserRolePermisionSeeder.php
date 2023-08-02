@@ -77,10 +77,20 @@ class UserRolePermisionSeeder extends Seeder
             $role_staff = Role::create(['name' => 'staff']);
 
             // insert data ke table permissions
-            $permision = Permission::create(['name' => 'read role']);
-            $permision = Permission::create(['name' => 'create role']);
-            $permision = Permission::create(['name' => 'update role']);
-            $permision = Permission::create(['name' => 'delete role']);
+            $permision = Permission::create(['name' => 'read permission']);
+            $permision = Permission::create(['name' => 'create permission']);
+            $permision = Permission::create(['name' => 'update permission']);
+            $permision = Permission::create(['name' => 'delete permission']);
+
+            /**
+             * memasangkan role admin ke permision,
+             * data ini akan masuk table role_has_permissions
+             * jika permision yang di pasangkan tidak ada di table permision, migration akan gagal. tidak ada pesan error, tatapi data seeder tidak masuk ke database
+             */
+            $role_admin->givePermissionTo('read permission');
+            $role_admin->givePermissionTo('create permission');
+            $role_admin->givePermissionTo('update permission');
+            $role_admin->givePermissionTo('delete permission');
 
             /**
              * memasangkan data user dengan data permision menggunakan relasi spatie
