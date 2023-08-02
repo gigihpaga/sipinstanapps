@@ -17,8 +17,8 @@
       </div>
       <div class="sidebar-content">
           <ul>
-              <li class="active">
-                  <a href="index.html" class="link">
+              <li class="{{ request()->segment(1) == 'dashboard' ? 'active' : '' }}">
+                  <a href="{{ url('dashboard') }}" class="link">
                       <i class="ti-home"></i>
                       <span>Dashboard</span>
                   </a>
@@ -26,19 +26,23 @@
               {{-- <li class="menu-category">
                   <span class="text-uppercase">User Interface</span>
               </li> --}}
-              <li>
-                  <a href="#" class="main-menu has-dropdown">
-                      <i class="ti-book"></i>
-                      <span>Konfigurasi</span>
-                  </a>
-                  <ul class="sub-menu ">
-                      <li>
-                          <a href="{{ url('konfigurasi/roles') }}" class="link">
-                              <span>Roles</span>
-                          </a>
-                      </li>
-                  </ul>
-              </li>
+              @can('read konfigurasi')
+                  <li class="{{ request()->segment(1) == 'konfigurasi' ? 'active open' : '' }}">
+                      <a href="#" class="main-menu has-dropdown">
+                          <i class="ti-book"></i>
+                          <span>Konfigurasi</span>
+                      </a>
+                      <ul class="sub-menu {{ request()->segment(1) == 'konfigurasi' ? 'expand' : '' }}">
+                          @can('read permission')
+                              <li>
+                                  <a href="{{ url('konfigurasi/roles') }}" class="link">
+                                      <span>Roles</span>
+                                  </a>
+                              </li>
+                          @endcan
+                      </ul>
+                  </li>
+              @endcan
           </ul>
       </div>
   </nav>
