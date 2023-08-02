@@ -38,7 +38,8 @@ class RoleController extends Controller
 
         // test permission menggunakan authorize start
         $this->authorize('read permission');
-        return 'hallo ' . $request->user()->name . ' anda mempunya akses ke halaman roles index';
+        // return 'hallo ' . $request->user()->name . ' anda mempunya akses ke halaman roles index';
+        return view('pages.role.roles-index');
         // test permission menggunakan authorize end
 
     }
