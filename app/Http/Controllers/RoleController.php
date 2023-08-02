@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\RoleDataTable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
@@ -19,7 +20,7 @@ class RoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(RoleDataTable $dataTable)
     {
         //
         // // test role start
@@ -39,7 +40,8 @@ class RoleController extends Controller
         // test permission menggunakan authorize start
         $this->authorize('read permission');
         // return 'hallo ' . $request->user()->name . ' anda mempunya akses ke halaman roles index';
-        return view('pages.role.roles-index');
+        // return view('pages.role.roles-index');
+        return $dataTable->render('pages.role.roles-index');
         // test permission menggunakan authorize end
 
     }
