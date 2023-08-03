@@ -26,10 +26,16 @@ class RoleDataTable extends DataTable
         return (new EloquentDataTable($query))
             ->addIndexColumn() // untuk no
             ->editColumn('created_at', function ($row) {
-                return $row->created_at->format('d-m-Y H:i');
+                // jika field created_at pada database null maka akan di return "", jika tidak null maka akan di format
+                $created_at_formated = $row->created_at ? $row->created_at->format('d-m-Y H:i') : '';
+                // return $row->created_at->format('d-m-Y H:i');
+                return $created_at_formated;
             }) // format data tanggal
             ->editColumn('updated_at', function ($row) {
-                return $row->updated_at->format('d-m-Y H:i');
+                // jika field updated_at pada database null maka akan di return "", jika tidak null maka akan di format
+                $updated_at_formated = $row->updated_at ? $row->updated_at->format('d-m-Y H:i') : '';
+                // return $row->updated_at->format('d-m-Y H:i');
+                return $updated_at_formated;
             }) // format data tanggal
             ->addColumn('action', function ($row) {
                 $action = '';
@@ -43,7 +49,10 @@ class RoleDataTable extends DataTable
                 return $wrapper;
             })
             // ->setRowId('id')
-        ;
+            ->addColumn('checkbox', function ($row) {
+                return '<input type="checkbox" id=cb-' . $row->id . ' name=cb-' . $row->id . ' value=' . $row->id . ' class="dt-cb-child">';
+            })
+            ->rawColumns(['action', 'checkbox']);
     }
 
     /**
@@ -68,11 +77,13 @@ class RoleDataTable extends DataTable
             ->parameters([
                 'searchDelay' => 1500,
                 'scrollX' => true,
+                // 'buttons' => ['reload'], // tidak berguna
                 // 'language' => ['processing' => '<div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>']
                 // 'drawCallback' => 'function(oSettings) {$(\'[data-toggle="tooltip"]\').tooltip();}',
                 // 'drawCallback' => 'function() { alert("Table Draw Callback") }',
                 // 'drawCallback' => '$(function () {$(\'[data-toggle="tooltip"]\').tooltip()})',
             ])
+            // https://yajrabox.com/docs/laravel-datatables/master/html-builder-action
             ->setTableId('role-table')
             ->columns($this->getColumns())
             ->minifiedAjax()
@@ -99,17 +110,25 @@ class RoleDataTable extends DataTable
     {
         return [
             // Column::make('id'),
+            Column::computed('<input type="checkbox" id="dt-cb-parent" name="dt-cb-parent" value="">')
+                ->data('checkbox')
+                ->name('checkbox')
+                ->exportable(false)
+                ->printable(false)
+                ->width(20)
+                ->addClass('column-checkbox dt-cb-column text-center'),
             Column::make('DT_RowIndex')->title('No')->searchable(false)->orderable(false), // untuk no
             Column::make('name'),
             Column::make('guard_name'),
             // Column::make('add your columns'),
-            Column::make('created_at'),
-            Column::make('updated_at'),
+            Column::make('created_at')->content('01/07/2020'),
+            Column::make('updated_at')->content('01/07/2020'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)
                 ->width(90)
                 ->addClass('text-center'),
+            // ->addClass('text-center')
         ];
     }
 
