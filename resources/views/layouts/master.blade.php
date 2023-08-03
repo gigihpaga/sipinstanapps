@@ -26,6 +26,12 @@
     <link rel="stylesheet" href="{{ asset('arfa/assets/css/style.min.css') }}">
     <link rel="stylesheet" href="{{ asset('arfa/assets/css/bootstrap-override.min.css') }}">
     <link rel="stylesheet" id="theme-color" href="{{ asset('arfa/assets/css/dark.min.css') }}">
+    <style>
+        .main-content,
+        .sidebar-content ul>li a {
+            font-size: 14px;
+        }
+    </style>
 </head>
 
 <body>
