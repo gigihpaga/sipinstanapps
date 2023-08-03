@@ -34,10 +34,10 @@ class RoleDataTable extends DataTable
             ->addColumn('action', function ($row) {
                 $action = '';
                 if (Gate::allows('update permission')) {
-                    $action = '<button type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" data-bs-original-title="Edit" class="btn mb-1 btn-sm btn-primary mx-1"><i class="ti-pencil-alt"></i></button>';
+                    $action = '<button type="button" data-id=' . $row->id . ' data-typeaction="edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" data-bs-original-title="Edit" class="btn btn-action mb-1 btn-sm btn-primary mx-1"><i class="ti-pencil-alt"></i></button>';
                 }
                 if (Gate::allows('delete permission')) {
-                    $action .= '<button type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" data-bs-original-title="Delete" class="btn mb-1 btn-sm btn-danger mx-1"><i class="ti-trash"></i></button>';
+                    $action .= '<button type="button" data-id=' . $row->id . ' data-typeaction="delete" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" data-bs-original-title="Delete" class="btn btn-action mb-1 btn-sm btn-outline-danger mx-1"><i class="ti-trash"></i></button>';
                 }
                 $wrapper = '<div class="d-flex justify-content-evenly">' . $action . '</div>';
                 return $wrapper;
