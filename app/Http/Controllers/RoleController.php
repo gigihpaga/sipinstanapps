@@ -119,8 +119,22 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Role $role)
     {
         //
+        try {
+            $role->delete();
+            // response
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Delete data successfully',
+            ]);
+        } catch (\Throwable  $th) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Sorry server down',
+                // 'message' => $th->getMessage(),
+            ], 500);
+        }
     }
 }

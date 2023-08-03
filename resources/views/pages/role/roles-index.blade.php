@@ -57,6 +57,7 @@
     <script src="{{ asset('arfa/vendor/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
     <script src="{{ asset('arfa/vendor/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('arfa/vendor/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('arfa/vendor/sweetalert2/sweetalert2.all.min.js') }}"></script>
     <script src="{{ asset('arfa/assets/js/pages/datatables.min.js') }}"></script>
     <script src="{{ asset('arfa/assets/js/pages/element-ui.min.js') }}"></script>
     <script src="{{ asset('arfa/assets/js/pages/element-ui-serverside.js') }}"></script>
@@ -76,6 +77,49 @@
             let data = $(this).data()
             let id = data.id
             let typeaction = data.typeaction
+
+            if (typeaction == 'delete') {
+                // swall confirm
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#027afe',
+                    cancelButtonColor: '#ea5455',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // jika confirm yes, jalankan ajax
+                        $.ajax({
+                            type: "DELETE",
+                            url: `{{ url('konfigurasi/roles') }}/${id}`,
+                            headers: {
+                                'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                            },
+                            success: function(res) {
+                                // response berhasil
+                                window.LaravelDataTables["role-table"].ajax.reload()
+                                if (res.status == 'success') {
+                                    Swal.fire(
+                                        'Deleted!',
+                                        'Your file has been deleted.',
+                                        'success'
+                                    )
+                                }
+                            },
+                            error: function(err) {
+                                // console.log('Pesan erron: ,' err)
+                            }
+                        });
+
+
+                    }
+                })
+
+                return
+            }
+
             // ajax get data for edit
             $.ajax({
                 type: "GET",
