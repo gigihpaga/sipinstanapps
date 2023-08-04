@@ -31,6 +31,14 @@
         .sidebar-content ul>li a {
             font-size: 14px;
         }
+
+        .main-content .title i {
+            display: inline-block;
+            background: linear-gradient(90deg, #027afe, rgba(70, 137, 238, .7));
+            color: #fff;
+            padding: 8px;
+            border-radius: 4px;
+        }
     </style>
 </head>
 

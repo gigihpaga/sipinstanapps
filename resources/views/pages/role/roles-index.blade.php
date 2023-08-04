@@ -9,6 +9,7 @@
 @section('content')
     <div class="main-content">
         <div class="title">
+            <i class="ti-book"></i>
             Konfigurasi
         </div>
         {{-- <button type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="tolong" data-bs-original-title="Edit"
