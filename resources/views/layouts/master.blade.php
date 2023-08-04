@@ -39,6 +39,23 @@
             padding: 8px;
             border-radius: 4px;
         }
+
+        /*
+        * loading datatable
+        * document.querySelector('.dataTables_processing').style.display = 'block'
+        */
+        div .dataTables_processing {
+            background-color: #191f30cc !important;
+            color: white;
+        }
+
+        div .dataTables_processing.card {
+            height: 25px !important;
+        }
+
+        div.dataTables_processing>div:last-child {
+            margin: auto auto !important;
+        }
     </style>
 </head>
 

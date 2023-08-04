@@ -78,7 +78,7 @@ class RoleDataTable extends DataTable
                 'searchDelay' => 1500,
                 'scrollX' => true,
                 // 'buttons' => ['reload'], // tidak berguna
-                // 'language' => ['processing' => '<div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>']
+                'language' => ["processing" => '<div class="spinner-border" style="width: 20px; height: 20px;" role="status"><span class="visually-hidden">Loading...</span></div>'],
                 // 'drawCallback' => 'function(oSettings) {$(\'[data-toggle="tooltip"]\').tooltip();}',
                 // 'drawCallback' => 'function() { alert("Table Draw Callback") }',
                 // 'drawCallback' => '$(function () {$(\'[data-toggle="tooltip"]\').tooltip()})',
