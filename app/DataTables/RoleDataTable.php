@@ -117,12 +117,18 @@ class RoleDataTable extends DataTable
                 ->printable(false)
                 ->width(20)
                 ->addClass('column-checkbox dt-cb-column text-center'),
-            Column::make('DT_RowIndex')->title('No')->searchable(false)->orderable(false), // untuk no
+            Column::make('DT_RowIndex')->title('No')->searchable(false)->orderable(false)
+                ->width(20), // untuk no
             Column::make('name'),
-            Column::make('guard_name'),
+            Column::make('guard_name')
+                ->width(100),
             // Column::make('add your columns'),
-            Column::make('created_at')->content('01/07/2020'),
-            Column::make('updated_at')->content('01/07/2020'),
+            Column::make('created_at')
+                ->content('01/07/2020')
+                ->width(130),
+            Column::make('updated_at')
+                ->content('01/07/2020')
+                ->width(130),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)
