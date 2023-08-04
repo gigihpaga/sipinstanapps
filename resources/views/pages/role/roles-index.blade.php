@@ -8,7 +8,7 @@
 
 @section('content')
     <div class="main-content">
-        <div class="title">
+        <div class="title mb-4">
             <i class="ti-book"></i>
             Konfigurasi
         </div>
