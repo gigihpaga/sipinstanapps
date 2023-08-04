@@ -1,7 +1,19 @@
+@php
+    if ($role->id) {
+        $action = route('roles.update', $role->id);
+        $method = 'PUT';
+        $titleButton = 'Save Change';
+    } else {
+        $action = route('roles.store');
+        $method = 'POST';
+        $titleButton = 'Save';
+    }
+@endphp
+
 <div class="modal-content">
-    <form id="form-action" action="{{ route('roles.update', $role->id) }}" method="POST">
+    <form id="form-action" action="{{ $action }}" method="POST">
         @csrf
-        @method('PUT')
+        @method($method)
         <div class="modal-header">
             <h5 class="modal-title" id="largeModalLabel">Modal title</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -27,7 +39,7 @@
         <div class="modal-footer">
             <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top"
-                title="Save Change" data-bs-original-title="Save Change">
+                title="{{ $titleButton }}" data-bs-original-title="{{ $titleButton }}">
                 <i class="ti-save"></i>
             </button>
         </div>
