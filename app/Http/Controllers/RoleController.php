@@ -56,7 +56,8 @@ class RoleController extends Controller
     public function create(Request $request)
     {
         //
-        return 'hallo ' . $request->user()->name . ' anda mempunya akses ke halaman roles create';
+        // return view dan model Role, tanpa membawa data
+        return view('pages.role.role-form', ['role' => new Role()]);
     }
 
     /**
@@ -65,9 +66,15 @@ class RoleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(RoleRequest $request)
     {
         //
+        Role::create($request->all());
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Create data successfully',
+        ]);
     }
 
     /**

@@ -26,7 +26,7 @@
                             {{-- auth()->user()->can('create permission') --}}
                             @if (request()->user()->can('create permission'))
                                 <button type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Tambah Data"
-                                    data-bs-original-title="Tambah Data" class="btn mb-4 btn-sm btn-primary">
+                                    data-bs-original-title="Tambah Data" class="btn mb-4 btn-sm btn-primary btn-add">
                                     <i class="ti-plus"></i>
                                     Tambah Data
                                 </button>
@@ -72,12 +72,35 @@
         // initial modal
         const modalAction = new bootstrap.Modal($('#modal-action'))
 
+        // handle button add
+        $('.btn-add').on('click', function() {
+            // ajax
+            $.ajax({
+                type: "GET",
+                url: `{{ url('konfigurasi/roles/create') }}`,
+                // data: "data",
+                // dataType: "dataType",
+                success: function(resHtlm) {
+                    // set content modal from response
+                    $('#modal-action').find('.modal-dialog').html(resHtlm)
+                    // show modified modal
+                    modalAction.show()
+                    // prepare for execution update
+                    handleActionSubmit()
+                },
+                error: function(err) {
+                    console.log('[Log On] >> [roles-index.blade] -> [err] : ', err);
+                }
+            });
+        })
+
         // handle button edit
         $('#role-table').on('click', '.btn-action', function() {
             let data = $(this).data()
             let id = data.id
             let typeaction = data.typeaction
 
+            //
             if (typeaction == 'delete') {
                 // swall confirm
                 Swal.fire({
@@ -116,7 +139,10 @@
 
                     }
                 })
-
+                /**
+                 * jika typeaction == delete maka akan di return (program tidak tidak akan menjalankan code dibawahnya)
+                 * jika tidak (jika typeaction == update), maka akan menjalankan aja get data for edit
+                 */
                 return
             }
 
@@ -132,22 +158,30 @@
                     // show modified modal
                     modalAction.show()
                     // prepare for execution update
-                    handleActionUpdate(id)
+                    handleActionSubmit()
                 }
             });
         })
 
-        // initial handle button update (submit) in modal
-        function handleActionUpdate(id) {
+        // initial handle button submit (dinamic route, 1. create 2. edit) in modal
+        function handleActionSubmit() {
             $('#form-action').on('submit', function(e) {
                 e.preventDefault()
                 const _form = this
                 // grab data in form modal
                 const formData = new FormData(_form)
+
+                /**
+                 * get url/route in form (dynamic route sesuai dengan request sebelumnyan)
+                 * jika request sebelumnya ada "create", maka submit ini akan mengarah ke route "store"
+                 * jika request sebelumnya ada "edit", maka submit ini akan mengarah ke route "update"
+                 */
+                const url = this.getAttribute('action')
+
                 // ajax update data
                 $.ajax({
                     type: "POST",
-                    url: `{{ url('konfigurasi/roles') }}/${id}`,
+                    url: url,
                     data: formData,
                     headers: {
                         'X-CSRF-TOKEN': "{{ csrf_token() }}",
