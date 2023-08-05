@@ -4,6 +4,7 @@
     <link href="{{ asset('arfa/vendor/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('arfa/vendor/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css') }}"
         rel="stylesheet" />
+    <link href="{{ asset('arfa/vendor/izitoast/css/iziToast.min.css') }}" rel="stylesheet" />
 @endpush
 
 @section('content')
@@ -59,9 +60,11 @@
     <script src="{{ asset('arfa/vendor/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('arfa/vendor/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js') }}"></script>
     <script src="{{ asset('arfa/vendor/sweetalert2/sweetalert2.all.min.js') }}"></script>
+    <script src="{{ asset('arfa/vendor/izitoast/js/iziToast.min.js') }}"></script>
     <script src="{{ asset('arfa/assets/js/pages/datatables.min.js') }}"></script>
     <script src="{{ asset('arfa/assets/js/pages/element-ui.min.js') }}"></script>
     <script src="{{ asset('arfa/assets/js/pages/element-ui-serverside.js') }}"></script>
+    <script src="{{ asset('arfa/assets/js/pages/modules_toastr.js') }}"></script>
 @endpush
 
 @push('js_library_page')
@@ -121,15 +124,11 @@
                             headers: {
                                 'X-CSRF-TOKEN': "{{ csrf_token() }}",
                             },
-                            success: function(res) {
+                            success: function(response) {
                                 // response berhasil
                                 window.LaravelDataTables["role-table"].ajax.reload()
-                                if (res.status == 'success') {
-                                    Swal.fire(
-                                        'Deleted!',
-                                        'Your file has been deleted.',
-                                        'success'
-                                    )
+                                if (response.status == 'success') {
+                                    modules_toastr.notif('Info', response.message, 'success')
                                 }
                             },
                             error: function(err) {
@@ -190,11 +189,12 @@
                     processData: false,
                     contentType: false,
                     // dataType: "dataType",
-                    success: function(resHtlm) {
+                    success: function(response) {
                         // show modified modal
                         modalAction.hide()
                         // reaload datatable
                         window.LaravelDataTables["role-table"].ajax.reload()
+                        modules_toastr.notif('Info', response.message, 'success')
                     },
                     error: function(resErr) {
                         // get list field error from json response
