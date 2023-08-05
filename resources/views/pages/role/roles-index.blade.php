@@ -24,8 +24,8 @@
                         </div>
                         <div class="card-body">
                             {{-- <canvas id="myChart" height="642" width="1388"></canvas> --}}
-                            {{-- auth()->user()->can('create permission') --}}
-                            @if (request()->user()->can('create permission'))
+                            {{-- auth()->user()->can('create_konfigurasi/roles') --}}
+                            @if (request()->user()->can('create_konfigurasi/roles'))
                                 <button type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Tambah Data"
                                     data-bs-original-title="Tambah Data" class="btn mb-4 btn-sm btn-primary btn-add">
                                     <i class="ti-plus"></i>

@@ -40,7 +40,7 @@ class RoleController extends Controller
         // // test permission menggunakan gate end
 
         // test permission menggunakan authorize start
-        $this->authorize('read permission');
+        $this->authorize('read_konfigurasi/roles');
         // return 'hallo ' . $request->user()->name . ' anda mempunya akses ke halaman roles index';
         // return view('pages.role.roles-index');
         return $dataTable->render('pages.role.roles-index');
@@ -56,6 +56,7 @@ class RoleController extends Controller
     public function create(Request $request)
     {
         //
+        $this->authorize('create_konfigurasi/roles');
         // return view dan model Role, tanpa membawa data
         return view('pages.role.role-form', ['role' => new Role()]);
     }
