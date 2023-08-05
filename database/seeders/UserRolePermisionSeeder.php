@@ -29,7 +29,7 @@ class UserRolePermisionSeeder extends Seeder
         DB::beginTransaction();
         try {
             // insert data ke table user
-            $paga = User::create(array_merge(
+            $paga = User::create(array_merge( // 1
                 [
                     'name' => 'Paga Admin',
                     'username' => 'paga',
@@ -37,7 +37,7 @@ class UserRolePermisionSeeder extends Seeder
                 ],
                 $default_value
             ));
-            $ido = User::create(array_merge(
+            $ido = User::create(array_merge( // 2
                 [
                     'name' => 'Ido Manager',
                     'username' => 'ido',
@@ -45,7 +45,7 @@ class UserRolePermisionSeeder extends Seeder
                 ],
                 $default_value
             ));
-            $dani = User::create(array_merge(
+            $dani = User::create(array_merge( // 3
                 [
                     'name' => 'Dani Spv',
                     'username' => 'dani',
@@ -53,7 +53,7 @@ class UserRolePermisionSeeder extends Seeder
                 ],
                 $default_value
             ));
-            $tika = User::create(array_merge(
+            $tika = User::create(array_merge( // 4
                 [
                     'name' => 'Tika Staff',
                     'username' => 'tika',
@@ -61,7 +61,7 @@ class UserRolePermisionSeeder extends Seeder
                 ],
                 $default_value
             ));
-            $dian = User::create(array_merge(
+            $dian = User::create(array_merge( // 5
                 [
                     'name' => 'Dian Admin',
                     'username' => 'dian',
@@ -71,27 +71,32 @@ class UserRolePermisionSeeder extends Seeder
             ));
 
             // insert data ke table roles
-            $role_admin = Role::create(['name' => 'admin']);
-            $role_manager = Role::create(['name' => 'manager']);
-            $role_spv = Role::create(['name' => 'spv']);
-            $role_staff = Role::create(['name' => 'staff']);
+            $role_admin = Role::create(['name' => 'admin']); // 1
+            $role_manager = Role::create(['name' => 'manager']); // 2
+            $role_spv = Role::create(['name' => 'spv']); // 3
+            $role_staff = Role::create(['name' => 'staff']); // 4
 
             // insert data ke table permissions
-            $permision = Permission::create(['name' => 'read permission']);
-            $permision = Permission::create(['name' => 'create permission']);
-            $permision = Permission::create(['name' => 'update permission']);
-            $permision = Permission::create(['name' => 'delete permission']);
-            Permission::create(['name' => 'read konfigurasi']);
+            $permision = Permission::create(['name' => 'read_konfigurasi']); // 1
+            $permision = Permission::create(['name' => 'read_konfigurasi/roles']); // 2
+            $permision = Permission::create(['name' => 'create_konfigurasi/roles']); // 3
+            $permision = Permission::create(['name' => 'update_konfigurasi/roles']); // 4
+            $permision = Permission::create(['name' => 'delete_konfigurasi/roles']); // 5
+            Permission::create(['name' => 'read_konfigurasi/permissions']); // 6
+            Permission::create(['name' => 'create_konfigurasi/permissions']); // 7
+            Permission::create(['name' => 'update_konfigurasi/permissions']); // 8
+            Permission::create(['name' => 'delete_konfigurasi/permissions']); // 9
 
             /**
              * memasangkan role admin ke permision,
              * data ini akan masuk table role_has_permissions
              * jika permision yang di pasangkan tidak ada di table permision, migration akan gagal. tidak ada pesan error, tatapi data seeder tidak masuk ke database
              */
-            $role_admin->givePermissionTo(['read permission', 'read konfigurasi']);
-            $role_admin->givePermissionTo('create permission');
-            $role_admin->givePermissionTo('update permission');
-            $role_admin->givePermissionTo('delete permission');
+            $role_admin->givePermissionTo(['read_konfigurasi', 'read_konfigurasi/roles', 'read_konfigurasi/permissions']); // 1 (4,2,6)
+            // $role_admin->givePermissionTo(['update_konfigurasi/roles', 'read_konfigurasi/roles', 'read_konfigurasi/users']); // 1 (4,2,6)
+            $role_admin->givePermissionTo('create_konfigurasi/roles');
+            $role_admin->givePermissionTo('update_konfigurasi/roles');
+            $role_admin->givePermissionTo('delete_konfigurasi/roles');
 
             /**
              * memasangkan data user dengan data permision menggunakan relasi spatie
@@ -108,13 +113,18 @@ class UserRolePermisionSeeder extends Seeder
             $ido->assignRole('spv');
             $ido->assignRole('staff');
             $dani->assignRole('spv');
+            // $dani->assignRole('admin'); // {user: 3} {role: 1, permission (4,2,6)}
+            // $dani->givePermissionTo('create_konfigurasi/users'); // 3 . 7
             $tika->assignRole('staff');
+            // $tika->assignRole('manager');
             /**
              * ini test, memasangkan user dengan nama "Dian Admin" mempunyai role admin juga,
              * jadi yang mempunyai role admin ada  2 orang, "Paga Admin" dan "Dian Admin"
              */
 
             $dian->assignRole('admin');
+            // $ido->givePermissionTo(['read_konfigurasi', 'read_konfigurasi/roles', 'read_konfigurasi/users']);
+            // $dani->givePermissionTo(['delete_konfigurasi/users', 'delete_konfigurasi/roles']); // {user: 3} { permission (9,5)}
 
             DB::commit();
         } catch (\Throwable $th) {
