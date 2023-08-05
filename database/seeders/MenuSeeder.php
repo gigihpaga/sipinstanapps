@@ -22,7 +22,7 @@ class MenuSeeder extends Seeder
             'type' => 'main_menu',
             'parrent_menu_id' => null,
             'url' => 'konfigurasi',
-            'icon' => 'ti-setting',
+            'icon' => 'ti-settings',
         ]);
         Menu::create([
             'sort' => 2,
