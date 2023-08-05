@@ -49,19 +49,23 @@
               {{-- menu dari db --}}
               @foreach (getMenus() as $main_menu)
                   <li class="{{ request()->segment(1) == $main_menu->url ? 'active open' : '' }}">
-                      <a href="#" class="main-menu has-dropdown">
-                          <i class="{{ $main_menu->icon }}"></i>
-                          <span>{{ $main_menu->display_name }}</span>
-                      </a>
-                      <ul class="sub-menu {{ request()->segment(1) == $main_menu->url ? 'expand' : '' }}">
-                          @foreach ($main_menu->subMenus as $sub_menu)
-                              <li class="{{ Request::path() == $sub_menu->url ? 'active' : '' }}">
-                                  <a href="{{ url($sub_menu->url) }}" class="link">
-                                      <span>{{ $sub_menu->display_name }}</span>
-                                  </a>
-                              </li>
-                          @endforeach
-                      </ul>
+                      @can('read_' . $main_menu->url)
+                          <a href="#" class="main-menu has-dropdown">
+                              <i class="{{ $main_menu->icon }}"></i>
+                              <span>{{ $main_menu->display_name }}</span>
+                          </a>
+                          <ul class="sub-menu {{ request()->segment(1) == $main_menu->url ? 'expand' : '' }}">
+                              @foreach ($main_menu->subMenus as $sub_menu)
+                                  @can('read_' . $sub_menu->url)
+                                      <li class="{{ Request::path() == $sub_menu->url ? 'active' : '' }}">
+                                          <a href="{{ url($sub_menu->url) }}" class="link">
+                                              <span>{{ $sub_menu->display_name }}</span>
+                                          </a>
+                                      </li>
+                                  @endcan
+                              @endforeach
+                          </ul>
+                      @endcan
                   </li>
               @endforeach
           </ul>
