@@ -50,7 +50,7 @@ class RoleDataTable extends DataTable
             })
             // ->setRowId('id')
             ->addColumn('checkbox', function ($row) {
-                return '<input type="checkbox" id=cb-' . $row->id . ' name=cb-' . $row->id . ' value=' . $row->id . ' class="dt-cb-child">';
+                return '<input class="form-check-input" type="checkbox" id=cb-' . $row->id . ' name=cb-' . $row->id . ' value=' . $row->id . ' class="dt-cb-child">';
             })
             ->rawColumns(['action', 'checkbox']);
     }
@@ -77,6 +77,7 @@ class RoleDataTable extends DataTable
             ->parameters([
                 'searchDelay' => 1500,
                 'scrollX' => true,
+                'processing' => true,
                 // 'buttons' => ['reload'], // tidak berguna
                 'language' => ["processing" => '<div class="spinner-border" style="width: 20px; height: 20px;" role="status"><span class="visually-hidden">Loading...</span></div>'],
                 // 'drawCallback' => 'function(oSettings) {$(\'[data-toggle="tooltip"]\').tooltip();}',
@@ -98,7 +99,7 @@ class RoleDataTable extends DataTable
             //     Button::make('reset'),
             //     Button::make('reload')
             // ])
-        ;
+            ->setTableAttribute('class', 'table-hover table-stripped table dataTable no-footer');
     }
 
     /**
@@ -110,12 +111,13 @@ class RoleDataTable extends DataTable
     {
         return [
             // Column::make('id'),
-            Column::computed('<input type="checkbox" id="dt-cb-parent" name="dt-cb-parent" value="">')
+            Column::computed('_', '<input class="form-check-input" type="checkbox" id="dt-cb-parent" name="dt-cb-parent" value="">')
+                // ->content('<input class="form-check-input" type="checkbox" id="dt-cb-parent" name="dt-cb-parent" value="">')
                 ->data('checkbox')
                 ->name('checkbox')
                 ->exportable(false)
                 ->printable(false)
-                ->width(20)
+                ->width(15)
                 ->addClass('column-checkbox dt-cb-column text-center'),
             Column::make('DT_RowIndex')->title('No')->searchable(false)->orderable(false)
                 ->width(20), // untuk no
