@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PkaSptController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Route;
@@ -34,4 +35,7 @@ require __DIR__ . '/auth.php';
 Route::middleware(['auth'])->group(function () {
     // role
     Route::resource('konfigurasi/roles', RoleController::class);
+    // pkaspt
+    Route::get('dokumen/pkaspt/loadData', [PkaSptController::class, 'loadData'])->name('pkaspt.loadData');
+    Route::resource('dokumen/pkaspt', PkaSptController::class);
 });
