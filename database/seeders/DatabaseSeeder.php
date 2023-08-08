@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
 
         // call seeder
         $this->call([
+            BagianSeeder::class,
             UserRolePermisionSeeder::class,
             MenuSeeder::class,
             JabatanSeeder::class,
