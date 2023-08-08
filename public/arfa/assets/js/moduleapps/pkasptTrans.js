@@ -64,7 +64,7 @@ $(document).ready(function () {
             },
         ];
         const renderPillLastStatusSpt = {
-            targets: -2, // kolom status spt (2 dari kiri)
+            targets: -3, // kolom status spt (2 dari kiri)
             render: function (data, type, row) {
                 let lastStatusSpt = row?.last_status_history?.status;
                 let displayPil = '';
@@ -144,6 +144,7 @@ $(document).ready(function () {
                         return data;
                     },
                 },
+                { className: 'dt-nowrap text-capitalize', targets: [2, 3, 5, 7, 8, 9, -2, -1] },
                 // pill status buat spt
                 renderPillStatusBuat,
                 // pill status spt approval
