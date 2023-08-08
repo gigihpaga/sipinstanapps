@@ -48,13 +48,14 @@
                                             <th>No.</th>
                                             <th>pemohon spt</th>
                                             <th>sifat tugas</th>
-                                            <th>status buat</th>
+                                            <th>PKA</th>
                                             <th>nomor pengajuan</th>
+                                            <th>status buat</th>
                                             <th>tanggal mulai</th>
                                             <th>tanggal selesai</th>
+                                            <th>Status SPT</th>
                                             <th>keterangan tugas</th>
                                             <th>note</th>
-                                            <th>created by</th>
                                         </tr>
                                     </thead>
                                 </table>

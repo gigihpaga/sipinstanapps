@@ -24,11 +24,14 @@ class PkaSptController extends Controller
 
     public function loadData()
     {
-        $model = Spt::query();
+        $model = Spt::with('user')->with('lastStatusHistory')->get();
         return DataTables::of($model)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
                 return view('pages.pkaspt.pkaspt-button')->with(['data' => $row]);
+            })
+            ->addColumn('pka', function ($row) {
+                return view('pages.pkaspt.pkaspt-button-pka')->with(['data' => $row]);
             })
             ->make(true);
     }
