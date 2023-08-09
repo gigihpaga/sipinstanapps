@@ -125,6 +125,11 @@ class UserRolePermisionSeeder extends Seeder
             Permission::create(['name' => 'update_master/pegawai']); //
             Permission::create(['name' => 'delete_master/pegawai']); //
 
+            // bagian
+            Permission::create(['name' => 'read_master/bagian']); //
+            Permission::create(['name' => 'create_master/bagian']); //
+            Permission::create(['name' => 'update_master/bagian']); //
+            Permission::create(['name' => 'delete_master/bagian']); //
 
             /**
              * memasangkan role admin ke permision,
@@ -164,6 +169,12 @@ class UserRolePermisionSeeder extends Seeder
             $role_admin->givePermissionTo('create_master/pegawai');
             $role_admin->givePermissionTo('update_master/pegawai');
             $role_admin->givePermissionTo('delete_master/pegawai');
+
+            // bagian
+            $role_admin->givePermissionTo('read_master/bagian');
+            $role_admin->givePermissionTo('create_master/bagian');
+            $role_admin->givePermissionTo('update_master/bagian');
+            $role_admin->givePermissionTo('delete_master/bagian');
 
             // pka spt
             $role_admin->givePermissionTo([

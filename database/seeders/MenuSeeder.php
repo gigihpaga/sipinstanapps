@@ -96,5 +96,13 @@ class MenuSeeder extends Seeder
             'url' => 'master/pegawai',
             'icon' => '',
         ]);
+        Menu::create([
+            'sort' => 11,
+            'display_name' => 'Bagian',
+            'type' => 'sub_menu',
+            'parrent_menu_id' => 6,
+            'url' => 'master/bagian',
+            'icon' => '',
+        ]);
     }
 }
