@@ -1,10 +1,10 @@
 @php
     if ($data->id) {
-        $action = route('jabatan.update', $data->id);
+        $action = route('pangkat_golongan.update', $data->id);
         $method = 'PUT';
         $titleButton = 'Save Change';
     } else {
-        $action = route('jabatan.store');
+        $action = route('pangkat_golongan.store');
         $method = 'POST';
         $titleButton = 'Save';
     }
@@ -15,15 +15,15 @@
         @csrf
         @method($method)
         <div class="modal-header">
-            <h5 class="modal-title" id="largeModalLabel">Tambah/Ubah Jabatan</h5>
+            <h5 class="modal-title" id="largeModalLabel">Tambah/Ubah Pangkat Golongan</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
             <div class="row">
                 <div class="col-md-12">
                     <div class="mb-3">
-                        <label for="roleName" class="form-label">Jabatan</label>
-                        <input type="text" value="{{ $data->nama }}" placeholder="Masukkan Nama Jabatan..." name="nama"
+                        <label for="roleName" class="form-label">Nama Pangkat Golongan</label>
+                        <input type="text" value="{{ $data->nama }}" placeholder="Masukkan Nama Pangkat Golongan..." name="nama"
                             class="form-control" id="roleName" required>
                     </div>
                 </div>

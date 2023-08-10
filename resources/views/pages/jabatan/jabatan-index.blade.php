@@ -11,7 +11,7 @@
     <div class="main-content">
         <div class="title mb-4">
             <i class="ti-book"></i>
-            Konfigurasi
+            Data Master
         </div>
         {{-- <button type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="tolong" data-bs-original-title="Edit"
             class="btn mb-2 btn-sm btn-primary"><i class="ti-plus"></i>
@@ -21,7 +21,7 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="card-title">Roles</h5>
+                            <h5 class="card-title">Data Jabatan Pegawai</h5>
                         </div>
                         <div class="card-body">
                             {{-- <canvas id="myChart" height="642" width="1388"></canvas> --}}
