@@ -1,12 +1,16 @@
 @php
+    $default = 'Form';
+    $namaModul = ucfirst(explode('/', Request::path())[1]) ?? '';
     if ($data->id) {
         $action = route('bagian.update', $data->id);
         $method = 'PUT';
         $titleButton = 'Save Change';
+        $titleForm = "$default Ubah $namaModul";
     } else {
         $action = route('bagian.store');
         $method = 'POST';
         $titleButton = 'Save';
+        $titleForm = "$default Tambah $namaModul";
     }
 @endphp
 
@@ -15,7 +19,7 @@
         @csrf
         @method($method)
         <div class="modal-header">
-            <h5 class="modal-title" id="largeModalLabel">Tambah/Ubah Bagian</h5>
+            <h5 class="modal-title" id="largeModalLabel">{{ $titleForm }}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -23,8 +27,8 @@
                 <div class="col-md-12">
                     <div class="mb-3">
                         <label for="roleName" class="form-label">Nama Bagian</label>
-                        <input type="text" value="{{ $data->nama }}" placeholder="Masukkan Nama Bagian..." name="nama"
-                            class="form-control" id="roleName" required>
+                        <input type="text" value="{{ $data->nama }}" placeholder="Masukkan Nama Bagian..."
+                            name="nama" class="form-control" id="roleName" required>
                     </div>
                 </div>
                 {{-- <div class="col-md-6">
