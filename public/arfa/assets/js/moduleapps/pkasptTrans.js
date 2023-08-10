@@ -115,7 +115,8 @@ $(document).ready(function () {
                 return '<span style="background-color:#d8ffdc;" class="badge rounded-pill text-dark"><i style="color:#28c76f;" class="ti-check-box"></i>&nbspSelesai</span>';
             },
         };
-        const url = window.location.href;
+        const oldUrl = window.location.href;
+        const url = oldUrl.split('#')[0]; //get url without hash
 
         var table = $('#tabel').DataTable({
             scrollCollapse: true,
@@ -154,7 +155,7 @@ $(document).ready(function () {
             columns: listColums,
         });
 
-        // // ini utuk uncolapse text
+        // ini utuk uncolapse text
         $('tbody').on('click', 'tr', function () {
             // $(this).children('td:eq(1)').text(table.row(this).data()[1]);
             let fullSentence = Object.values(table.row(this).data())[1]; // 1 adalah full data. dimbil oleh ellipsis
@@ -163,7 +164,87 @@ $(document).ready(function () {
             $(this).children('td:eq(2)').text(fullSentence); // 1 ini adalah target value kolom yang akan di replace
             table.cell(this, 2).invalidate('dom');
         });
-        //  // ini utuk uncolapse text end
+        // ini utuk uncolapse text end
+
+        // initial modal
+        const modalAction = new bootstrap.Modal($('#modal-action'));
+
+        // Smart Wizard
+        function smartWizard() {
+            const sectionSmartWizard = $('#smartwizard');
+            sectionSmartWizard.smartWizard({
+                selected: 0,
+                // autoAdjustHeight: false,
+                theme: 'square', // basic, arrows, square, round, dots
+                autoAdjustHeight: true, // Automatically adjust content height
+                transition: {
+                    animation: 'none',
+                },
+                toolbar: {
+                    showNextButton: false, // show/hide a Next button
+                    showPreviousButton: false, // show/hide a Previous button
+                    position: 'none', // none/ top/ both bottom
+                },
+                anchor: {
+                    enableNavigation: true, // Enable/Disable anchor navigation
+                    enableNavigationAlways: false, // Activates all anchors clickable always
+                    enableDoneState: true, // Add done state on visited steps
+                    markPreviousStepsAsDone: true, // When a step selected by url hash, all previous steps are marked done
+                    unDoneOnBackNavigation: false, // While navigate back, done state will be cleared
+                    enableDoneStateNavigation: true, // Enable/Disable the done state navigation
+                },
+                disabledSteps: [], // Array Steps disabled
+                errorSteps: [], // Highlight step with errors
+                hiddenSteps: [],
+            });
+            console.log(sectionSmartWizard);
+            let f = $('#form-action');
+            console.log(f);
+        }
+
+        // tracking modal on hide
+        function modalActionOnHide() {
+            var myModalEl = document.getElementById('modal-action');
+            myModalEl.addEventListener('hidden.bs.modal', function (event) {
+                // console.log('modal hilang');
+                // set url has to null
+                window.location.hash = '';
+            });
+        }
+
+        // handle button add
+        $('.btn-add').on('click', function () {
+            // ajax
+            $.ajax({
+                type: 'GET',
+                url: `${url}/create`,
+                // data: "data",
+                // dataType: "dataType",
+                success: function (resHtlm) {
+                    // set content modal from response
+                    $('#modal-action').find('.modal-dialog').html(resHtlm);
+                    // show modified modal
+                    modalAction.show();
+
+                    // smart wizard
+                    smartWizard();
+                    // initial modalActionOnHide
+                    modalActionOnHide();
+                    // prepare for execution save
+                    handleSave();
+                },
+                error: function (err) {
+                    console.log('[Log On] >> [roles-index.blade] -> [err] : ', err);
+                },
+            });
+        });
+
+        // handle button save on form action
+        function handleSave() {
+            $('#next-btn-modal').on('click', function (e) {
+                $('#smartwizard').smartWizard('next');
+            });
+        }
 
         // ========== end function
     })();

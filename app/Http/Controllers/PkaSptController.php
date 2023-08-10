@@ -44,6 +44,7 @@ class PkaSptController extends Controller
     public function create()
     {
         //
+        return view('pages.pkaspt.pkspt-form-add', ['data' => new Pka()]);
     }
 
     /**
