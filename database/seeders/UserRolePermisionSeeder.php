@@ -158,7 +158,7 @@ class UserRolePermisionSeeder extends Seeder
             $role_admin->givePermissionTo('update_master/pangkat_golongan');
             $role_admin->givePermissionTo('delete_master/pangkat_golongan');
 
-            // kelas perjadian
+            // kelas perjadin
             $role_admin->givePermissionTo('read_master/kelas_perjadin');
             $role_admin->givePermissionTo('create_master/kelas_perjadin');
             $role_admin->givePermissionTo('update_master/kelas_perjadin');
