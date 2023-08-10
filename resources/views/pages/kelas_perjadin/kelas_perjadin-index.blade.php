@@ -21,12 +21,12 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="card-title">Data Bagian</h5>
+                            <h5 class="card-title">Data Kelas Perjalanan Dinas</h5>
                         </div>
                         <div class="card-body">
                             {{-- <canvas id="myChart" height="642" width="1388"></canvas> --}}
-                            {{-- auth()->user()->can('create_master/bagian') --}}
-                            @if (request()->user()->can('create_master/bagian'))
+                            {{-- auth()->user()->can('create_master/kelas_perjadin') --}}
+                            @if (request()->user()->can('create_master/kelas_perjadin'))
                                 <button type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Tambah Data"
                                     data-bs-original-title="Tambah Data" class="btn mb-4 btn-sm btn-primary btn-add">
                                     <i class="ti-plus"></i>
@@ -82,7 +82,7 @@
             // ajax
             $.ajax({
                 type: "GET",
-                url: `{{ url('master/bagian/create') }}`,
+                url: `{{ url('master/kelas_perjadin/create') }}`,
                 // data: "data",
                 // dataType: "dataType",
                 success: function(resHtlm) {
@@ -121,7 +121,7 @@
                         // jika confirm yes, jalankan ajax
                         $.ajax({
                             type: "DELETE",
-                            url: `{{ url('master/bagian') }}/${id}`,
+                            url: `{{ url('master/kelas_perjadin') }}/${id}`,
                             headers: {
                                 'X-CSRF-TOKEN': "{{ csrf_token() }}",
                             },
@@ -150,7 +150,7 @@
             // ajax get data for edit
             $.ajax({
                 type: "GET",
-                url: `{{ url('master/bagian') }}/${id}/edit`,
+                url: `{{ url('master/kelas_perjadin') }}/${id}/edit`,
                 // data: "data",
                 // dataType: "dataType",
                 success: function(resHtlm) {

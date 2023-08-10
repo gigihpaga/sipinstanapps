@@ -29,17 +29,17 @@
                             <h5 class="card-title">PKA dan SPT</h5>
                         </div>
                         <div class="card-body">
-                            <button type="button" data-bs-toggle="modal" data-bs-placement="top" title="Tambah Data"
-                                data-bs-target="#modal-action" data-bs-original-title="Tambah Data"
+                            <button type="button" data-bs-toggle="modal" data-bs-placement="top" title="Buat Pengajuan"
+                                data-bs-target="#modal-action" data-bs-original-title="Buat Pengajuan"
                                 class="btn btn-sm btn-primary btn-add">
                                 <i class="ti-plus"></i>
-                                Tambah Data
+                                Buat Pengajuan
                             </button>
                         </div>
                     </div>
                     <div class="card">
                         <div class="card-header">
-                            <h6 class="card-title">Tabel</h6>
+                            <h6 class="card-title">Daftar Pengajuan SPT</h6>
                         </div>
                         <div class="card-body">
                             {{--  --}}

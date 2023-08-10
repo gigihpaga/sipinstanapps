@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard &mdash; Arfa</title>
+    <title>Dashboard &mdash; SIP INSTAN</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
         integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w=="
         crossorigin="anonymous" />
@@ -74,7 +74,7 @@
 
         <footer>
             Copyright © 2023 &nbsp
-            <a href="https://www.youtube.com/c/mulaidarinull" target="_blank"class="ml-1">Gigih Paga </a>
+            <a href="https://inspektorat.magetan.go.id/" target="_blank"class="ml-1">Riki Handoko dkk</a>
             <span> . All rights Reserved</span>
         </footer>
         <div class="overlay action-toggle"></div>
