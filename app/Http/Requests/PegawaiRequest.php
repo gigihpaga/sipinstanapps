@@ -40,6 +40,14 @@ class PegawaiRequest extends FormRequest
             'jabatan_id' => [
                 'required',
                 'numeric'
+            ],
+            'pangkat_golongan_id' => [
+                'required',
+                'numeric'
+            ],
+            'kelas_perjadin_id' => [
+                'required',
+                'numeric'
             ]
         ];
     }

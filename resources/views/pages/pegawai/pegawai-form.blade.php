@@ -53,6 +53,24 @@
                     @endforeach
                 </select>
             </div>
+            <div class="col-md-12 mb-3">
+                <label for="pangkat_golongan" class="form-label">Pangkat Golongan</label>
+                <select class="js-example-basic-single form-select " id="pangkat_golongan" name="pangkat_golongan_id">
+                    <option></option>
+                    @foreach ($pangkat_golongan as $j)
+                        <option value="{{ $j->id }}">{{ $j->nama }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-12 mb-3">
+                <label for="kelas_perjadin" class="form-label">Kelas Perjadin</label>
+                <select class="js-example-basic-single form-select " id="kelas_perjadin" name="kelas_perjadin_id">
+                    <option></option>
+                    @foreach ($kelas_perjadin as $k)
+                        <option value="{{ $k->id }}">{{ $k->kategori }}</option>
+                    @endforeach
+                </select>
+            </div>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Close</button>

@@ -107,19 +107,19 @@ class PangkatGolonganController extends Controller
         //
         $pangkat_golongan->delete();
         // dd($pangkat_golongan);
-        // try {
-        //     $pangkat_golongan->delete();
-        //     // response
-        //     return response()->json([
-        //         'status' => 'success',
-        //         'message' => 'Delete data successfully',
-        //     ]);
-        // } catch (\Throwable  $th) {
-        //     return response()->json([
-        //         'status' => 'failed',
-        //         'message' => 'Sorry server down',
-        //         // 'message' => $th->getMessage(),
-        //     ], 500);
-        // }
+        try {
+            $pangkat_golongan->delete();
+            // response
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Delete data successfully',
+            ]);
+        } catch (\Throwable  $th) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Sorry server down',
+                // 'message' => $th->getMessage(),
+            ], 500);
+        }
     }
 }
