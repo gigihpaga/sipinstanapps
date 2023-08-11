@@ -18,6 +18,7 @@ $(document).ready(function () {
                 // name: 'pemohon_spt',
                 data: 'user.name',
                 name: 'user.name',
+                defaultContent: '',
             },
             {
                 data: 'sifat_tugas',
