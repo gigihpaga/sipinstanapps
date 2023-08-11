@@ -217,7 +217,7 @@ $(document).ready(function () {
             // ajax
             $.ajax({
                 type: 'GET',
-                url: `${url}/create`,
+                url: `${url}/create_pkaspt`,
                 // data: "data",
                 // dataType: "dataType",
                 success: function (resHtlm) {
@@ -231,7 +231,8 @@ $(document).ready(function () {
                     // initial modalActionOnHide
                     modalActionOnHide();
                     // prepare for execution save
-                    handleSave();
+                    handleSubmit();
+                    initialDatePicker();
                 },
                 error: function (err) {
                     console.log('[Log On] >> [roles-index.blade] -> [err] : ', err);
@@ -240,9 +241,88 @@ $(document).ready(function () {
         });
 
         // handle button save on form action
-        function handleSave() {
+        function handleSubmit() {
             $('#next-btn-modal').on('click', function (e) {
-                $('#smartwizard').smartWizard('next');
+                e.preventDefault();
+                let formTarget = null;
+                let formData = null;
+                let stepInfo = $('#smartwizard').smartWizard('getStepInfo');
+                //
+
+                console.log('step : ', stepInfo);
+                if (stepInfo.currentStep == 1) {
+                    // stepInfo == 1 berarti sudah di step SPT, jadi save ke controller ====SPT====
+
+                    return;
+                }
+
+                // let formSerialize = formTarget.serialize();
+                // formData = formTarget.serialize();
+
+                // masih di step PKA, jadi save ke controller ====PKA====
+                // let formTargetHtml = document.querySelector('');
+                formTarget = document.getElementById('form-pka');
+                const url = formTarget.getAttribute('action');
+                formData = new FormData(formTarget);
+                onSubmit(formTarget, formData, url, stepInfo);
+            });
+        }
+        // smartWizard forward
+        function handleShowNextStep() {
+            $('#smartwizard').smartWizard('next');
+        }
+
+        function initialDatePicker() {
+            $('.date')
+                .datepicker({
+                    autoclose: true,
+                    todayHighlight: true,
+                    format: 'dd-mm-yyyy',
+                })
+                .on('changeDate', function (e) {
+                    // console.log(e.target.value);
+                });
+        }
+
+        function onSubmit(formTarget, formData, url, stepInfo) {
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                },
+                processData: false,
+                contentType: false,
+                // dataType: "dataType",
+                success: function (response) {
+                    if (stepInfo == 1) {
+                        // show modified modal
+                        modalAction.hide();
+                        // reaload datatable
+                        window.LaravelDataTables['role-table'].ajax.reload();
+                    }
+                    modules_toastr.notif('Info', response.message, 'success');
+                    // handleShowNextStep();
+                },
+                error: function (resErr) {
+                    // get list field error from json response
+                    let listFieldError = resErr.responseJSON?.errors;
+                    // reset form
+                    $(formTarget).find('.text-danger.text-small').remove();
+                    $(formTarget).find('.form-control').removeClass('is-invalid');
+                    // $(formTarget).find('.form-control').addClass("is-valid")
+                    if (listFieldError) {
+                        // looping key object listFieldError
+                        for (const [key, value] of Object.entries(listFieldError)) {
+                            //   find field element form with object key
+                            $(`[name=${key}]`)
+                                .addClass('is-invalid')
+                                .parent()
+                                .append(`<span class="text-danger text-small">${value}</span>`);
+                        }
+                    }
+                },
             });
         }
 

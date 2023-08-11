@@ -10,6 +10,7 @@
     <link href="{{ asset('arfa/vendor/izitoast/css/iziToast.min.css') }}" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/smartwizard@6/dist/css/smart_wizard_all.min.css" rel="stylesheet"
         type="text/css" />
+    <link href="{{ asset('arfa/vendor/bootstrap-datepicker/css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
 @endpush
 
 @section('content')
@@ -99,6 +100,7 @@
     <script src="{{ asset('arfa/assets/js/pages/element-ui.min.js') }}"></script>
     <script src="{{ asset('arfa/assets/js/pages/element-ui-serverside.js') }}"></script>
     <script src="{{ asset('arfa/assets/js/pages/modules_toastr.js') }}"></script>
+    <script src="{{ asset('arfa/vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"></script>
 @endpush
 
 @push('js_library_page')

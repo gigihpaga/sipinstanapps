@@ -47,6 +47,10 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('master/pegawai', PegawaiController::class);
 
     // pkaspt
+    Route::get('dokumen/pkaspt', [PkaSptController::class, 'index'])->name('pkaspt.index');
     Route::get('dokumen/pkaspt/loadData', [PkaSptController::class, 'loadData'])->name('pkaspt.loadData');
-    Route::resource('dokumen/pkaspt', PkaSptController::class);
+    Route::get('dokumen/pkaspt/create_pkaspt', [PkaSptController::class, 'create_pkaspt'])->name('pkaspt.create_pkaspt');
+    Route::post('dokumen/pkaspt/store_pka', [PkaSptController::class, 'store_pka'])->name('pkaspt.store_pka');
+    Route::post('dokumen/pkaspt/store_spt', [PkaSptController::class, 'store_spt'])->name('pkaspt.store_spt');
+    // Route::resource('dokumen/pkaspt', PkaSptController::class);
 });
