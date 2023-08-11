@@ -72,7 +72,6 @@ class KelasPerjadinController extends Controller
      */
     public function edit(KelasPerjadin $kelas_perjadin)
     {
-        // dd($kelas_perjadin);
         //
         $data = $kelas_perjadin;
         return view('pages.kelas_perjadin.kelas_perjadin-form', compact('data'));
@@ -105,22 +104,21 @@ class KelasPerjadinController extends Controller
      */
     public function destroy(KelasPerjadin $kelas_perjadin)
     {
-        //
-        $kelas_perjadin->delete();
+
         // dd($kelas_perjadin);
-        // try {
-        //     $kelas_perjadin->delete();
-        //     // response
-        //     return response()->json([
-        //         'status' => 'success',
-        //         'message' => 'Delete data successfully',
-        //     ]);
-        // } catch (\Throwable  $th) {
-        //     return response()->json([
-        //         'status' => 'failed',
-        //         'message' => 'Sorry server down',
-        //         // 'message' => $th->getMessage(),
-        //     ], 500);
-        // }
+        try {
+            $kelas_perjadin->delete();
+            // response
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Delete data successfully',
+            ]);
+        } catch (\Throwable  $th) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Sorry server down',
+                // 'message' => $th->getMessage(),
+            ], 500);
+        }
     }
 }
