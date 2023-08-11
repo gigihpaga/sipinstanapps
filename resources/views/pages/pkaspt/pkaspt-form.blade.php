@@ -173,17 +173,17 @@
             </div>
         </div>
 
-        <div class="modal-footer">
-            {{-- <button class="btn btn-primary" id="prev-btn-modal">Previous</button>
-        <button class="btn btn-primary" id="next-btn-modal">Next</button>
-        <button class="btn btn-success" onclick="onFinish()">Finish</button>
-        <button class="btn btn-secondary" onclick="onCancel()">Cancel</button> --}}
-            <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-            <button id="next-btn-modal" type="button" class="btn btn-sm btn-primary" data-bs-toggle="tooltip"
-                {{-- data-bs-placement="top" title="{{ $titleButton }}" --}} data-bs-placement="top" title="Simpan, lanjut ke SPT" {{-- data-bs-original-title="{{ $titleButton }}"> --}}
-                data-bs-original-title="">
-                <i class="ti-save"></i>
-                &nbsp;Simpan
-            </button>
-        </div>
+    </div>
+    <div class="modal-footer">
+        {{-- <button class="btn btn-primary" id="prev-btn-modal">Previous</button>
+    <button class="btn btn-primary" id="next-btn-modal">Next</button>
+    <button class="btn btn-success" onclick="onFinish()">Finish</button>
+    <button class="btn btn-secondary" onclick="onCancel()">Cancel</button> --}}
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+        <button id="next-btn-modal" type="button" class="btn btn-sm btn-primary" data-bs-toggle="tooltip"
+            {{-- data-bs-placement="top" title="{{ $titleButton }}" --}} data-bs-placement="top" title="Simpan, lanjut ke SPT" {{-- data-bs-original-title="{{ $titleButton }}"> --}}
+            data-bs-original-title="">
+            <i class="ti-save"></i>
+            &nbsp;Simpan
+        </button>
     </div>
