@@ -25,7 +25,7 @@ class PkaSeeder extends Seeder
                 'pka_no' => 'PKA/DEV/' . Carbon::now('Asia/Jakarta')->format('m-s') . '/' . Str::random(5),
                 'nama_opd' => fake()->company(),
                 'alamat' => fake()->address(),
-                'sasaran' => fake()->sentence(20, true),
+                'keterangan' => fake()->sentence(20, true),
                 'tanggal_mulai' => Carbon::now()->subDays(10),
                 'tanggal_selesai' => Carbon::now()->subDays(3),
                 'created_by' => 1, // user_id
@@ -38,7 +38,7 @@ class PkaSeeder extends Seeder
                 'pka_no' => 'PKA/DEV/' . Carbon::now('Asia/Jakarta')->format('m-s') . '/' . Str::random(5),
                 'nama_opd' => fake()->company(),
                 'alamat' => fake()->streetAddress(),
-                'sasaran' => fake()->sentence(20, true),
+                'keterangan' => fake()->sentence(20, true),
                 'tanggal_mulai' => Carbon::now()->subDays(8),
                 'tanggal_selesai' => Carbon::now()->subDays(2),
                 'created_by' => 2, // user_id
@@ -51,7 +51,7 @@ class PkaSeeder extends Seeder
                 'pka_no' => 'PKA/DEV/' . Carbon::now('Asia/Jakarta')->format('m-s') . '/' . Str::random(5),
                 'nama_opd' => fake()->company(),
                 'alamat' => fake()->streetAddress(),
-                'sasaran' => fake()->sentence(20, true),
+                'keterangan' => fake()->sentence(20, true),
                 'tanggal_mulai' => Carbon::now()->subDays(9),
                 'tanggal_selesai' => Carbon::now()->subDays(0),
                 'created_by' => 3, // user_id

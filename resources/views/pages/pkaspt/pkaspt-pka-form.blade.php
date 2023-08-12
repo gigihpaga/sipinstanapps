@@ -55,8 +55,8 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="mb-3">
-                        <label for="sasaran" class="form-label">Sasaran</label>
-                        <textarea class="form-control" id="sasaran" rows="4" name="sasaran">{{ $data->sasaran }}</textarea>
+                        <label for="keterangan" class="form-label">Keterangan</label>
+                        <textarea class="form-control" id="keterangan" rows="4" name="keterangan">{{ $data->keterangan }}</textarea>
                     </div>
                 </div>
             </div>

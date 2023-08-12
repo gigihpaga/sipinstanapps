@@ -41,7 +41,7 @@ class PkaRequest extends FormRequest
                 'min:3',
                 'max:225'
             ],
-            'sasaran' => [
+            'keterangan' => [
                 'required',
                 'min:3',
                 'max:225'

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('pka_no', 255);
             $table->string('nama_opd', 255);
             $table->string('alamat', 255);
-            $table->string('sasaran', 255);
+            $table->string('keterangan', 255);
             $table->date('tanggal_mulai')->nullable();
             $table->date('tanggal_selesai')->nullable();
             $table->foreignId('created_by')->nullable();
