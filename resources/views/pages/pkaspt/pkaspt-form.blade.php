@@ -5,6 +5,9 @@
         @method($method) --}}
     <div class="modal-header">
         <h5 class="modal-title" id="modal-action-label">Form Tambah PKA & SPT</h5>
+        <div class="float-end text-muted ms-5">
+            Step number: <span id="sw-current-step"></span> of <span id="sw-total-step"></span>
+        </div>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
     <div class="modal-body">
@@ -25,7 +28,7 @@
             </ul>
             <div class="tab-content">
                 <div id="step-1" class="tab-pane" role="tabpanel" aria-labelledby="step-pka">
-                    <form id="form-pka" action="{{ route('pkaspt.store_pka') }}" method="POST">
+                    <form id="form-pka" action="{{ route('pkaspt.pka.store') }}" method="POST">
                         <h4 class="mb-2">PKA</h4>
                         <div class="row">
                             <div class="col-md-6">
@@ -49,15 +52,21 @@
                             {{--  --}}
                             {{--  --}}
                             <div class="col-md-12">
-                                <label for="tanggal_mulai" class="form-label">Waktu PKA</label>
+                                <label for="tanggalmulaipka" class="form-label">Waktu PKA</label>
                                 <div class="input-group mb-3 input-daterange datepicker date"
                                     data-date-format="dd-mm-yyyy">
-                                    <input class="form-control" required="" type="text" id="tanggal_mulai"
-                                        name="tanggal_mulai" value="" readonly="">
-                                    <span
-                                        class="bg-primary text-light px-3 justify-content-center align-items-center d-flex">sampai</span>
-                                    <input class="form-control" required="" type="text" id="end_date"
-                                        name="tanggal_selesai" value="" readonly="">
+                                    <div class="col-md-5">
+                                        <input class="form-control" required="" type="text" id="tanggalmulaipka"
+                                            name="tanggal_mulai" value="" readonly="">
+                                    </div>
+                                    <div class="col-md-1 d-inline-block px-1 mt-2">
+                                        <span
+                                            class="bg-primary text-light  justify-content-center align-items-center d-inline-block ">sampai</span>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <input class="form-control" required="" type="text" id="tanggalselesaipka"
+                                            name="tanggal_selesai" value="" readonly="">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -87,23 +96,25 @@
                     </form>
                 </div>
                 <div id="step-2" class="tab-pane" role="tabpanel" aria-labelledby="step-spt">
-                    <form id="form-spt" action="{{ route('pkaspt.store_spt') }}" method="POST">
+                    <form id="form-spt" action="" method="POST">
+                        @method('PATCH')
                         <h4 class="mb-2">SPT</h4>
+                        {{-- <input type="text" value="" hidden name="pka_id" id="pkaid"> --}}
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-3">
-                                    <label for="nomor_pengajuan" class="form-label">Nomor Pengajuan</label>
+                                    <label for="nomorPengajuan" class="form-label">Nomor Pengajuan</label>
                                     {{-- <input type="text" value="{{ $role->name }}" placeholder="Role name" --}}
                                     <input type="text" value="" placeholder="Nomor Pengajuan"
-                                        name="nomor_pengajuan" class="form-control" id="nomor_pengajuan" required>
+                                        name="nomor_pengajuan" class="form-control" id="nomorPengajuan" required>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="sifat_penugasan" class="form-label">Sifat Tugas</label>
-                                <select class="js-example-basic-single form-select " id="sifat_penugasan"
-                                    name="sifat_penugasan">
+                                <label for="sifatpenugasan" class="form-label">Sifat Tugas</label>
+                                <select class="js-example-basic-single form-select " id="sifatpenugasan"
+                                    name="sifat_tugas">
                                     <option value="PKA">PKA</option>
                                     <option value="Non-PKPT">Non-PKPT</option>
                                 </select>
@@ -123,15 +134,20 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-3">
-                                    <label for="tanggal_mulai" class="form-label">Waktu SPT</label>
+                                    <label for="tanggalmulaispt" class="form-label">Waktu SPT</label>
                                     <div class="input-group mb-3 input-daterange datepicker date"
                                         data-date-format="dd-mm-yyyy">
-                                        <input class="form-control" required="" type="text" id="tanggal_mulai"
-                                            name="tanggal_mulai" value="" readonly="">
+                                        <div class="col-md-4">
+                                            <input class="form-control" type="text" id="tanggalmulaispt"
+                                                name="tanggal_mulai" value="" readonly="">
+                                        </div>
+
                                         <span
                                             class="bg-primary text-light px-3 justify-content-center align-items-center d-flex">to</span>
-                                        <input class="form-control" required="" type="text" id="end_date"
-                                            name="tanggal_selesai" value="" readonly="">
+                                        <div class="col-md-4">
+                                            <input class="form-control" type="text" id="tanggalselesaispt"
+                                                name="tanggal_selesai" value="" readonly="">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -139,16 +155,16 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-3">
-                                    <label for="keperluan_tugas" class="form-label">Keperluan Tugas</label>
-                                    <textarea class="form-control" id="keperluan_tugas" rows="2" name="keperluan_tugas"></textarea>
+                                    <label for="keperluantugas" class="form-label">Keperluan Tugas</label>
+                                    <textarea class="form-control" id="keperluantugas" rows="2" name="keperluan_tugas"></textarea>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-3">
-                                    <label for="keterangan_tugas" class="form-label">Keterangan Tugas</label>
-                                    <textarea class="form-control" id="keterangan_tugas" rows="2" name="keterangan_tugas"></textarea>
+                                    <label for="keterangantugas" class="form-label">Keterangan Tugas</label>
+                                    <textarea class="form-control" id="keterangantugas" rows="2" name="keterangan_tugas"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -172,6 +188,7 @@
                 </div>
             </div>
         </div>
+        {{-- <br><br><br><br> --}}
 
     </div>
     <div class="modal-footer">

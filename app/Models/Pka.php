@@ -11,4 +11,10 @@ class Pka extends Model
 
     protected $table = 'pka';
     protected $guarded = ['id'];
+
+    // join ke table spt
+    public function spt()
+    {
+        return $this->hasOne(Spt::class);
+    }
 }

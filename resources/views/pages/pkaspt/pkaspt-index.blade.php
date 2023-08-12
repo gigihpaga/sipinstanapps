@@ -72,8 +72,9 @@
             </div>
         </div>
         {{-- modal start --}}
-        <div id="modal-action" class="modal fade" tabindex="-1" aria-labelledby="modal-action-label" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div id="modal-action" data-bs-backdrop="static" class="modal fade" tabindex="-1"
+            aria-labelledby="modal-action-label" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
                 {{--   modal-dialog-scrollable  --}}
                 {{-- <-- modal-lg--> --}}
                 {{-- modal-form --}}

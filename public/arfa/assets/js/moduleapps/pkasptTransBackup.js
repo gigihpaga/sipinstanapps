@@ -156,42 +156,28 @@ $(document).ready(function () {
             columns: listColums,
         });
 
-        // ===========>>>>>>>>> ini utuk uncolapse text
+        // ini utuk uncolapse text
         // $('tbody').on('click', 'tr', function () {
         //     // $(this).children('td:eq(1)').text(table.row(this).data()[1]);
         //     let fullSentence = Object.values(table.row(this).data())[1]; // 1 adalah full data. dimbil oleh ellipsis
         //     let debug = table.row(this).data();
-        //     console.log(debug);
+        //     console.log('debug :', debug);
         //     $(this).children('td:eq(2)').text(fullSentence); // 1 ini adalah target value kolom yang akan di replace
         //     table.cell(this, 2).invalidate('dom');
         // });
-        // ===========>>>>>>>>> ini utuk uncolapse text end
+        // ini utuk uncolapse text end
 
         // initial modal
         const modalAction = new bootstrap.Modal($('#modal-action'));
 
         // Smart Wizard
         function smartWizard() {
-            // http://techlaboratory.net/projects/demo/jquery-smart-wizard/v6/bootstrap-modal#step-4
-            // Step show event
-            $('#smartwizard').on(
-                'showStep',
-                function (e, anchorObject, stepIndex, stepDirection, stepPosition) {
-                    // Get step info from Smart Wizard
-                    let stepInfo = $('#smartwizard').smartWizard('getStepInfo');
-                    let myCurrent = stepInfo.currentStep + 1;
-                    $('#sw-current-step').text(myCurrent + 1);
-                    $('#sw-total-step').text(stepInfo.totalSteps);
-                }
-            );
-
             const sectionSmartWizard = $('#smartwizard');
             sectionSmartWizard.smartWizard({
                 selected: 0,
                 // autoAdjustHeight: false,
                 theme: 'square', // basic, arrows, square, round, dots
                 autoAdjustHeight: false, // Automatically adjust content height
-                enableUrlHash: false,
                 transition: {
                     animation: 'none',
                 },
@@ -224,7 +210,6 @@ $(document).ready(function () {
                 // console.log('modal hilang');
                 // set url has to null
                 window.location.hash = '';
-                reloadTable();
             });
         }
 
@@ -260,56 +245,69 @@ $(document).ready(function () {
         function handleSubmit() {
             $('#next-btn-modal').on('click', function (e) {
                 e.preventDefault();
-                let formTarget = null;
-                let formData = null;
+                // let formTarget = null;
+                // let formData = null;
+                // let urlForm = null;
                 let stepInfo = $('#smartwizard').smartWizard('getStepInfo');
                 //
 
                 console.log('step : ', stepInfo);
                 if (stepInfo.currentStep == 0) {
-                    // masih di step PKA, jadi save ke controller ====PKA====
-                    formTarget = document.getElementById('form-pka');
+                    // stepInfo == 1 berarti sudah di step PKA, jadi save ke controller ====PKA====
+                    let formTargetPka = document.getElementById('form-pka');
+                    let formDataPka = new FormData(formTargetPka);
+                    let urlFormPka = formTargetPka.getAttribute('action');
+                    onSubmit(formTargetPka, formDataPka, urlFormPka, stepInfo);
+                    for (const pair of formDataPka.entries()) {
+                        console.log(`${pair[0]}: ${pair[1]}`);
+                    }
                 } else {
-                    formTarget = document.getElementById('form-spt');
                     // stepInfo == 1 berarti sudah di step SPT, jadi save ke controller ====SPT====
+                    let formTargetSpt = document.getElementById('form-spt');
+                    let formDataSpt = new FormData(formTargetSpt);
+                    let urlFormSpt = formTargetSpt.getAttribute('action');
+                    onSubmitSpt(formTargetSpt, formDataSpt, urlFormSpt);
+                    for (const pair of formDataSpt.entries()) {
+                        console.log(`${pair[0]}: ${pair[1]}`);
+                    }
                 }
-
                 // let formSerialize = formTarget.serialize();
                 // formData = formTarget.serialize();
-
                 // let formTargetHtml = document.querySelector('');
-                const urlForm = formTarget.getAttribute('action');
-                formData = new FormData(formTarget);
-                onSubmit(formTarget, formData, urlForm, stepInfo);
+
+                // formTarget = null;
+                // formData = null;
+                // urlForm = null;
             });
         }
+
+        // $('#modal-action').on('click', '#next-btn-modal', function () {
+        //     console.log('s');
+        // });
+
         // smartWizard forward
         function handleShowNextStep() {
             $('#smartwizard').smartWizard('next');
         }
 
         function initialDatePicker() {
-            $('.date')
-                .datepicker({
-                    autoclose: true,
-                    todayHighlight: true,
-                    format: 'dd-mm-yyyy',
-                })
-                .on('changeDate', function (e) {
-                    // console.log(e.target.value);
-                });
+            $(function () {
+                $('.date')
+                    .datepicker('setvalue', new Date())
+                    .datepicker({
+                        autoclose: true,
+                        todayHighlight: true,
+                        format: 'dd-mm-yyyy',
+                    })
+                    .on('changeDate', function (e) {
+                        // console.log(e.target.value);
+                    });
+            });
         }
 
-        function reloadTable() {
-            var t = $('#tabel').DataTable();
-            t.ajax.reload();
-        }
-
-        // ========================================
-        // ajax
         function onSubmit(formTarget, formData, urlForm, stepInfo) {
             $.ajax({
-                type: 'POST',
+                type: stepInfo.currentStep == 0 ? 'POST' : 'PATCH',
                 url: urlForm,
                 data: formData,
                 headers: {
@@ -317,7 +315,7 @@ $(document).ready(function () {
                 },
                 processData: false,
                 contentType: false,
-                // dataType: "dataType",
+                dataType: 'JSON',
                 success: function (response) {
                     if (stepInfo.currentStep == 0) {
                         let sptId = response?.data[0]?.spt?.id;
@@ -325,21 +323,19 @@ $(document).ready(function () {
                         $('#next-btn-modal').attr('data-bs-original-title', 'Simpan SPT');
                         // set hidden textbox in step 2 (form spt)
                         $('#form-spt').attr('action', `${url}/spt/${sptId}`);
-                        // $('#form-spt').find('#pka_id').attr('value', sptId);
+                        $('#form-spt').find('#pka_id').attr('value', sptId);
 
                         handleShowNextStep();
-                        $('#nomorPengajuan').trigger('focus');
-                    } else {
+                    } else if (stepInfo.currentStep == 1) {
                         // show modified modal
                         modalAction.hide();
                         // reaload datatable
                         // window.LaravelDataTables['role-table'].ajax.reload();
+                        reloadTable();
                     }
                     modules_toastr.notif('Info', response.message, 'success');
-                    // handleShowNextStep();
                 },
                 error: function (resErr) {
-                    modalAction.handleUpdate();
                     // get list field error from json response
                     let listFieldError = resErr.responseJSON?.errors;
                     // reset form
@@ -357,8 +353,183 @@ $(document).ready(function () {
                         }
                     }
                 },
+            })
+                .done(function (data) {
+                    alert(JSON.stringify(data));
+                })
+                .fail(function (jqXHR, textStatus) {
+                    console.log(jqXHR);
+                    console.log(textStatus);
+                });
+        }
+        function onSubmitSpt(formTarget, formData, urlForm) {
+            $.ajax({
+                type: 'PUT',
+                url: urlForm,
+                data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                },
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    reloadTable();
+                    modalAction.hide();
+                    modules_toastr.notif('Info', response.message, 'success');
+                },
+                error: function (resErr) {
+                    // get list field error from json response
+                    let listFieldError = resErr.responseJSON?.errors;
+                    // reset form
+                    $(formTarget).find('.text-danger.text-small').remove();
+                    $(formTarget).find('.form-control').removeClass('is-invalid');
+                    // $(formTarget).find('.form-control').addClass("is-valid")
+                    if (listFieldError) {
+                        // looping key object listFieldError
+                        for (const [key, value] of Object.entries(listFieldError)) {
+                            //   find field element form with object key
+                            $(`[name=${key}]`)
+                                .addClass('is-invalid')
+                                .parent()
+                                .append(`<span class="text-danger text-small">${value}</span>`);
+                        }
+                    }
+                },
+            })
+                .done(function (data) {
+                    alert(JSON.stringify(data));
+                })
+                .fail(function (jqXHR, textStatus) {
+                    console.log(jqXHR);
+                    console.log(textStatus);
+                });
+        }
+
+        function reloadTable() {
+            var t = $('#tabel').DataTable();
+            t.ajax.reload();
+        }
+
+        // ===handle button on data table =======================================================
+        // handle button edit
+        $('#tabel').on('click', '.btn-action', function () {
+            let data = $(this).data();
+            let id = data.id;
+            let typeaction = data.typeaction;
+            //
+            if (typeaction == 'edit-spt') {
+                console.log('btn-edit');
+                // ajax get data for edit
+                $.ajax({
+                    type: 'GET',
+                    url: `${url}/spt/${id}/edit`,
+                    // data: "data",
+                    // dataType: "dataType",
+                    success: function (resHtlm) {
+                        // set content modal from response
+                        $('#modal-action').find('.modal-dialog').html(resHtlm);
+                        // show modified modal
+                        modalAction.show();
+                        // prepare for execution update
+                        $('#save-spt').on('click', function (e) {
+                            // let formTargetSpt = document.getElementById('form-spt');
+                            // let formTargetSpt = $('#form-spt-edit');
+                            // formTargetSpt.submit();
+                            let formTarget = $('#form-spt-edit');
+                            onFormSptSubmit(formTarget);
+                            // onFormSptSubmit();
+                            // console.log('ini satu', formTargetSpt);
+                            // let formDataSpt = new FormData(formTargetSpt);
+                            // let urlFormSpt = formTargetSpt.getAttribute('action');
+                            // onSubmitSpt(formTargetSpt, formDataSpt, urlFormSpt);
+                        });
+                    },
+                    error: function (resErr) {
+                        // get list field error from json response
+                        let listFieldError = resErr.responseJSON?.errors;
+                        // reset form
+                        $('#form-spt').find('.text-danger.text-small').remove();
+                        $('#form-spt').find('.form-control').removeClass('is-invalid');
+                        // $(formTarget).find('.form-control').addClass("is-valid")
+                        if (listFieldError) {
+                            // looping key object listFieldError
+                            for (const [key, value] of Object.entries(listFieldError)) {
+                                //   find field element form with object key
+                                $(`[name=${key}]`)
+                                    .addClass('is-invalid')
+                                    .parent()
+                                    .append(`<span class="text-danger text-small">${value}</span>`);
+                            }
+                        }
+                    },
+                });
+            }
+        });
+        // ===handle button on data table =======================================================
+
+        // ===on form submit++++++++++++++++++++++++++++++++++++
+        function onFormSptSubmit(formTarget) {
+            // const _form = formTargetSpt;
+            // // grab data in form modal
+            // const formData = new FormData(_form[0]);
+            // console.log(formData);
+            // for (const pair of formData.entries()) {
+            //     console.log(`${pair[0]}: ${pair[1]}`);
+            // }
+
+            /**
+             * get url/route in form (dynamic route sesuai dengan request sebelumnyan)
+             * jika request sebelumnya ada "create", maka submit ini akan mengarah ke route "store"
+             * jika request sebelumnya ada "edit", maka submit ini akan mengarah ke route "update"
+             */
+            // const url = _form.attr('action');
+            // const url = $('#form-spt-edit').attr('action');
+            // console.log($('#form-spt-edit').serialize());
+
+            const _form = formTarget[0];
+            const formData = new FormData(_form);
+            const url = _form.getAttribute('action');
+
+            // ajax update data
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                },
+                processData: false,
+                contentType: false,
+                // dataType: "dataType",
+                success: function (response) {
+                    // show modified modal
+                    modalAction.hide();
+                    // reaload datatable
+                    window.LaravelDataTables['role-table'].ajax.reload();
+                    modules_toastr.notif('Info', response.message, 'success');
+                },
+                error: function (resErr) {
+                    // get list field error from json response
+                    let listFieldError = resErr.responseJSON?.errors;
+                    // reset form
+                    $('#form-spt-edit').find('.text-danger.text-small').remove();
+                    $('#form-spt-edit').find('.form-control').removeClass('is-invalid');
+                    // $(_form).find('.form-control').addClass("is-valid")
+                    if (listFieldError) {
+                        // looping key object listFieldError
+                        for (const [key, value] of Object.entries(listFieldError)) {
+                            //   find field element form with object key
+                            $(`[name=${key}]`)
+                                .addClass('is-invalid')
+                                .parent()
+                                .append(`<span class="text-danger text-small">${value}</span>`);
+                        }
+                    }
+                },
             });
         }
+
+        // ===on form submit++++++++++++++++++++++++++++++++++++
 
         // ========== end function
     })();

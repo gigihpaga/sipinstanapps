@@ -45,7 +45,7 @@ class PkaSptController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create_pkaspt()
+    public function create()
     {
         //
         return view('pages.pkaspt.pkaspt-form', ['data' => new Pka()]);
@@ -74,7 +74,7 @@ class PkaSptController extends Controller
         // $path = $dokumen->move('dokumen/pka', $nama_dokumen);
         // $request->request->replace(array('nama_file_pdf' => $nama_dokumen));;
         // $pka = Pka::create($request->all());
-
+        // ==============================================================================================
         // add key and value to manipulate request data
         $request->request->add([
             'created_by' => Auth::user()->id,
@@ -108,16 +108,17 @@ class PkaSptController extends Controller
 
         // save to db
         $pka = Pka::create($fixData);
+        // $pka::with('spt')->where('id', 29)->get()
         Spt::create(['pka_id' => $pka->id, 'status_buat' => '0', 'pemohon_spt' => $pka->created_by, 'created_by' => $pka->created_by]);
+        $pkaspt = Pka::with('spt')->where('id', $pka->id)->get();
 
 
         return response()->json([
             'status' => 'success',
             'message' => 'Create data successfully',
-            // 'data' => $pka,
-            'data' => $pka,
-            'path' => $path->getPathname(),
-            'pka_id' => $pka->id
+            'data' => $pkaspt,
+            // 'path' => $path->getPathname(),
+            // 'pka_id' => $pka->id
         ]);
     }
     /**

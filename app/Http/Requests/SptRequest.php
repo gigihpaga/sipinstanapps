@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\File;
 
-class PkaRequest extends FormRequest
+class SptRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,40 +25,27 @@ class PkaRequest extends FormRequest
     {
         return [
             //
-            'pka_no' => [
+            'nomor_pengajuan' => [
                 'required',
                 'min:3',
                 'max:225'
             ],
-            'nama_opd' => [
+            'sifat_penugasan' => [
                 'required',
-                'min:3',
-                'max:225'
             ],
-            'alamat' => [
+            'lama_penugasan' => [
                 'required',
-                'min:3',
-                'max:225'
+                'numeric'
             ],
-            'sasaran' => [
-                'required',
-                'min:3',
-                'max:225'
-            ],
-            'tanggal_mulai' => [
+            'tanggal_mulai_spt' => [
                 'date'
             ],
-            'tanggal_selesai' => [
+            'tanggal_selesai_spt' => [
                 'date'
             ],
-            'nama_file_pdf' => [
-                'required',
-                File::types(['pdf'])->min(2)->max(2000),
-                // 'mimes:pdf',
-                // 'min:2',
-                // 'max:2000',
-                // 'file',
-            ]
+            'keperluan_tugas' => [],
+            'keterangan_tugas' => [],
+            'note' => [],
         ];
     }
 }

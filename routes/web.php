@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BagianController;
+use App\Http\Controllers\DummySptController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\KelasPerjadinController;
 use App\Http\Controllers\PangkatGolonganController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\PkaSptController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SptController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -49,8 +51,13 @@ Route::middleware(['auth'])->group(function () {
     // pkaspt
     Route::get('dokumen/pkaspt', [PkaSptController::class, 'index'])->name('pkaspt.index');
     Route::get('dokumen/pkaspt/loadData', [PkaSptController::class, 'loadData'])->name('pkaspt.loadData');
-    Route::get('dokumen/pkaspt/create_pkaspt', [PkaSptController::class, 'create_pkaspt'])->name('pkaspt.create_pkaspt');
-    Route::post('dokumen/pkaspt/store_pka', [PkaSptController::class, 'store_pka'])->name('pkaspt.store_pka');
-    Route::post('dokumen/pkaspt/store_spt', [PkaSptController::class, 'store_spt'])->name('pkaspt.store_spt');
+    Route::get('dokumen/pkaspt/create', [PkaSptController::class, 'create'])->name('pkaspt.create');
+    Route::post('dokumen/pkaspt/pka', [PkaSptController::class, 'store_pka'])->name('pkaspt.pka.store');
+    Route::match(['PUT', 'PATCH'], 'dokumen/pkaspt/pka/{id}', [PkaSptController::class, 'update_pka'])->name('pkaspt.pka.update');
+    Route::resource('dokumen/pkaspt/spt', SptController::class);
     // Route::resource('dokumen/pkaspt', PkaSptController::class);
+    // Route::match(['PUT', 'PATCH'], 'dokumen/pkaspt/spt/{id}', [PkaSptController::class, 'update_spt'])->name('pkaspt.spt.update');
+    // Route::patch('dokumen/pkaspt/spt/{id}', [PkaSptController::class, 'update_spt'])->name('pkaspt.spt.update');
+
+    // Route::resource('dummy/spt', DummySptController::class);
 });
