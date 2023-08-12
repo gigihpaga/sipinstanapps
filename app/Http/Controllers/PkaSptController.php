@@ -149,9 +149,11 @@ class PkaSptController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Pka $pka)
     {
         //
+        $data = $pka;
+        return view('pages.pkaspt.pkaspt-pka-form', compact('data'));
     }
 
     /**

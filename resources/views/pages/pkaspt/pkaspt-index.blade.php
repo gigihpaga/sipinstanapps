@@ -82,6 +82,28 @@
             </div>
         </div>
         {{-- modal end --}}
+
+        {{-- modal pdf start --}}
+        <div id="modal-pdf" data-bs-backdrop="static" class="modal fade" tabindex="-1" aria-labelledby="modal-action-label"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modal-action-label">Edit PKA</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <embed src="http://127.0.0.1:8000/dokumen/pka/pka-20230812-023533.pdf" type="">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-outline-secondary"
+                            data-bs-dismiss="modal">Close</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{-- modal pdf end --}}
     </div>
 @endsection
 

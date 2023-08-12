@@ -41,6 +41,19 @@
             border-radius: 4px;
         }
 
+        .bi::before {
+            content: "";
+            display: inline-block;
+            /* background-image: url('data:image/svg+xml,%3Csvg%20preserveAspectRatio%3D%22none%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22currentColor%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M.5%209.9a.5.5%200%200%201%20.5.5v2.5a1%201%200%200%200%201%201h12a1%201%200%200%200%201-1v-2.5a.5.5%200%200%201%201%200v2.5a2%202%200%200%201-2%202H2a2%202%200%200%201-2-2v-2.5a.5.5%200%200%201%20.5-.5z%22%20%2F%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M7.646%2011.854a.5.5%200%200%200%20.708%200l3-3a.5.5%200%200%200-.708-.708L8.5%2010.293V1.5a.5.5%200%200%200-1%200v8.793L5.354%208.146a.5.5%200%201%200-.708.708l3%203z%22%20%2F%3E%3C%2Fsvg%3E'); */
+            background-image: url('https://www.svgrepo.com/show/66745/pdf.svg');
+            /* background-image: @html_link_asset('arfa/assets/images/icons-pdf.png')
+
+        ;
+        */ background-repeat: no-repeat;
+        width: 2rem;
+        height: 2rem;
+        }
+
         /*
         * loading datatable
         * document.querySelector('.dataTables_processing').style.display = 'block'

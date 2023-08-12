@@ -52,8 +52,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('dokumen/pkaspt', [PkaSptController::class, 'index'])->name('pkaspt.index');
     Route::get('dokumen/pkaspt/loadData', [PkaSptController::class, 'loadData'])->name('pkaspt.loadData');
     Route::get('dokumen/pkaspt/create', [PkaSptController::class, 'create'])->name('pkaspt.create');
+    Route::get('dokumen/pkaspt/pka/{pka}/edit', [PkaSptController::class, 'edit'])->name('pkaspt.pka.edit');
     Route::post('dokumen/pkaspt/pka', [PkaSptController::class, 'store_pka'])->name('pkaspt.pka.store');
-    Route::match(['PUT', 'PATCH'], 'dokumen/pkaspt/pka/{id}', [PkaSptController::class, 'update_pka'])->name('pkaspt.pka.update');
+    Route::match(['PUT', 'PATCH'], 'dokumen/pkaspt/pka/{id}', [PkaSptController::class, 'pkaspt.pka.update'])->name('pkaspt.pka.update');
     Route::resource('dokumen/pkaspt/spt', SptController::class);
     // Route::resource('dokumen/pkaspt', PkaSptController::class);
     // Route::match(['PUT', 'PATCH'], 'dokumen/pkaspt/spt/{id}', [PkaSptController::class, 'update_spt'])->name('pkaspt.spt.update');

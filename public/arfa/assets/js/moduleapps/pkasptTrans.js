@@ -170,6 +170,45 @@ $(document).ready(function () {
         // initial modal
         const modalAction = new bootstrap.Modal($('#modal-action'));
 
+        // ====== button in datatable ======
+        $('#tabel').on('click', '.btn-action', function () {
+            let data = $(this).data();
+            let id = data.id;
+            let typeaction = data.typeaction;
+            let formUrl = null;
+
+            if (typeaction == 'edit_spt') {
+                formUrl = `${url}/spt/${id}/edit`;
+            } else if (typeaction == 'edit_pka') {
+                formUrl = `${url}/pka/${id}/edit`;
+            }
+
+            $.ajax({
+                type: 'GET',
+                url: formUrl,
+                // data: "data",
+                // dataType: "dataType",
+                success: function (resHtlm) {
+                    // set content modal from response
+                    $('#modal-action').find('.modal-dialog').html(resHtlm);
+                    // show modified modal
+                    modalAction.show();
+
+                    // smart wizard
+                    smartWizard();
+                    // initial modalActionOnHide
+                    modalActionOnHide();
+                    // prepare for execution save
+                    handleSubmit();
+                    initialDatePicker();
+                },
+                error: function (err) {
+                    console.log('[Log On] >> [roles-index.blade] -> [err] : ', err);
+                },
+            });
+        });
+        // ====== button in datatable ======
+
         // Smart Wizard
         function smartWizard() {
             // http://techlaboratory.net/projects/demo/jquery-smart-wizard/v6/bootstrap-modal#step-4
