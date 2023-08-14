@@ -36,4 +36,9 @@ class Spt extends Model
         // ambil id terbesar dari status history
         return $this->hasOne(SptStatusHistory::class)->latestOfMany();
     }
+
+    public function dasarTugas()
+    {
+        return $this->hasMany(DasarTugas::class);
+    }
 }

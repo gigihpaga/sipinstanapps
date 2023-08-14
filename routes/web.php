@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BagianController;
+use App\Http\Controllers\DasarTugasController;
 use App\Http\Controllers\DummySptController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\KelasPerjadinController;
@@ -56,6 +57,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('dokumen/pkaspt/pka', [PkaSptController::class, 'store_pka'])->name('pkaspt.pka.store');
     Route::match(['PUT', 'PATCH'], 'dokumen/pkaspt/pka/{id}', [PkaSptController::class, 'pkaspt.pka.update'])->name('pkaspt.pka.update');
     Route::resource('dokumen/pkaspt/spt', SptController::class);
+    Route::resource('dokumen/pkaspt/spt/dasartugas', DasarTugasController::class);
+    Route::get('dokumen/pkaspt/spt/dasartugas/{spt}/dasartugas_by_spt', [DasarTugasController::class, 'loadDataBySpt'])->name('pkaspt.spt.dasartugas.byspt');
+
     // Route::resource('dokumen/pkaspt', PkaSptController::class);
     // Route::match(['PUT', 'PATCH'], 'dokumen/pkaspt/spt/{id}', [PkaSptController::class, 'update_spt'])->name('pkaspt.spt.update');
     // Route::patch('dokumen/pkaspt/spt/{id}', [PkaSptController::class, 'update_spt'])->name('pkaspt.spt.update');

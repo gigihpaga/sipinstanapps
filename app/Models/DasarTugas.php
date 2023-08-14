@@ -11,4 +11,9 @@ class DasarTugas extends Model
 
     protected $table = 'dasar_tugas';
     protected $guarded = ['id'];
+
+    public function spt()
+    {
+        return $this->belongsTo(Spt::class);
+    }
 }

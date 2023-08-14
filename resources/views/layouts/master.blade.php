@@ -54,6 +54,26 @@
         height: 2rem;
         }
 
+        .table tbody td .table-actions {
+            /* text-align: right; */
+            text-align: center;
+        }
+
+        .table tbody td .table-actions a {
+            color: #bcc1c6;
+            display: inline-block;
+            margin-left: 8px;
+            font-size: 16px;
+        }
+
+        hr {
+            margin: 1rem 0;
+            color: inherit;
+            background-color: currentColor;
+            border: 0;
+            opacity: 0.75;
+        }
+
         /*
         * loading datatable
         * document.querySelector('.dataTables_processing').style.display = 'block'

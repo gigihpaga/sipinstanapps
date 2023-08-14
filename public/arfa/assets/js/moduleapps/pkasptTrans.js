@@ -197,10 +197,11 @@ $(document).ready(function () {
                     // smart wizard
                     smartWizard();
                     // initial modalActionOnHide
-                    modalActionOnHide();
+                    // modalActionOnHide();
                     // prepare for execution save
                     handleSubmit();
                     initialDatePicker();
+                    handleDasarTugas();
                 },
                 error: function (err) {
                     console.log('[Log On] >> [roles-index.blade] -> [err] : ', err);
@@ -257,18 +258,19 @@ $(document).ready(function () {
         }
 
         // tracking modal on hide
-        function modalActionOnHide() {
-            var myModalEl = document.getElementById('modal-action');
-            myModalEl.addEventListener('hidden.bs.modal', function (event) {
-                // console.log('modal hilang');
-                // set url has to null
-                window.location.hash = '';
-                reloadTable();
-            });
-        }
+        // function modalActionOnHide() {
+        var myModalEl = document.getElementById('modal-action');
+        myModalEl.addEventListener('hidden.bs.modal', function (event) {
+            // console.log('modal hilang');
+            // set url has to null
+            window.location.hash = '';
+            reloadTable();
+        });
+        // }
 
         // handle button add
         $('.btn-add').on('click', function () {
+            console.log('click');
             // ajax
             $.ajax({
                 type: 'GET',
@@ -284,7 +286,7 @@ $(document).ready(function () {
                     // smart wizard
                     smartWizard();
                     // initial modalActionOnHide
-                    modalActionOnHide();
+                    // modalActionOnHide();
                     // prepare for execution save
                     handleSubmit();
                     initialDatePicker();
@@ -340,8 +342,13 @@ $(document).ready(function () {
         }
 
         function reloadTable() {
-            var t = $('#tabel').DataTable();
-            t.ajax.reload();
+            let iteration = 1;
+            iteration += 1;
+            console.log('iteration reloadTable: ', iteration);
+            if (iteration > 1) {
+                var t = $('#tabel').DataTable();
+                t.ajax.reload();
+            }
         }
 
         // ========================================
@@ -398,6 +405,280 @@ $(document).ready(function () {
                 },
             });
         }
+
+        // handle === DASAR TUGAS === <<<START>>> in form edit spt
+        function handleDasarTugas() {
+            const sptId = $('#form-spt-edit').find('input[name="pka_id"]').val();
+
+            const templateForm = document.getElementById('template_tabel_dasar_pengajuan_form'); // html element
+            const templateFormEdit = document.getElementById(
+                'template_tabel_dasar_pengajuan_form_edit'
+            ); // html element
+            const templateRow = document.getElementById(
+                'template_tabel_dasar_pengajuan_format_row'
+            ); // html element
+            const templateButtonAdd = document.getElementById(
+                'template_tabel_dasar_pengajuan_button_add'
+            ); // html element
+
+            // handle row form edit
+            $('#tabel_dasar_pengajuan').on('click', '.table-actions>a', function () {
+                let data = $(this).data();
+                let id = data.id;
+                let typeaction = data.bsOriginalTitle; // "Ubah" || Hapus, kalo pake javascprint data.['data-bs-original-title']
+
+                console.log('data : ', $(this));
+                // console.log('typeAction : ', typeaction);
+
+                if (typeaction == 'Ubah') {
+                    let row = $(this).parents('tr');
+                    let kontenAsli = row.html();
+                    let kontenValueText = row.find('td:eq(0)').text();
+
+                    let templateFormEditContent = templateFormEdit.content.cloneNode(true);
+
+                    // set textValue table to textbox
+                    templateFormEditContent.querySelector('input#dasar_tugas').value =
+                        kontenValueText;
+
+                    // set textValue table to textbox
+                    templateFormEditContent.querySelector(
+                        'input[name="dasar_tugas_spt_id"]'
+                    ).value = id;
+
+                    //replace row dengan template form update
+                    row.html(templateFormEditContent);
+
+                    // simpan html row kedalam div dengan class .konten_asli, ini nanti akan di gunakan saat batalUpdate
+                    row.find('.konten_asli').html(kontenAsli);
+
+                    handleFormActionUpdate();
+                } else if (typeaction == 'Hapus') {
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#027afe',
+                        cancelButtonColor: '#ea5455',
+                        confirmButtonText: 'Yes, delete it!',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            //    ajax delete
+                            deleteDasarTugas(this.dataset['id']);
+                        }
+                    });
+                }
+            });
+
+            // handle form add
+            function handleButtonAdd() {
+                const rowAksi = $('#row_aksi_add');
+
+                $(rowAksi).on('click', 'button', function () {
+                    const templateFormContent = templateForm.content.cloneNode(true);
+
+                    $(templateFormContent).find('input[name="dasar_tugas_spt_id"]').val(sptId);
+                    $('#tabel_dasar_pengajuan tbody').append(templateFormContent);
+                    handleFormAction();
+
+                    $(rowAksi).hide();
+                });
+            }
+
+            // handle form add (simpan || batal)
+            function handleFormAction() {
+                const rowAksi = $('#row_aksi_add');
+                const btnBatal = $('button[data-aksi="bataltambah"]');
+                const btnSimpan = $('button[data-aksi="simpanDasarPengajuan"]');
+
+                $(btnBatal).on('click', function () {
+                    $(rowAksi).show();
+                    $(this).parents('tr').remove();
+                });
+
+                $(btnSimpan).on('click', function () {
+                    console.log(url);
+                    storeDasarTugas();
+                });
+            }
+
+            // handel form update (simpan/update || batal update)
+            function handleFormActionUpdate() {
+                const btnUpdate = 'button[data-aksi="ubahDasarPengajuan"]';
+                const btnBatalUpdate = 'button[data-aksi="batalupdate"]';
+
+                $('.dasar_pengajuan_form_edit').on('click', btnUpdate, function () {
+                    updateDasarTugas(this);
+                });
+
+                $('.dasar_pengajuan_form_edit').on('click', btnBatalUpdate, function () {
+                    let rowSelected = $(this).parents('tr');
+                    let kontenAsli = rowSelected.find('.konten_asli').html();
+                    rowSelected.html(kontenAsli);
+                });
+            }
+
+            // ajax pengajuan dasar
+            function loadDataDasarTugas() {
+                // const urlForm = `${url}/spt/dasartugas/${sptId}`;
+                const urlForm = `${url}/spt/dasartugas/${sptId}/dasartugas_by_spt`;
+                $.ajax({
+                    type: 'GET',
+                    url: urlForm,
+                    // data: "data",
+                    // dataType: "dataType",
+                    success: function (resData) {
+                        let arrDasarTugas = resData.data;
+                        let templateButtonAddContten = templateButtonAdd.content.cloneNode(true);
+
+                        let arrDasarTugasPopulate = arrDasarTugas.map(function (item, index) {
+                            let templateRowContent = templateRow.content.cloneNode(true);
+                            // set text
+                            $(templateRowContent).find('td:eq(0)').text(item.dasar_tugas);
+
+                            // set button Ubah dataset id & name using vanila javascipt
+                            let btnUbah = templateRowContent.querySelector(
+                                'a[data-bs-original-title="Ubah"]'
+                            );
+                            btnUbah.dataset['id'] = item.id;
+                            // btnUbah.dataset['name'] = item.dasar_tugas; // jangan dikasih ini, bikin berat html
+
+                            // set button Hapus dataset id & name using vanila javascipt
+                            let btnHapus = templateRowContent.querySelector(
+                                'a[data-bs-original-title="Hapus"]'
+                            );
+                            btnHapus.dataset['id'] = item.id;
+                            // btnHapus.dataset['name'] = item.dasar_tugas; // jangan dikasih ini, bikin berat html
+
+                            return templateRowContent;
+                        });
+
+                        // kosongkan tabel
+                        $('#tabel_dasar_pengajuan tbody').html('');
+                        // table inject button add from template
+                        $('#tabel_dasar_pengajuan tbody').append(templateButtonAddContten);
+                        // table inject data row from template and from database
+                        $('#tabel_dasar_pengajuan tbody').prepend(arrDasarTugasPopulate);
+
+                        handleButtonAdd();
+                    },
+                    error: function (err) {
+                        console.log('[Log On] >> [roles-index.blade] -> [err] : ', err);
+                    },
+                });
+            }
+
+            // execute load data
+            loadDataDasarTugas();
+
+            function storeDasarTugas() {
+                //  dokumen/pkaspt/spt/dasartugas/create
+                const formTarget = document.getElementById('dasar_pengajuan_form');
+                const formData = new FormData(formTarget);
+                console.log('form data on store dasar tugas : ', formData);
+                const urlForm = `${url}/spt/dasartugas`;
+                $.ajax({
+                    type: 'POST',
+                    url: urlForm,
+                    data: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    },
+                    processData: false,
+                    contentType: false,
+                    // dataType: "dataType",
+                    success: function (response) {
+                        modules_toastr.notif('Info', response.message, 'success');
+                        // disini load data dasar tugas
+                        loadDataDasarTugas();
+                    },
+                    error: function (resErr) {
+                        // get list field error from json response
+                        let listFieldError = resErr.responseJSON?.errors;
+                        // reset form
+                        $(formTarget).find('.text-danger.text-small').remove();
+                        $(formTarget).find('.form-control').removeClass('is-invalid');
+                        // $(formTarget).find('.form-control').addClass("is-valid")
+                        if (listFieldError) {
+                            // looping key object listFieldError
+                            for (const [key, value] of Object.entries(listFieldError)) {
+                                //   find field element form with object key
+                                $(`[name=${key}]`)
+                                    .addClass('is-invalid')
+                                    .parent()
+                                    .append(`<span class="text-danger text-small">${value}</span>`);
+                            }
+                        }
+                    },
+                });
+            }
+
+            function updateDasarTugas(elmButtonUpdate) {
+                const rowSelected = $(elmButtonUpdate).parents('tr')[0];
+                const formTarget = rowSelected.querySelector('form.dasar_pengajuan_form_edit'); // using jquery
+                const id = formTarget.querySelector('input[name="dasar_tugas_spt_id"]').value;
+
+                const formData = new FormData(formTarget);
+                const urlForm = `${url}/spt/dasartugas/${id}`;
+                $.ajax({
+                    type: 'POST',
+                    url: urlForm,
+                    data: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    },
+                    processData: false,
+                    contentType: false,
+                    // dataType: "dataType",
+                    success: function (response) {
+                        modules_toastr.notif('Info', response.message, 'success');
+                        // disini load data dasar tugas
+                        loadDataDasarTugas();
+                    },
+                    error: function (resErr) {
+                        // get list field error from json response
+                        let listFieldError = resErr.responseJSON?.errors;
+                        // reset form
+                        $(formTarget).find('.text-danger.text-small').remove();
+                        $(formTarget).find('.form-control').removeClass('is-invalid');
+                        // $(formTarget).find('.form-control').addClass("is-valid")
+                        if (listFieldError) {
+                            // looping key object listFieldError
+                            for (const [key, value] of Object.entries(listFieldError)) {
+                                //   find field element form with object key
+                                $(`[name=${key}]`)
+                                    .addClass('is-invalid')
+                                    .parent()
+                                    .append(`<span class="text-danger text-small">${value}</span>`);
+                            }
+                        }
+                    },
+                });
+            }
+
+            function deleteDasarTugas(id) {
+                // jika confirm yes, jalankan ajax
+                $.ajax({
+                    type: 'DELETE',
+                    url: `${url}/spt/dasartugas/${id}`,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    },
+                    success: function (response) {
+                        // response berhasil
+                        loadDataDasarTugas();
+                        if (response.status == 'success') {
+                            modules_toastr.notif('Info', response.message, 'success');
+                        }
+                    },
+                    error: function (err) {
+                        // console.log('Pesan erron: ,' err)
+                    },
+                });
+            }
+        }
+        // handle === DASAR TUGAS === <<<END>>> in form edit spt
 
         // ========== end function
     })();

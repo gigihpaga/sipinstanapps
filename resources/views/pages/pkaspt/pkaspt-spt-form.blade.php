@@ -87,10 +87,26 @@
                     </div>
                 </div>
             </div>
-
-            <br>
-
         </form>
+        {{-- input dasar --}}
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="mb-1">
+                    <h4>Dasar Pengajuan</h4>
+                    {{-- <span>haha</span> --}}
+                    <hr class="bg-danger border-2 border-top">
+                </div>
+            </div>
+        </div>
+        <div class="dt-responsive">
+            <table id="tabel_dasar_pengajuan" class="table table-inverse table-hover" width="100%">
+                <tbody>
+                    {{-- ajax content here --}}
+                </tbody>
+            </table>
+        </div>
+        {{-- input dasar --}}
+        <br>
     </div>
     <div class="modal-footer">
         {{-- <button class="btn btn-primary" id="prev-btn-modal">Previous</button>
@@ -106,3 +122,71 @@
         </button>
     </div>
 </div>
+
+<template id='template_tabel_dasar_pengajuan_button_add'>
+    <tr id="row_aksi_add" style="" class="p-1">
+        <td colspan="3"> <button type="button" class="btn btn-sm btn-primary">
+                <span class="fa fa-plus"></span>
+            </button>
+        </td>
+    </tr>
+</template>
+
+<template id='template_tabel_dasar_pengajuan_format_row'>
+    <tr>
+        <td style="width: 90%;"></td>
+        <td style="width: 10%">
+            <div class="table-actions">
+                <a class="" data-bs-toggle="tooltip" data-bs-original-title="Ubah" href="javascript:;"
+                    data-id="" data-name="">
+                    <i class="ti-pencil"></i>
+                </a>
+                <a class="ml-1" data-bs-toggle="tooltip" data-bs-original-title="Hapus" href="javascript:;"
+                    data-id="" data-name="">
+                    <i class="ti-trash"></i>
+                </a>
+            </div>
+        </td>
+    </tr>
+</template>
+
+<template id='template_tabel_dasar_pengajuan_form'>
+    <tr>
+        <td style="width: 90%">
+            <form id="dasar_pengajuan_form" action="javascript:;" method="POST">
+                @csrf
+                <input type="hidden" name="dasar_tugas_spt_id" value="">
+                <div class="form-group mb-2">
+                    <label for="dasar_tugas"></label>
+                    <input type="text" class="form-control" name="dasar_tugas" id="dasar_tugas" required>
+                    <span class="help-block"></span>
+                </div>
+                <button type="submit" class="btn btn-sm btn-primary"
+                    data-aksi="simpanDasarPengajuan">Simpan</button>
+                <button type="button" class="btn btn-sm btn-danger" data-aksi="bataltambah">Batal</button>
+            </form>
+        </td>
+        {{-- <td style="width: 10%">&nbsp;</td> --}}
+    </tr>
+</template>
+
+<template id='template_tabel_dasar_pengajuan_form_edit'>
+    <td style="width: 90%">
+        <form class="dasar_pengajuan_form_edit" action="javascript:;" method="POST">
+            @csrf
+            @method('PATCH')
+            <input type="hidden" name="dasar_tugas_spt_id" data-id="" value="">
+            <div class="form-group mb-2">
+                <label for="dasar_tugas"></label>
+                <input type="text" class="form-control" name="dasar_tugas" id="dasar_tugas" value=""
+                    required>
+                <span class="help-block"></span>
+            </div>
+            <button type="submit" class="btn btn-sm btn-primary" data-aksi="ubahDasarPengajuan">Simpan</button>
+            <button type="button" class="btn btn-sm btn-danger" data-aksi="batalupdate">Batal</button>
+        </form>
+    </td>
+    <td style="width: 10%">
+        <div class="konten_asli" style="display:none"></div>
+    </td>
+</template>
