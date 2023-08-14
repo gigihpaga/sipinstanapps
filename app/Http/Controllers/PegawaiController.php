@@ -96,6 +96,19 @@ class PegawaiController extends Controller
     public function edit(Pegawai $pegawai)
     {
         //
+        $data = $pegawai;
+        $jabatan = Jabatan::get();
+        $pangkatGolongan = PangkatGolongan::get();
+        $kelasPerjadin = KelasPerjadin::get();
+        return view(
+            'pages.pegawai.pegawai-form',
+            [
+                'data' => $data,
+                'jabatan' => $jabatan,
+                'pangkat_golongan' => $pangkatGolongan,
+                'kelas_perjadin' => $kelasPerjadin
+            ]
+        );
     }
 
     /**
@@ -105,9 +118,20 @@ class PegawaiController extends Controller
      * @param  \App\Models\Pegawai  $pegawai
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Pegawai $pegawai)
+    public function update(PegawaiRequest $request, Pegawai $pegawai)
     {
         //
+        $pegawai->nip = $request->nip;
+        $pegawai->nama = $request->nama;
+        $pegawai->jabatan_id = $request->jabatan_id;
+        $pegawai->pangkat_golongan_id = $request->pangkat_golongan_id;
+        $pegawai->kelas_perjadin_id = $request->kelas_perjadin_id;
+        $data =  $pegawai->save();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Update data successfully',
+            'data' => $data
+        ]);
     }
 
     /**

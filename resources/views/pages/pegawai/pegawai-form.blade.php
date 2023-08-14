@@ -1,7 +1,7 @@
 @php
     if ($data->id) {
         $action = route('pegawai.update', $data->id);
-        $method = 'PUT';
+        $method = 'PATCH';
         $titleButton = 'Save Change';
     } else {
         $action = route('pegawai.store');
@@ -23,7 +23,7 @@
                 <div class="col-md-12">
                     <div class="mb-3">
                         <label for="nip" class="form-label">NIP</label>
-                        <input type="text" value="{{ $data->nama }}" placeholder="NIP" name="nip"
+                        <input type="text" value="{{ $data->nip }}" placeholder="NIP" name="nip"
                             class="form-control" id="nip" required>
                     </div>
                 </div>
@@ -49,7 +49,8 @@
                 <select class="js-example-basic-single form-select " id="jabatan" name="jabatan_id">
                     <option></option>
                     @foreach ($jabatan as $j)
-                        <option value="{{ $j->id }}">{{ $j->nama }}</option>
+                        <option @if ($j->id == $data->jabatan_id) selected @endif value="{{ $j->id }}">
+                            {{ $j->nama }}</option>
                     @endforeach
                 </select>
             </div>
@@ -57,8 +58,9 @@
                 <label for="pangkat_golongan" class="form-label">Pangkat Golongan</label>
                 <select class="js-example-basic-single form-select " id="pangkat_golongan" name="pangkat_golongan_id">
                     <option></option>
-                    @foreach ($pangkat_golongan as $j)
-                        <option value="{{ $j->id }}">{{ $j->nama }}</option>
+                    @foreach ($pangkat_golongan as $p)
+                        <option @if ($p->id == $data->pangkat_golongan_id) selected @endif value="{{ $p->id }}">
+                            {{ $p->nama }}</option>
                     @endforeach
                 </select>
             </div>
@@ -67,7 +69,8 @@
                 <select class="js-example-basic-single form-select " id="kelas_perjadin" name="kelas_perjadin_id">
                     <option></option>
                     @foreach ($kelas_perjadin as $k)
-                        <option value="{{ $k->id }}">{{ $k->kategori }}</option>
+                        <option @if ($k->id == $data->kelas_perjadin_id) selected @endif value="{{ $k->id }}">
+                            {{ $k->kategori }}</option>
                     @endforeach
                 </select>
             </div>
