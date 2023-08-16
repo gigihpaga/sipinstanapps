@@ -46,7 +46,7 @@
             </div>
             <div class="col-md-12 mb-3">
                 <label for="jabatan" class="form-label">Jabatan</label>
-                <select class="js-example-basic-single form-select " id="jabatan" name="jabatan_id">
+                <select class="js-example-basic-single form-select form-select-sm" id="jabatan" name="jabatan_id">
                     <option></option>
                     @foreach ($jabatan as $j)
                         <option @if ($j->id == $data->jabatan_id) selected @endif value="{{ $j->id }}">
@@ -56,7 +56,8 @@
             </div>
             <div class="col-md-12 mb-3">
                 <label for="pangkat_golongan" class="form-label">Pangkat Golongan</label>
-                <select class="js-example-basic-single form-select " id="pangkat_golongan" name="pangkat_golongan_id">
+                <select class="js-example-basic-single form-select form-select-sm" id="pangkat_golongan"
+                    name="pangkat_golongan_id">
                     <option></option>
                     @foreach ($pangkat_golongan as $p)
                         <option @if ($p->id == $data->pangkat_golongan_id) selected @endif value="{{ $p->id }}">
@@ -66,7 +67,8 @@
             </div>
             <div class="col-md-12 mb-3">
                 <label for="kelas_perjadin" class="form-label">Kelas Perjadin</label>
-                <select class="js-example-basic-single form-select " id="kelas_perjadin" name="kelas_perjadin_id">
+                <select class="js-example-basic-single form-select form-select-sm" id="kelas_perjadin"
+                    name="kelas_perjadin_id">
                     <option></option>
                     @foreach ($kelas_perjadin as $k)
                         <option @if ($k->id == $data->kelas_perjadin_id) selected @endif value="{{ $k->id }}">
@@ -84,3 +86,11 @@
         </div>
     </form>
 </div>
+
+<script>
+    $('.js-example-basic-single').select2({
+        placeholder: 'Select an option',
+        theme: 'bootstrap-5',
+        dropdownParent: $("#modal-action")
+    });
+</script>

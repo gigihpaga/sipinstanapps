@@ -99,10 +99,6 @@
                     modalAction.show()
                     // prepare for execution update
                     handleActionSubmit()
-                    $('.js-example-basic-single').select2({
-                        placeholder: 'Select an option',
-                        theme: 'bootstrap-5'
-                    });
                 },
                 error: function(err) {
                     console.log('[Log On] >> [roles-index.blade] -> [err] : ', err);
