@@ -11,4 +11,9 @@ class Anggota extends Model
 
     protected $table = 'anggota';
     protected $guarded = ['id'];
+
+    public function pegawai()
+    {
+        return $this->belongsTo(Pegawai::class, 'pegawai_id', 'id');
+    }
 }

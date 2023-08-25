@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\BagianController;
 use App\Http\Controllers\DasarTugasController;
 use App\Http\Controllers\DummySptController;
@@ -60,6 +61,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('dokumen/pkaspt/spt', SptController::class);
     Route::resource('dokumen/pkaspt/spt/dasartugas', DasarTugasController::class);
     Route::get('dokumen/pkaspt/spt/dasartugas/{spt}/dasartugas_by_spt', [DasarTugasController::class, 'loadDataBySpt'])->name('pkaspt.spt.dasartugas.byspt');
+    Route::resource('dokumen/pkaspt/spt/anggota', AnggotaController::class);
+    Route::get('dokumen/pkaspt/spt/{spt}/anggota/anggota_by_spt', [AnggotaController::class, 'loadDataBySpt'])->name('pkaspt.spt.anggota.byspt');
 
     // Route::resource('dokumen/pkaspt', PkaSptController::class);
     // Route::match(['PUT', 'PATCH'], 'dokumen/pkaspt/spt/{id}', [PkaSptController::class, 'update_spt'])->name('pkaspt.spt.update');
