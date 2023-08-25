@@ -24,13 +24,13 @@
 
 .table tbody td .table-actions {
     /* text-align: right; */
-    text-align: center;
+    text-align: left;
 }
 
 .table tbody td .table-actions a {
     color: #bcc1c6;
     display: inline-block;
-    margin-left: 8px;
+    margin-right: 8px;
     font-size: 16px;
 }
 
@@ -70,4 +70,108 @@ div.dataTables_processing > div:last-child {
     .select2-results__option {
     font-size: 0.8rem;
 }
+
+/* custom scrollbar start */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::webkiscr ::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #f5f5f5;
+}
+
+::-webkit-scrollbar-thumb {
+    /* background: linear-gradient(#642bff, #ff22e6); */
+    /* background: linear-gradient(95deg, #d1e6ff, rgb(164 200 255 / 70%)); */
+    background: linear-gradient(95deg, #acb0b6, rgb(143 159 182 / 70%));
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+}
+/* custom scrollbar end */
+
+/* custom animation swal2 start, NOTE: swal2 custom css here can work if you not use sweetalert2.all.min.js, but using [1]. sweetalert2.css and [2]. sweetalert2.min.js*/
+.swal2-show {
+    animation: swal2-show 0.25s ease-out;
+    -webkit-animation: swal2-show 0.25s ease-out;
+}
+
+@-webkit-keyframes swal2-show {
+    0% {
+        transform: scale(0.7);
+        -webkit-transform: scale(0.7);
+        -moz-transform: scale(0.7);
+        -ms-transform: scale(0.7);
+        -o-transform: scale(0.7);
+        opacity: 0%;
+    }
+    80% {
+        transform: scale(0.95);
+        -webkit-transform: scale(0.95);
+        -moz-transform: scale(0.95);
+        -ms-transform: scale(0.95);
+        -o-transform: scale(0.95);
+        opacity: 70%;
+    }
+    100% {
+        transform: scale(1);
+        -webkit-transform: scale(1);
+        -moz-transform: scale(1);
+        -ms-transform: scale(1);
+        -o-transform: scale(1);
+        opacity: 100%;
+    }
+}
+
+@keyframes swal2-show {
+    0% {
+        transform: scale(0.7);
+        -webkit-transform: scale(0.7);
+        -moz-transform: scale(0.7);
+        -ms-transform: scale(0.7);
+        -o-transform: scale(0.7);
+        opacity: 0%;
+    }
+    80% {
+        transform: scale(0.95);
+        -webkit-transform: scale(0.95);
+        -moz-transform: scale(0.95);
+        -ms-transform: scale(0.95);
+        -o-transform: scale(0.95);
+        opacity: 70%;
+    }
+    100% {
+        transform: scale(1);
+        -webkit-transform: scale(1);
+        -moz-transform: scale(1);
+        -ms-transform: scale(1);
+        -o-transform: scale(1);
+        opacity: 100%;
+    }
+}
+/* custom animation swal2 start */
+
+/* loading table start */
+.table-loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    background: #000000;
+    opacity: 0.3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.table-loading-inner {
+    width: 100%;
+    height: 100%;
+}
+/* loading table end */
 
