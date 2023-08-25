@@ -47,6 +47,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('master/bagian', BagianController::class);
     Route::resource('master/kelas_perjadin', KelasPerjadinController::class);
     Route::resource('master/pangkat_golongan', PangkatGolonganController::class);
+    Route::get('master/pegawai/loadData', [PegawaiController::class, 'loadData'])->name('pegawai.loadData');
     Route::resource('master/pegawai', PegawaiController::class);
 
     // pkaspt

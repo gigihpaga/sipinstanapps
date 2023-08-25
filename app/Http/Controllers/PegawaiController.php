@@ -34,6 +34,26 @@ class PegawaiController extends Controller
         return $dataTable->render('pages.pegawai.pegawai-index');
     }
 
+    public function loadData(Request $request)
+    {
+        $response = self::$response;
+
+        $pegawai = Pegawai::oldest();
+
+
+        // example : http://127.0.0.1:8000/master/pegawai/loadData?id=3
+        if ($request->id) {
+            $pegawai->where('id', $request->id);
+        }
+
+        $data = $pegawai->get();
+
+        $response['success'] = true;
+        $response['data'] = $data;
+
+        return response()->json($response);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
