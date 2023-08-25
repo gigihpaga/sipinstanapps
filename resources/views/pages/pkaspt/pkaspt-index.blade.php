@@ -11,6 +11,9 @@
     <link href="https://cdn.jsdelivr.net/npm/smartwizard@6/dist/css/smart_wizard_all.min.css" rel="stylesheet"
         type="text/css" />
     <link href="{{ asset('arfa/vendor/bootstrap-datepicker/css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('arfa/vendor/select2-bootstrap-5-theme/select2-bootstrap-5-theme.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('arfa/vendor/select2/css/select2.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('arfa/vendor/sweetalert2/sweetalert2.css') }}" rel="stylesheet" />
 @endpush
 
 @section('content')
@@ -74,7 +77,7 @@
         {{-- modal start --}}
         <div id="modal-action" data-bs-backdrop="static" class="modal fade" tabindex="-1"
             aria-labelledby="modal-action-label" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl">
                 {{--   modal-dialog-scrollable  --}}
                 {{-- <-- modal-lg--> --}}
                 {{-- modal-form --}}
@@ -117,7 +120,7 @@
     {{-- <script defer src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script> --}}
     {{-- <script defer src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script> --}}
     <script src="https://cdn.datatables.net/plug-ins/1.10.16/dataRender/ellipsis.js"></script>
-    <script src="{{ asset('arfa/vendor/sweetalert2/sweetalert2.all.min.js') }}"></script>
+    <script src="{{ asset('arfa/vendor/sweetalert2/sweetalert2.js') }}"></script>
     <script src="{{ asset('arfa/vendor/izitoast/js/iziToast.min.js') }}"></script>
     <script src="{{ asset('arfa/assets/js/pages/datatables.min.js') }}"></script>
     <script src="{{ asset('arfa/assets/js/pages/element-ui.min.js') }}"></script>
@@ -130,6 +133,7 @@
     {{-- {{ $dataTable->scripts() }} --}}
     <script src="https://cdn.jsdelivr.net/npm/smartwizard@6/dist/js/jquery.smartWizard.min.js" type="text/javascript">
     </script>
+    <script src="{{ asset('arfa/vendor/select2/js/select2.min.js') }}"></script>
 @endpush
 
 @push('js_page')
