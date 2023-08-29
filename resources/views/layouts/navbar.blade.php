@@ -10,7 +10,19 @@
           </a>
       </div>
       <div class="sidebar-header">
-          <div class="text">SIP INSTAN</div>
+          <div class="sidebar-title">
+              <span class="image">
+                <a href="/">
+                    <img src="{{asset("favicon.ico")}}" alt="logo">
+                </a>
+              </span>
+
+              <div class="sidebar-title-text text">
+                  <span class="title-apps">pesan instan</span>
+                  <span class="descriptions-apps">pengawasan inspektorat</span>
+                  <span class="descriptions-apps">magetan</span>
+              </div>
+          </div>
           <div class="close-sidebar action-toggle">
               <i class="ti-close"></i>
           </div>

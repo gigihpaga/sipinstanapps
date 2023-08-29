@@ -144,7 +144,53 @@ body {
     justify-content: space-between;
     align-items: center;
     margin: 20px 20px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
+
+/* ===== custom-paga ===== start */
+.main-sidebar .sidebar-header .sidebar-title {
+    display: flex;
+    align-items: center;
+}
+
+body.dark .main-sidebar .sidebar-header .sidebar-title .sidebar-title-text.text{
+    color: #b8c2cc;
+}
+
+.main-sidebar .sidebar-header .sidebar-title img {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    -ms-border-radius: 6px;
+    -o-border-radius: 6px;
+}
+
+.sidebar-header .sidebar-title .sidebar-title-text {
+    display: flex;
+    flex-direction: column;
+    font-size: 18px;
+    line-height: 30px;
+    text-align: left;
+    margin: 0px 10px;
+    transition: all 0.4s ease;
+}
+
+.sidebar-title-text .title-apps {
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.sidebar-title-text .descriptions-apps {
+    text-transform: capitalize;
+    font-size: 9px;
+    font-weight: 500;
+    line-height: 12px;
+}
+/* ===== custom-paga =====  end */
 
 .collapse-sidebar .main-sidebar {
     width: 80px;

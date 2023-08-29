@@ -24,7 +24,7 @@
     @stack('css_page')
     <!-- end CSS for this page only -->
 
-    <link rel="stylesheet" href="{{ asset('arfa/assets/css/style.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('arfa/assets/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('arfa/assets/css/bootstrap-override.min.css') }}">
     <link rel="stylesheet" id="theme-color" href="{{ asset('arfa/assets/css/dark.min.css') }}">
     <link rel="stylesheet" href="{{ asset('arfa/assets/css/custom.css') }}">
