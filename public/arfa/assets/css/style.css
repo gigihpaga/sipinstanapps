@@ -143,10 +143,11 @@ body {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    margin: 20px 20px;
+    margin: 18px 18px;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    padding: 2px 2px;
 }
 
 /* ===== custom-paga ===== start */
@@ -160,8 +161,8 @@ body.dark .main-sidebar .sidebar-header .sidebar-title .sidebar-title-text.text{
 }
 
 .main-sidebar .sidebar-header .sidebar-title img {
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
     border-radius: 6px;
     -webkit-border-radius: 6px;
     -moz-border-radius: 6px;
@@ -172,7 +173,7 @@ body.dark .main-sidebar .sidebar-header .sidebar-title .sidebar-title-text.text{
 .sidebar-header .sidebar-title .sidebar-title-text {
     display: flex;
     flex-direction: column;
-    font-size: 18px;
+    font-size: 16px;
     line-height: 30px;
     text-align: left;
     margin: 0px 10px;
