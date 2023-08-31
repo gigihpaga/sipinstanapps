@@ -28,8 +28,8 @@
                 <div class="col-md-6 mb-3">
                     <label for="sifatpenugasan" class="form-label">Sifat Tugas</label>
                     <select class="js-example-basic-single form-select " id="sifatpenugasan" name="sifat_tugas">
-                        <option value="PKPT">PKPT</option>
-                        <option value="Non-PKPT">Non-PKPT</option>
+                        <option value="PKPT" @if ($data->sifat_tugas == 'PKPT') selected @endif>PKPT</option>
+                        <option value="Non-PKPT"  @if ($data->sifat_tugas == 'Non-PKPT') selected @endif>Non-PKPT</option>
                     </select>
                 </div>
                 <div class="col-md-6">
@@ -146,8 +146,8 @@
             <button class="btn btn-success" onclick="onFinish()">Finish</button>
             <button class="btn btn-secondary" onclick="onCancel()">Cancel</button> --}}
         <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-        <button id="save-spt" type="button" class="btn btn-sm btn-primary" data-bs-toggle="tooltip"
-            {{-- data-bs-placement="top" title="{{ $titleButton }}" --}} data-bs-placement="top" title="Simpan, lanjut ke SPT" {{-- data-bs-original-title="{{ $titleButton }}"> --}}
+        <button id="update-spt" type="button" class="btn btn-sm btn-primary" data-bs-toggle="tooltip"
+            {{-- data-bs-placement="top" title="{{ $titleButton }}" --}} data-bs-placement="top" title="Simpan Perubahan" {{-- data-bs-original-title="{{ $titleButton }}"> --}}
             data-bs-original-title="">
             <i class="ti-save"></i>
             &nbsp;Simpan

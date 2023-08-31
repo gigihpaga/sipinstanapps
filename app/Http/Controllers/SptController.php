@@ -74,7 +74,7 @@ class SptController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Spt $spt)
+    public function update(SptRequest $request, Spt $spt)
     {
         //
         $sptId = $spt->id;
@@ -82,6 +82,7 @@ class SptController extends Controller
         $tanggal_selesai_formated = Carbon::createFromFormat('d-m-Y', $request->tanggal_selesai)->format('Y-m-d');
 
         $spt->sifat_tugas = $request->sifat_tugas;
+        $spt->status_buat = '1'; // status_buat = 1. 'Selesai'
         $spt->nomor_pengajuan = $request->nomor_pengajuan;
         $spt->lama_penugasan = $request->lama_penugasan;
         $spt->tanggal_mulai = $tanggal_mulai_formated;
@@ -91,12 +92,17 @@ class SptController extends Controller
         $spt->note = $request->note;
         $spt->save();
         if ($spt) {
-            SptStatusHistory::create(['spt_id' => $sptId, 'status' => '1', 'status_dilihat' => 'N', 'created_by' => Auth::user()->id]);
+            $dataHistory = SptStatusHistory::where('spt_id', $sptId)->get();
+            if ($dataHistory->count() > 0) {
+                SptStatusHistory::create(['spt_id' => $sptId, 'status' => '3', 'status_dilihat' => 'N', 'created_by' => Auth::user()->id]);
+            } else {
+                SptStatusHistory::create(['spt_id' => $sptId, 'status' => '1', 'status_dilihat' => 'N', 'created_by' => Auth::user()->id]);
+            }
         }
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Update data successfully yeeees',
+            'message' => 'Update data successfully',
         ]);
     }
 

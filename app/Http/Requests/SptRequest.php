@@ -30,20 +30,24 @@ class SptRequest extends FormRequest
                 'min:3',
                 'max:225'
             ],
-            'sifat_penugasan' => [
+            'sifat_tugas' => [
                 'required',
             ],
             'lama_penugasan' => [
                 'required',
                 'numeric'
             ],
-            'tanggal_mulai_spt' => [
+            'tanggal_mulai' => [
+                'required',
                 'date'
             ],
-            'tanggal_selesai_spt' => [
+            'tanggal_selesai' => [
+                'required',
                 'date'
             ],
-            'keperluan_tugas' => [],
+            'keperluan_tugas' => [
+                'required',
+            ],
             'keterangan_tugas' => [],
             'note' => [],
         ];

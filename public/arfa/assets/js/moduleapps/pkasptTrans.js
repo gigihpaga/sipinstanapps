@@ -18,6 +18,7 @@ $(document).ready(function () {
         ];
 
         const myModalEl = document.getElementById('modal-action');
+        // tracking modal on hide
         myModalEl.addEventListener('hidden.bs.modal', function (event) {
             // console.log('modal hilang');
             // set url has to null
@@ -162,6 +163,31 @@ $(document).ready(function () {
             return Math.floor(Math.random() * Date.now()).toString(36);
         }
 
+        // format from dd-mm-yyyy to yyyy-mm-dd
+        function dateFormatIndoToGlobal(htmlForm, stringTarget) {
+            /** change format from dd-mm-yyyy to yyyy-mm-dd
+             * example :
+             * let formTarget = document.getElementById('form-spt-edit');
+             * dateFormatIndoToGlobal(formTarget, 'input#tanggalmulaispt')
+             */
+            try {
+                let tanggal = $(htmlForm)
+                    .find(stringTarget)
+                    .datepicker('option', 'dateFormat', 'dd-mm-yyyy');
+
+                let tanggalArray = tanggal.val().split('-');
+                let date = tanggalArray[0];
+                let month = tanggalArray[1];
+                let year = tanggalArray[2];
+
+                tanggal = moment(`${year}-${month}-${date}`).format('YYYY-MM-DD');
+                return tanggal;
+            } catch (error) {
+                console.log('error', error);
+                return 'Invalid Date';
+            }
+        }
+
         var table = $('#tabel').DataTable({
             scrollCollapse: true,
             processing: true,
@@ -230,19 +256,58 @@ $(document).ready(function () {
                 // dataType: "dataType",
                 success: function (resHtlm) {
                     // set content modal from response
-                    $('#modal-action').find('.modal-dialog').html(resHtlm);
+                    let modRes = $('#modal-action').find('.modal-dialog').html(resHtlm);
+
+                    if (typeaction == 'edit_spt') {
+                        // get tanggalMulaiSpt
+                        let tanggalMulaiSpt = modRes.find('input#tanggalmulaispt').val();
+                        // get tanggalSelesaiSpt
+                        let tanggalSelesaiSpt = modRes.find('input#tanggalselesaispt').val();
+                        // formatdate tanggalMulaiSpt yyyy-mm-dd to dd-mm-yyyy
+                        modRes
+                            .find('input#tanggalmulaispt')
+                            .val(
+                                tanggalMulaiSpt ? moment(tanggalMulaiSpt).format('DD-MM-YYYY') : ''
+                            );
+                        // formatdate tanggalSelesaiSpt yyyy-mm-dd to dd-mm-yyyy
+                        modRes
+                            .find('input#tanggalselesaispt')
+                            .val(
+                                tanggalSelesaiSpt
+                                    ? moment(tanggalSelesaiSpt).format('DD-MM-YYYY')
+                                    : ''
+                            );
+                    } else if (typeaction == 'edit_pka') {
+                        // get tanggalMulaiPka
+                        let tanggalMulaiPka = modRes.find('input#tanggalmulaipka').val();
+                        // get tanggalSelesaiPka
+                        let tanggalSelesaiPka = modRes.find('input#tanggalselesaipka').val();
+                        // formatdate tanggalMulaiPka yyyy-mm-dd to dd-mm-yyyy
+                        modRes
+                            .find('input#tanggalmulaipka')
+                            .val(
+                                tanggalMulaiPka ? moment(tanggalMulaiPka).format('DD-MM-YYYY') : ''
+                            );
+                        // formatdate tanggalSelesaiPka yyyy-mm-dd to dd-mm-yyyy
+                        modRes
+                            .find('input#tanggalselesaipka')
+                            .val(
+                                tanggalSelesaiPka
+                                    ? moment(tanggalSelesaiPka).format('DD-MM-YYYY')
+                                    : ''
+                            );
+                    }
                     // show modified modal
                     modalAction.show();
-
-                    // smart wizard
-                    smartWizard();
-                    // initial modalActionOnHide
-                    // modalActionOnHide();
-                    // prepare for execution save
-                    handleSubmit();
+                    // initial datePicker
                     initialDatePicker();
-                    handleDasarTugas();
-                    handleAnggota();
+                    // prepare for execution save
+                    if (typeaction == 'edit_spt') {
+                        handleUpdateSpt();
+                        handleDasarTugas();
+                        handleAnggota();
+                    } else if (typeaction == 'edit_pka') {
+                    }
                 },
                 error: function (err) {
                     console.log('[Log On] >> [roles-index.blade] -> [err] : ', err);
@@ -297,8 +362,6 @@ $(document).ready(function () {
             // let f_action = $('#form-action');
             // console.log('f_action : ', f_action);
         }
-
-        // tracking modal on hide
 
         // handle button add
         $('.btn-add').on('click', function () {
@@ -423,6 +486,59 @@ $(document).ready(function () {
                         }
                     }
                 },
+            });
+        }
+
+        function onUpdate(targetForm, formData, elmButton) {
+            const formTarget = targetForm;
+            const urlForm = formTarget.getAttribute('action');
+            elmButton.button('loading');
+
+            $.ajax({
+                type: 'POST',
+                url: urlForm,
+                data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                },
+                processData: false,
+                contentType: false,
+                // dataType: "dataType",
+                success: function (response) {
+                    modules_toastr.notif('Info', response.message, 'success');
+                    modalAction.hide();
+                },
+                error: function (resErr) {
+                    // get list field error from json response
+                    let listFieldError = resErr.responseJSON?.errors;
+                    // reset form
+                    elmButton.button('reset');
+                    $(formTarget).find('.text-danger.text-small').remove();
+                    $(formTarget).find('.form-control').removeClass('is-invalid');
+                    // $(formTarget).find('.form-control').addClass("is-valid")
+                    if (listFieldError) {
+                        // looping key object listFieldError
+                        for (const [key, value] of Object.entries(listFieldError)) {
+                            //   find field element form with object key
+                            $(`[name=${key}]`)
+                                .addClass('is-invalid')
+                                .parent()
+                                .append(`<span class="text-danger text-small">${value}</span>`);
+                        }
+                    }
+                },
+            }).done(function (data) {
+                elmButton.button('reset');
+            });
+        }
+
+        function handleUpdateSpt() {
+            $('#update-spt').on('click', function (e) {
+                let formTarget = document.getElementById('form-spt-edit');
+                let formData = new FormData(formTarget);
+                let elmButton = $(this);
+                // send ajax
+                onUpdate(formTarget, formData, elmButton);
             });
         }
 
