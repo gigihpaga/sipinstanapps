@@ -56,8 +56,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('dokumen/pkaspt/loadData', [PkaSptController::class, 'loadData'])->name('pkaspt.loadData');
     Route::get('dokumen/pkaspt/create', [PkaSptController::class, 'create'])->name('pkaspt.create');
     Route::get('dokumen/pkaspt/pka/{pka}/edit', [PkaSptController::class, 'edit'])->name('pkaspt.pka.edit');
+    Route::get('dokumen/pkaspt/pka/{id}/file_pdf', [PkaSptController::class, 'filePdf'])->name('pkaspt.pka.filepdf');
+    // Route::get('dokumen/pkaspt/pka/{id}/view_pdf_test', [PkaSptController::class, 'viewPdf_test'])->name('pkaspt.pka.viewpdf_2'); // tidak ada button untuk ke controller ini, hanya bisa langsung di panggil via url
     Route::post('dokumen/pkaspt/pka', [PkaSptController::class, 'store_pka'])->name('pkaspt.pka.store');
-    Route::match(['PUT', 'PATCH'], 'dokumen/pkaspt/pka/{id}', [PkaSptController::class, 'pkaspt.pka.update'])->name('pkaspt.pka.update');
+    Route::match(['PUT', 'PATCH'], 'dokumen/pkaspt/pka/{id}', [PkaSptController::class, 'update'])->name('pkaspt.pka.update');
     Route::resource('dokumen/pkaspt/spt', SptController::class);
     Route::resource('dokumen/pkaspt/spt/dasartugas', DasarTugasController::class);
     Route::get('dokumen/pkaspt/spt/dasartugas/{spt}/dasartugas_by_spt', [DasarTugasController::class, 'loadDataBySpt'])->name('pkaspt.spt.dasartugas.byspt');

@@ -10,8 +10,9 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 // use Yajra\DataTables\DataTables;
-
 use Yajra\DataTables\Facades\DataTables;
+// use PDF;
+// use Barryvdh\DomPDF\Facade\Pdf;
 
 class PkaSptController extends Controller
 {
@@ -163,9 +164,52 @@ class PkaSptController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PkaRequest $request, $id)
     {
         //
+        $model = Pka::where('id', $id)->firstOrFail();
+        $oldFileName = $model->nama_file_pdf;
+        $oldFilePath = public_path('dokumen\\pka\\' . $oldFileName);
+
+        /** Handle file from client to upload
+         * 1. get file upload user for save to the server
+         * 2. rename file
+         * 3. move file (representing upload file).
+         * in PHP, upload file is moved file from temporary folder on client user to the location target path directory on server
+         * eg:  from (C:\Users\PAGA\AppData\Local\Temp) move to directory (public\dokumen\pka\{name_file}...)
+         */
+        $file = $request->file('nama_file_pdf');
+        $newFileName = 'pka-' . date('Ymd-his') . '.' . $request->file('nama_file_pdf')->getClientOriginalExtension();
+        $newFile = $file->move('dokumen/pka', $newFileName);
+        $newFilePath = public_path('dokumen\\pka\\' . $newFile->getBasename());
+
+        // if successfully upload, delete oldFile
+        if (file_exists($newFilePath)) {
+            // check oldFile exist
+            if (file_exists($oldFilePath)) {
+                // delete oldFile
+                unlink($oldFilePath);
+            }
+        }
+
+        $tanggal_mulai_formated = Carbon::createFromFormat('d-m-Y', $request->tanggal_mulai)->format('Y-m-d');
+        $tanggal_selesai_formated = Carbon::createFromFormat('d-m-Y', $request->tanggal_selesai)->format('Y-m-d');
+
+        $model->pka_no = $request->pka_no;
+        $model->nama_opd = $request->nama_opd;
+        $model->tanggal_mulai = $tanggal_mulai_formated;
+        $model->tanggal_selesai = $tanggal_selesai_formated;
+        $model->keterangan = $request->keterangan;
+        $model->alamat = $request->alamat;
+        $model->nama_file_pdf = $newFileName;
+        $model->updated_by = Auth::user()->id;
+        $data = $model->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Update data successfully',
+            'data' => $data
+        ]);
     }
 
     /**
@@ -177,5 +221,193 @@ class PkaSptController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Show pdf file,
+     * Return the raw contents of a binary file (foo.pdf) ***OR*** base64_encode() representing of binary file.
+     *
+     * @param  int  $id
+     * @return base64_encode($fileBinnary)
+     * @return response()->file($filePath) || response($fileBinnary)
+     */
+    public function filePdf($id)
+    {
+        $model = Pka::where('id', $id)->firstOrFail();
+        $namaFile = $model->nama_file_pdf;
+
+        $filePath = public_path('dokumen\\pka\\' . $namaFile);      // Path to the file OR directory. eg: C:\Users\PAGA\Documents\Coba PHP Laravel\sipinstanapps\public\dokumen\pka\pka-20230903-032653.pdf. the on windows the separator using "\\" OR "/"
+        $fileIsExist = file_exists($filePath);
+
+        // check file is exist
+        if (!$fileIsExist) {
+            return abort(404);
+        }
+
+        $fileBinnary = file_get_contents($filePath);
+        $informationFile = pathinfo($filePath);
+        // $mungkinArrayBuffer = file($filePath);
+
+        $mimeContentType = mime_content_type($filePath);                // return "application/pdf"
+        $fileSize = filesize($filePath);                                // 1231233 bit
+        $extension = $informationFile['extension'];                     // pdf
+        $orginalNameWithExtention = $informationFile['basename'];       // pka-20230902-015509.pdf
+        $orginalNameWithOutExtention = $informationFile['filename'];    // pka-20230902-015509
+
+
+        $fileMeta = [
+            'mimeContentType' => $mimeContentType,
+            'fileSize' => $fileSize,
+            'extension' => $extension,
+            'orginalNameWithExtention' => $orginalNameWithExtention,
+            'orginalNameWithOutExtention' => $orginalNameWithOutExtention,
+            'dirname' =>  $filePath,
+        ];
+
+        // optional parameter to encode file
+        if (request()->encode && request()->encode == "yes") {
+            return response(base64_encode($fileBinnary)) // jika ingin mereturn sebagai base64
+                ->header('Cache-Control', 'no-cache private')
+                ->header('Content-Description', 'File Transfer')
+                ->header('Content-Location', '/dokumen/pka/' . $fileMeta['orginalNameWithExtention'])
+                // ->header('Content-Type', 'application/pdf')
+                // ->header('Content-Type', 'text/plain; charset=ISO-8859-1') // jika ingin mereturn sebagai base64
+                ->header('Content-Type', 'text/plain; charset=UTF-8') // jika ingin mereturn sebagai base64
+                ->header('Content-length', $fileMeta['fileSize'])
+                ->header('Content-Disposition', 'inline; filename="' .  $fileMeta['orginalNameWithOutExtention'] . '"') // biar idm tidak langsung download, jangan memberikan extention pada filename
+                // ->header('Content-Transfer-Encoding', 'binary');
+                // ->header('Content-Transfer-Encoding', 'base64');
+                // ->header('Content-Encoding', 'base64');
+                ->header('Transfer-Encoding', 'base64'); // jika ingin mereturn sebagai base64 (HARUS MENGGUNAKAN INI, JIKA TIDAK, base64_encode DARI PHP AKAN DI UBAH OLEH HTTP)
+
+        }
+
+        // file not encode
+        return response($fileBinnary)
+            // return response(base64_encode($fileBinnary)) // jika ingin mereturn sebagai base64
+            ->header('Cache-Control', 'no-cache private')
+            ->header('Content-Description', 'File Transfer')
+            ->header('Content-Location', '/dokumen/pka/' . $fileMeta['orginalNameWithExtention'])
+            ->header('Content-Type', 'application/pdf')
+            // ->header('Content-Type', 'text/plain; charset=ISO-8859-1') // jika ingin mereturn sebagai base64
+            ->header('Content-length', $fileMeta['fileSize'])
+            ->header('Content-Disposition', 'attachment; filename=' .  $fileMeta['orginalNameWithExtention']) // biar idm tidak langsung download, jangan memberikan extention pada filename
+            // ->header('Content-Transfer-Encoding', 'base64'); // jika ingin mereturn sebagai base64
+            ->header('Content-Transfer-Encoding', 'binary');
+    }
+
+    // tidak ada button untuk ke controller ini, hanya bisa langsung di panggil via url
+    public function viewPdf_test($id)
+    {
+        echo "testing pdf";
+        die();
+        $model = Pka::where('id', $id)->firstOrFail();
+        $namaFile = $model->nama_file_pdf;
+        $filePath = public_path('dokumen/pka/' . $namaFile);      // C:\Users\PAGA\Documents\Coba PHP Laravel\sipinstanapps\public\dokumen/pka/pka-20230903-032653.pdf
+        $fileBinnary = file_get_contents($filePath);
+        $informationFile = pathinfo($filePath);
+        $mungkinArrayBuffer = file($filePath);
+
+        $mimeContentType = mime_content_type($filePath);                // return "application/pdf"
+        $fileSize = filesize($filePath);                                // 1231233 bit
+        $extension = $informationFile['extension'];                     // pdf
+        $orginalNameWithExtention = $informationFile['basename'];       // pka-20230902-015509.pdf
+        $orginalNameWithOutExtention = $informationFile['filename'];    // pka-20230902-015509
+
+
+        $fileMeta = [
+            'mimeContentType' => $mimeContentType,
+            'fileSize' => $fileSize,
+            'extension' => $extension,
+            'orginalNameWithExtention' => $orginalNameWithExtention,
+            'orginalNameWithOutExtention' => $orginalNameWithOutExtention,
+            'dirname' =>  $filePath,
+        ];
+
+        // return $fileBinnary;
+        // return response()->file($file, [
+        //     'Cache-Control' => 'no-cache private',
+        //     'Content-Type' => 'application/pdf',
+        //     'Content-Disposition' => 'inline; filename="' . $namaFile . '"'
+        // ]);
+        // 'Content-Type' => 'application/octet-stream', // langsung download
+        $head = [
+            'Cache-Control' => 'no-cache, private',
+            'Content-Type' => 'application/pdf',
+            'Content-Transfer-Encoding' => 'binary',
+            'Content-length' => $fileMeta['fileSize']
+        ];
+        // return $res = response()->file($filePath, $head);
+        $data = [
+            'nama' => 'paga',
+            'fileBinnary' => $fileBinnary,
+            'base64' => base64_encode($fileBinnary),
+            'decode64' => base64_decode(base64_encode($fileBinnary)),
+            'fileMeta' => $fileMeta
+        ];
+        // dd($data['base64']);
+        return response(base64_encode($fileBinnary)) // jika ingin mereturn sebagai base64
+            ->header('Cache-Control', 'no-cache private')
+            ->header('Content-Description', 'File Transfer')
+            ->header('Content-Location', '/dokumen/pka/' . $fileMeta['orginalNameWithExtention'])
+            // ->header('Content-Type', 'application/pdf')
+            // ->header('Content-Type', 'text/plain; charset=ISO-8859-1') // jika ingin mereturn sebagai base64
+            ->header('Content-Type', 'text/plain; charset=UTF-8') // jika ingin mereturn sebagai base64
+            ->header('Content-length', $fileMeta['fileSize'])
+            ->header('Content-Disposition', 'inline; filename="' .  $fileMeta['orginalNameWithOutExtention'] . '"') // biar idm tidak langsung download, jangan memberikan extention pada filename
+            // ->header('Content-Transfer-Encoding', 'binary');
+            // ->header('Content-Transfer-Encoding', 'base64');
+            // ->header('Content-Encoding', 'base64');
+            ->header('Transfer-Encoding', 'base64'); // jika ingin mereturn sebagai base64 (HARUS MENGGUNAKAN INI, JIKA TIDAK, base64_encode DARI PHP AKAN DI UBAH OLEH HTTP)
+    }
+
+    // tidak ada button dan route untuk ke controller ini
+    public function pdf($id)
+    {
+        echo "testing pdf 2";
+        die();
+        $model = Pka::where('id', $id)->firstOrFail();
+        $namaFile = $model->nama_file_pdf;
+        $file = public_path('dokumen/pka/' . $namaFile);
+
+        $fileT = filetype($file); // return "file"
+        $mimeT = mime_content_type($file); // return "application/pdf"
+        $fileZ = filesize($file);
+        $infoPath = pathinfo($file);
+        /**
+         * array:4 [▼ // app\Http\Controllers\PkaSptController.php:175
+         * "dirname" => "C:\Users\PAGA\Documents\Coba PHP Laravel\sipinstanapps\public\dokumen/pka"
+         * "basename" => "pka-20230902-015931.pdf"
+         * "extension" => "pdf"
+         * "filename" => "pka-20230902-015931"
+         * ]
+         * $extension = $infoPath['extension'];
+         */
+
+
+        $file_contents = base64_decode($file, true);
+        // $file = file($file);
+        // $contents = Storage::get($file);
+
+        // dd($file_contents);
+        // $file = Storage::public();
+
+
+        return response()->file($file, ['yuhu' => 'yuhu']);
+        return response()->download($file, 'yeha');
+        return response($file_contents)
+            ->header('Cache-Control', 'no-cache private')
+            ->header('Content-Description', 'File Transfer')
+            ->header('Content-Type', $mimeT)
+            ->header('Content-length', $fileZ)
+            ->header('Content-Disposition', 'attachment; filename=' . $infoPath['filename'])
+            ->header('Content-Transfer-Encoding', 'binary');
+        return $file_contents;
+        return response()->download($file, $infoPath['basename'], [], 'inline');
+
+        // return Response::make(file_get_contents($filePath), 200, [
+        //     'Content-Type' => 'application/pdf',
+        //     'Content-Disposition' => 'inline; filename="' . $namaFile . '"'
+        // ]);
     }
 }

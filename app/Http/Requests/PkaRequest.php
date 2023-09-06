@@ -47,9 +47,11 @@ class PkaRequest extends FormRequest
                 'max:225'
             ],
             'tanggal_mulai' => [
+                'required',
                 'date'
             ],
             'tanggal_selesai' => [
+                'required',
                 'date'
             ],
             'nama_file_pdf' => [

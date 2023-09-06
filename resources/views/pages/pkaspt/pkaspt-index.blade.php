@@ -87,21 +87,31 @@
         {{-- modal end --}}
 
         {{-- modal pdf start --}}
-        <div id="modal-pdf" data-bs-backdrop="static" class="modal fade" tabindex="-1" aria-labelledby="modal-action-label"
+        <div id="modal-pdf" data-bs-backdrop="static" class="modal fade" tabindex="-1" aria-labelledby="modal-pdf-label"
             aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modal-action-label">Edit PKA</h5>
+                        <h1 class="modal-title fs-5" id="modal-pdf-label">Lampiran PKA</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <embed src="http://127.0.0.1:8000/dokumen/pka/pka-20230812-023533.pdf" type="">
+                    <div class="px-3 my-1 ">
+                        <h2 id="modal-pdf-filename" class="my-0 font-monospace fw-semibold" style="font-size: 12px">
+                            pdf-filename.pdf</h2>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-outline-secondary"
-                            data-bs-dismiss="modal">Close</button>
-
+                    <div class="modal-body">
+                        <div id="pdf-object-wrapper" data-url-pdf=""></div>
+                        {{-- <embed src="http://127.0.0.1:8000/dokumen/pka/pka-20230812-023533.pdf" type=""> --}}
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <a id="btn_view_on_new_tab" href="" class="btn btn-sm icon-left btn-outline-secondary"
+                            data-bs-toggle="tooltip" title="View on new tab" target="_blank">
+                            <i class="ti-desktop"></i>
+                            View
+                        </a>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">
+                            Close
+                        </button>
                     </div>
                 </div>
             </div>
@@ -135,6 +145,7 @@
     <script src="https://cdn.jsdelivr.net/npm/smartwizard@6/dist/js/jquery.smartWizard.min.js" type="text/javascript">
     </script>
     <script src="{{ asset('arfa/vendor/select2/js/select2.min.js') }}"></script>
+    <script src="{{ asset('arfa/vendor/pdfobject/pdfobject.js') }}"></script>
 @endpush
 
 @push('js_page')

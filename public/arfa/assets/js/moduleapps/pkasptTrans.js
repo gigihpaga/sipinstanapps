@@ -3,10 +3,11 @@ $(document).ready(function () {
         elementUIServerside.buttonCustomJQuery();
 
         const oldUrl = window.location.href;
-        const url = oldUrl.split('#')[0]; //get url without hash
+        const urlBaseModulPKA = oldUrl.split('#')[0]; //get url without hash eg: http://127.0.0.1:8000/dokumen/pkaspt
 
         // initial modal
         const modalAction = new bootstrap.Modal($('#modal-action'));
+        const modalPdf = new bootstrap.Modal($('#modal-pdf'));
 
         // data pegawai
         let dataPegawai = []; // can be set from function loadDataPegawai()
@@ -24,6 +25,27 @@ $(document).ready(function () {
             // set url has to null
             window.location.hash = '';
             reloadTable();
+        });
+
+        const modalPdfEl = document.getElementById('modal-pdf');
+        modalPdfEl.addEventListener('hidden.bs.modal', function (event) {
+            /**
+             * menghapus url blob yang sudah dibuat, yang memproduksi url blob
+             * handleUpdatePka() ==> btnViewFile, btnLampiranModal, btnReqFileServer
+             */
+            URL.revokeObjectURL(modalPdfEl.querySelector('#pdf-object-wrapper').dataset['urlPdf']);
+        });
+
+        // https://jsfiddle.net/thnex9ad/
+        $(document).on('show.bs.modal', '.modal', function () {
+            const zIndex = 1040 + 10 * $('.modal:visible').length;
+            $(this).css('z-index', zIndex);
+            setTimeout(() =>
+                $('.modal-backdrop')
+                    .not('.modal-stack')
+                    .css('z-index', zIndex - 1)
+                    .addClass('modal-stack')
+            );
         });
 
         function initialDatePicker() {
@@ -200,7 +222,7 @@ $(document).ready(function () {
             },
             ajax: {
                 // url: "{{ route('pkaspt.loadData') }}",
-                url: `${url}/loadData`,
+                url: `${urlBaseModulPKA}/loadData`,
                 type: 'GET',
             },
             columnDefs: [
@@ -244,9 +266,9 @@ $(document).ready(function () {
             let formUrl = null;
 
             if (typeaction == 'edit_spt') {
-                formUrl = `${url}/spt/${id}/edit`;
+                formUrl = `${urlBaseModulPKA}/spt/${id}/edit`;
             } else if (typeaction == 'edit_pka') {
-                formUrl = `${url}/pka/${id}/edit`;
+                formUrl = `${urlBaseModulPKA}/pka/${id}/edit`;
             }
 
             $.ajax({
@@ -307,6 +329,7 @@ $(document).ready(function () {
                         handleDasarTugas();
                         handleAnggota();
                     } else if (typeaction == 'edit_pka') {
+                        handleUpdatePka();
                     }
                 },
                 error: function (err) {
@@ -369,7 +392,7 @@ $(document).ready(function () {
             // ajax
             $.ajax({
                 type: 'GET',
-                url: `${url}/create`,
+                url: `${urlBaseModulPKA}/create`,
                 // data: "data",
                 // dataType: "dataType",
                 success: function (resHtlm) {
@@ -453,7 +476,7 @@ $(document).ready(function () {
                         // replace data togle button simpan dari "Simpan, lanjut ke SPT" menjadi "Simpan SPT"
                         $('#next-btn-modal').attr('data-bs-original-title', 'Simpan SPT');
                         // set hidden textbox in step 2 (form spt)
-                        $('#form-spt').attr('action', `${url}/spt/${sptId}`);
+                        $('#form-spt').attr('action', `${ururlBaseModulPKAl}/spt/${sptId}`);
                         // $('#form-spt').find('#pka_id').attr('value', sptId);
 
                         handleShowNextStep();
@@ -522,8 +545,10 @@ $(document).ready(function () {
                             //   find field element form with object key
                             $(`[name=${key}]`)
                                 .addClass('is-invalid')
-                                .parent()
-                                .append(`<span class="text-danger text-small">${value}</span>`);
+                                .parents('.form-group')
+                                .append(
+                                    `<span class="text-danger text-small">${value}&nbsp;</span>`
+                                );
                         }
                     }
                 },
@@ -532,10 +557,299 @@ $(document).ready(function () {
             });
         }
 
+        // form spt update
         function handleUpdateSpt() {
             $('#update-spt').on('click', function (e) {
                 let formTarget = document.getElementById('form-spt-edit');
                 let formData = new FormData(formTarget);
+                let elmButton = $(this);
+                // send ajax
+                onUpdate(formTarget, formData, elmButton);
+            });
+        }
+
+        // form pka update
+        function handleUpdatePka() {
+            // nama_file_pdf;
+            const pdfWrapper = document.querySelector('#pdf-object-wrapper');
+            const btnNewtab = document.querySelector('#modal-pdf #btn_view_on_new_tab');
+            const modalFileName = modalPdfEl.querySelector('#modal-pdf-filename');
+
+            const inputFile = document.querySelector('input#nama_file_pdf');
+            const btnViewFile = document.querySelector('a#btn_file_upload_view');
+            const btnCancelFile = document.querySelector('button#btn_file_upload_cancel');
+
+            const btnLampiran = document.querySelector('a#btn_view_lampiran');
+            const btnLampiranModal = document.querySelector('a#btn_view_lampiran_modal');
+
+            const btnGenerateBase64toFile = document.querySelector('span#btn_test_base64_to_file');
+            const btnReqFileServer = document.querySelector('span#btn_test_request_file_server');
+            const inputTextBase64 = document.querySelector('textarea#input_test_base64_to_file');
+
+            let reader = new FileReader();
+            // let readerLampiran = new FileReader();
+
+            function base64ToBlob(base64, type = 'application/octet-stream') {
+                const binStr = atob(base64);
+                const len = binStr.length;
+                const arr = new Uint8Array(len);
+                for (let i = 0; i < len; i++) {
+                    arr[i] = binStr.charCodeAt(i);
+                }
+
+                return new Blob([arr], { type: type });
+            }
+
+            btnLampiran.addEventListener('click', function (e) {
+                return;
+                e.preventDefault();
+
+                // readerLampiran.readAsDataURL(this.href);
+                // fetch(this.href)
+                //     .then((r) => r.blob)
+                //     .then((blob) => {
+                //         readerLampiran.onload = (e) =>
+                //             prepareIframe(readerLampiran.result.split(',')[1]);
+                //         readerLampiran.readAsDataURL(blob);
+                //     });
+                const urlForm = this.href;
+                $.ajax({
+                    type: 'GET',
+                    url: urlForm,
+                    // contentType: 'text/plain; charset=ISO-8859-1',
+                    // responseType: 'text',
+                    // xhrFields: {
+                    //     responseType: 'blob',
+                    // },
+                    processData: false,
+                    contentType: false,
+                    // data: "data",
+                    // dataType: "dataType",
+                    success: function (resBase64) {
+                        const blob = base64ToBlob(resBase64, 'application/pdf');
+                        const url = URL.createObjectURL(blob); // for bigger pdf file (> 2mb)
+                        // const url = reader.result; // for small file (< 2mb)
+                        console.log(blob);
+                        return;
+                        const pdfWindow = window.open('');
+                        pdfWindow.document.open();
+                        pdfWindow.document.write(
+                            "<iframe width='100%' height='100%' src='" + url + "'></iframe>"
+                        );
+                    },
+                    error: function (err) {
+                        console.log('[Log On] >> [roles-index.blade] -> [err] : ', err);
+                    },
+                });
+                // console.log(readerLampiran);
+                // readerLampiran.onload = (rEvent) => {};
+
+                // const pdfWindow = window.open('');
+                // pdfWindow.document.open();
+                // pdfWindow.document.write(
+                //     "<iframe width='100%' height='100%' src='" + this.href + "'></iframe>"
+                // );
+                // pdfWindow.document.close();
+            });
+
+            btnLampiranModal.addEventListener('click', function (e) {
+                e.preventDefault();
+                // console.time('time performance get idPka from parrent button');
+                const urlFile = this.getAttribute('href');
+                // console.timeEnd('time performance get idPka from parrent button');
+                const namaFile = this.dataset['bsOriginalTitle'];
+                $.ajax({
+                    type: 'GET',
+                    url: urlFile,
+                    processData: false,
+                    contentType: false,
+                    // contentType: 'text/plain; charset=ISO-8859-1',
+                    // responseType: 'text',
+                    // xhrFields: {
+                    //     responseType: 'blob',
+                    // },
+                    // data: "data",
+                    // dataType: "dataType",
+                    success: function (resBase64) {
+                        // let base64 = btoa(res);
+                        // const file = new File([res], 'foo.pdf', {
+                        //     type: 'application/pdf',
+                        // });
+                        // let readFile = new FileReader();
+                        // readFile.readAsDataURL(file);
+                        // readFile.onloadend = (readerEvent) => {
+                        //     inputTextBase64.value = '';
+                        //     inputTextBase64.value = readerEvent.target.result;
+                        // };
+                        // inputTextBase64.value = base64;
+
+                        const blob = base64ToBlob(resBase64, 'application/pdf');
+                        const urlBlob = URL.createObjectURL(blob); // for bigger pdf file (> 2mb)
+
+                        // inputTextBase64.value = '';
+                        // inputTextBase64.value = aa.replace('_REPLACE_BASE64', resBase64);
+                        // inputTextBase64.value = urlBlob;
+                        let embedPdf = PDFObject.embed(urlBlob, '#pdf-object-wrapper', {
+                            height: '70vh',
+                            pdfOpenParams: { view: 'FitV', page: '1' },
+                        });
+                        pdfWrapper.dataset['urlPdf'] = urlBlob;
+                        btnNewtab.setAttribute('href', urlBlob);
+                        modalFileName.innerText = namaFile;
+                        modalPdf.show();
+                    },
+                    error: function (err) {
+                        console.log('[Log On] >> [roles-index.blade] -> [err] : ', err);
+                    },
+                });
+            });
+
+            // group button on input file ==start==
+            inputFile.addEventListener('change', function (event) {
+                if (event.target.files[0]) {
+                    let fileInput = event.target.files[0];
+                    console.log(fileInput);
+                    reader.readAsDataURL(event.target.files[0]);
+                    reader.onloadend = (readerEvent) => {
+                        btnViewFile.href = readerEvent.target.result; // bikin berat, kalo image pake ini
+
+                        // set to text area
+                        inputTextBase64.value = '';
+                        inputTextBase64.value = readerEvent.target.result;
+                    };
+                    btnViewFile.title = event.target.files[0].name;
+                } else {
+                    btnViewFile.href = '#';
+                }
+
+                if (this.value) {
+                    btnViewFile.classList.remove('d-none');
+                    btnViewFile.classList.add('d-flex');
+                    btnCancelFile.classList.remove('d-none');
+                } else {
+                    btnViewFile.classList.remove('d-flex');
+                    btnViewFile.classList.add('d-none');
+                    btnCancelFile.classList.add('d-none');
+                }
+            });
+
+            btnViewFile.addEventListener(
+                'click',
+                function (e) {
+                    e.preventDefault();
+                    const blob = base64ToBlob(reader.result.split(',')[1], 'application/pdf');
+                    const urlBlob = URL.createObjectURL(blob); // for bigger pdf file (> 2mb)
+                    const namaFile = inputFile?.files[0].name;
+                    // const url = reader.result; // for small file (< 2mb)
+
+                    let embedPdf = PDFObject.embed(urlBlob, '#pdf-object-wrapper', {
+                        height: '70vh',
+                        pdfOpenParams: { view: 'FitV', page: '1' },
+                    });
+                    pdfWrapper.dataset['urlPdf'] = urlBlob;
+                    btnNewtab.setAttribute('href', urlBlob);
+                    modalFileName.innerText = namaFile;
+                    modalPdf.show();
+                    // jika ingin di buka di new tab ==start===
+                    // const pdfWindow = window.open('');
+                    // pdfWindow.document.open();
+                    // pdfWindow.location.href = url;
+                    // pdfWindow.document.write(
+                    //     "<iframe width='100%' height='100%' src='" + url + "'></iframe>"
+                    // );
+                    // pdfWindow.document.close();
+                    // let head = pdfWindow.document.querySelector('head');
+                    // if (head.querySelector('title')) {
+                    //     head.querySelector('title').textContent = inputFile.files[0].name;
+                    // } else {
+                    //     let title = pdfWindow.document.createElement('title');
+                    //     title.append(inputFile.files[0].name);
+                    //     head.append(title);
+                    // }
+                    // jika ingin di buka di new tab ==end===
+                }
+                // true // belum tau funsinya apa
+            );
+
+            btnCancelFile.addEventListener('click', function () {
+                inputFile.value = '';
+                const fileListArr = Array.from(inputFile.files);
+                fileListArr.splice(1, 1);
+                inputFile.dispatchEvent(new Event('change'));
+            });
+            // group button on input file ==endt==
+
+            // group button on text area ==start==
+            btnGenerateBase64toFile.addEventListener('click', function (e) {
+                let base64text = inputTextBase64.value;
+                console.log('button generate file ready');
+            });
+
+            btnReqFileServer.addEventListener('click', function (e) {
+                let idPka = this.closest('form#form-pka-edit')
+                    .getAttribute('action')
+                    .split('/')
+                    .pop();
+                let namaFile = document
+                    .querySelector('a#btn_view_lampiran')
+                    .getAttribute('data-bs-original-title');
+
+                // url
+                const urlControllerfile_Pdf = `${urlBaseModulPKA}/pka/${idPka}/file_pdf`; // eg: http://127.0.0.1:8000/dokumen/pkaspt/pka/18/file_pdf
+                let urlPublicDocumentPka = `/dokumen/pka/${namaFile}`;
+                let urlViewPdfTest = `${urlBaseModulPKA}/pka/${idPka}/file_pdf?encode=yes`;
+
+                $.ajax({
+                    type: 'GET',
+                    url: urlViewPdfTest,
+                    processData: false,
+                    contentType: false,
+                    // contentType: 'text/plain; charset=ISO-8859-1',
+                    // responseType: 'text',
+                    // xhrFields: {
+                    //     responseType: 'blob',
+                    // },
+                    // data: "data",
+                    // dataType: "dataType",
+                    success: function (resBase64) {
+                        const aa = 'data:application/pdf;base64,_REPLACE_BASE64';
+                        // let base64 = btoa(res);
+                        // const file = new File([res], 'foo.pdf', {
+                        //     type: 'application/pdf',
+                        // });
+                        // let readFile = new FileReader();
+                        // readFile.readAsDataURL(file);
+                        // readFile.onloadend = (readerEvent) => {
+                        //     inputTextBase64.value = '';
+                        //     inputTextBase64.value = readerEvent.target.result;
+                        // };
+                        // inputTextBase64.value = base64;
+
+                        const blob = base64ToBlob(resBase64, 'application/pdf');
+                        const urlBlob = URL.createObjectURL(blob); // for bigger pdf file (> 2mb)
+                        inputTextBase64.value = '';
+                        // inputTextBase64.value = aa.replace('_REPLACE_BASE64', resBase64);
+                        inputTextBase64.value = urlBlob;
+
+                        let embedPdf = PDFObject.embed(urlBlob, '#pdf-object-wrapper', {
+                            height: '70vh',
+                            pdfOpenParams: { view: 'FitV', page: '1' },
+                        });
+                        modalPdf.show();
+                    },
+                    error: function (err) {
+                        console.log('[Log On] >> [roles-index.blade] -> [err] : ', err);
+                    },
+                });
+            });
+            // group button on text area ==end==
+
+            $('button#update-pka').on('click', function (e) {
+                let formTarget = document.getElementById('form-pka-edit');
+                let formData = new FormData(formTarget);
+                // for (const pair of formData.entries()) {
+                //     console.log(`${pair[0]}: ${pair[1]}`);
+                // }
                 let elmButton = $(this);
                 // send ajax
                 onUpdate(formTarget, formData, elmButton);
@@ -654,7 +968,7 @@ $(document).ready(function () {
                 });
 
                 $(btnSimpan).on('click', function () {
-                    console.log(url);
+                    // console.log(urlBaseModulPKA);
                     storeDasarTugas();
                 });
             }
@@ -678,7 +992,7 @@ $(document).ready(function () {
             // ajax pengajuan dasar
             function loadDataDasarTugas() {
                 // const urlForm = `${url}/spt/dasartugas/${sptId}`;
-                const urlForm = `${url}/spt/dasartugas/${sptId}/dasartugas_by_spt`;
+                const urlForm = `${urlBaseModulPKA}/spt/dasartugas/${sptId}/dasartugas_by_spt`;
                 $.ajax({
                     type: 'GET',
                     url: urlForm,
@@ -733,7 +1047,7 @@ $(document).ready(function () {
                 const formTarget = document.getElementById('dasar_pengajuan_form');
                 const formData = new FormData(formTarget);
                 console.log('form data on store dasar tugas : ', formData);
-                const urlForm = `${url}/spt/dasartugas`;
+                const urlForm = `${urlBaseModulPKA}/spt/dasartugas`;
                 $.ajax({
                     type: 'POST',
                     url: urlForm,
@@ -776,7 +1090,7 @@ $(document).ready(function () {
                 const id = formTarget.querySelector('input[name="dasar_tugas_spt_id"]').value;
 
                 const formData = new FormData(formTarget);
-                const urlForm = `${url}/spt/dasartugas/${id}`;
+                const urlForm = `${urlBaseModulPKA}/spt/dasartugas/${id}`;
                 $.ajax({
                     type: 'POST',
                     url: urlForm,
@@ -817,7 +1131,7 @@ $(document).ready(function () {
                 // jika confirm yes, jalankan ajax
                 $.ajax({
                     type: 'DELETE',
-                    url: `${url}/spt/dasartugas/${id}`,
+                    url: `${urlBaseModulPKA}/spt/dasartugas/${id}`,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                     },
@@ -1153,7 +1467,7 @@ $(document).ready(function () {
 
             // ajax anggota
             function loadDataAnggota() {
-                const urlForm = `${url}/spt/${sptId}/anggota/anggota_by_spt`;
+                const urlForm = `${urlBaseModulPKA}/spt/${sptId}/anggota/anggota_by_spt`;
                 const _MINHEIGHTLOADING = 175;
                 const tableAnggota = $('#tabel_anggota');
                 const tBody = tableAnggota.find('tbody');
@@ -1270,7 +1584,7 @@ $(document).ready(function () {
                 // }
                 // console.log('form data on store anggota : ', formData);
                 elmButton.button('loading');
-                const urlForm = `${url}/spt/anggota`;
+                const urlForm = `${urlBaseModulPKA}/spt/anggota`;
                 $.ajax({
                     type: 'POST',
                     url: urlForm,
@@ -1320,7 +1634,7 @@ $(document).ready(function () {
                 const formTarget = rowSelected.querySelector('tr.input-row');
                 const id = formData.get('anggota_id');
                 // const formData = formData;
-                const urlForm = `${url}/spt/anggota/${id}`;
+                const urlForm = `${urlBaseModulPKA}/spt/anggota/${id}`;
                 elmButton.button('loading');
                 $.ajax({
                     type: 'POST',
@@ -1362,7 +1676,7 @@ $(document).ready(function () {
             }
 
             function deleteAnggota(id, elmButton) {
-                const urlForm = `${url}/spt/anggota/${id}`;
+                const urlForm = `${urlBaseModulPKA}/spt/anggota/${id}`;
                 elmButton.button('loading');
                 $.ajax({
                     type: 'DELETE',
