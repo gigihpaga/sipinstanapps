@@ -115,7 +115,7 @@
                                 <label for="sifatpenugasan" class="form-label">Sifat Tugas</label>
                                 <select class="js-example-basic-single form-select " id="sifatpenugasan"
                                     name="sifat_tugas">
-                                    <option value="PKA">PKA</option>
+                                    <option value="PKPT">PKPT</option>
                                     <option value="Non-PKPT">Non-PKPT</option>
                                 </select>
                             </div>
