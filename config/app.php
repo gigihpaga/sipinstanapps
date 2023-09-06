@@ -189,6 +189,8 @@ return [
         Spatie\Permission\PermissionServiceProvider::class,
         // yajra datatable
         Yajra\DataTables\DataTablesServiceProvider::class,
+        // barryvdh domPDF
+        Barryvdh\DomPDF\ServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -220,6 +222,7 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
         'DataTables' => Yajra\DataTables\DataTablesServiceProvider::class,
+        'PDF' => Barryvdh\DomPDF\Facade::class,
     ])->toArray(),
 
 ];
