@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="{{ asset('arfa/vendor/bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('arfa/vendor/themify-icons/themify-icons.css') }}">
     <link rel="stylesheet" href="{{ asset('arfa/vendor/perfect-scrollbar/css/perfect-scrollbar.css') }}">
+    <link rel="stylesheet" href="{{ asset('arfa/vendor/pace/pace-theme-minimal.css') }}">
+    <script src="{{ asset('arfa/vendor/pace/pace.min.js') }}"></script>
 
     <!-- start CSS library for this page only -->
     @stack('css_library_page')
