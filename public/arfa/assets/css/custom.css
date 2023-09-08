@@ -94,7 +94,25 @@ hr {
 * loading datatable
 * document.querySelector('.dataTables_processing').style.display = 'block'
 */
+.table > :not(caption) > * > * {
+    padding: 0.3rem 0.3rem;
+}
+
+body table.table-stripped tbody tr.odd {
+    color: #464453;
+    background-color: rgba(0, 0, 0, 0.025);
+}
+
 div .dataTables_processing {
+    top: calc(50% + 30px);
+}
+
+body div .dataTables_processing {
+    background-color: #191f3066 !important;
+    color: white;
+}
+
+body.dark div .dataTables_processing {
     background-color: #191f30cc !important;
     color: white;
 }
