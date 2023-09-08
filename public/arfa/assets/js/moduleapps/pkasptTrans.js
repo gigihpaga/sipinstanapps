@@ -476,7 +476,7 @@ $(document).ready(function () {
                         // replace data togle button simpan dari "Simpan, lanjut ke SPT" menjadi "Simpan SPT"
                         $('#next-btn-modal').attr('data-bs-original-title', 'Simpan SPT');
                         // set hidden textbox in step 2 (form spt)
-                        $('#form-spt').attr('action', `${ururlBaseModulPKAl}/spt/${sptId}`);
+                        $('#form-spt').attr('action', `${urlBaseModulPKA}/spt/${sptId}`);
                         // $('#form-spt').find('#pka_id').attr('value', sptId);
 
                         handleShowNextStep();

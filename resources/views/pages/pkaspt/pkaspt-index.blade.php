@@ -8,8 +8,7 @@
     <link href="{{ asset('arfa/vendor/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css') }}"
         rel="stylesheet" />
     <link href="{{ asset('arfa/vendor/izitoast/css/iziToast.min.css') }}" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/smartwizard@6/dist/css/smart_wizard_all.min.css" rel="stylesheet"
-        type="text/css" />
+    <link href="{{ asset('arfa/vendor/jquery-smartwizard/css/smart_wizard_all.min.css') }}" rel="stylesheet">
     <link href="{{ asset('arfa/vendor/bootstrap-datepicker/css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
     <link href="{{ asset('arfa/vendor/select2/css/select2.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('arfa/vendor/select2-bootstrap-5-theme/select2-bootstrap-5-theme.min.css') }}" rel="stylesheet" />
@@ -142,8 +141,7 @@
 
 @push('js_library_page')
     {{-- {{ $dataTable->scripts() }} --}}
-    <script src="https://cdn.jsdelivr.net/npm/smartwizard@6/dist/js/jquery.smartWizard.min.js" type="text/javascript">
-    </script>
+    <script src="{{ asset('arfa/vendor/jquery-smartwizard/js/jquery.smartWizard.min.js') }}"></script>
     <script src="{{ asset('arfa/vendor/select2/js/select2.min.js') }}"></script>
     <script src="{{ asset('arfa/vendor/pdfobject/pdfobject.js') }}"></script>
 @endpush
