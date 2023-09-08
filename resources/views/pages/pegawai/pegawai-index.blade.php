@@ -6,8 +6,7 @@
         rel="stylesheet" />
     <link href="{{ asset('arfa/vendor/izitoast/css/iziToast.min.css') }}" rel="stylesheet" />
 
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    {{-- <link href="{{ asset('arfa/vendor/select2/css/select2.min.css') }}" rel="stylesheet" /> --}}
+    <link href="{{ asset('arfa/vendor/select2/css/select2.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('arfa/vendor/select2-bootstrap-5-theme/select2-bootstrap-5-theme.min.css') }}" rel="stylesheet" />
 @endpush
 
@@ -70,8 +69,7 @@
     <script src="{{ asset('arfa/assets/js/pages/element-ui-serverside.js') }}"></script>
     <script src="{{ asset('arfa/assets/js/pages/modules_toastr.js') }}"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    {{-- <script src="{{ asset('arfa/vendor/select2/js/select2.min.js') }}"></script> --}}
+    <script src="{{ asset('arfa/vendor/select2/js/select2.min.js') }}"></script>
     {{-- <script src="{{ asset('arfa/assets/js/moduleapps/basictransapp.js') }}"></script> --}}
 @endpush
 
