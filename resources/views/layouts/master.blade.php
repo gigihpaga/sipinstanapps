@@ -33,6 +33,12 @@
 </head>
 
 <body>
+    <div id="loader">
+        <div class="loader-box-wrapper">
+            <div class="loader-box-shadow"></div>
+            <div class="loader-box"></div>
+        </div>
+    </div>
     <div id="app">
         <div class="shadow-header"></div>
         {{-- header --}}
@@ -58,6 +64,7 @@
     @stack('js_library_page')
     <!-- end JS librabry for this page only -->
     <script src="{{ asset('arfa/assets/js/main.min.js') }}"></script>
+    <script src="{{ asset('arfa/assets/js/appscript.js') }}"></script>
 
     <script>
         Main.init()
