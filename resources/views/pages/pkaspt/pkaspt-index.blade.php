@@ -130,7 +130,7 @@
     {{-- {{-- <script defer src="https://code.jquery.com/jquery-3.7.0.js"></script> --}}
     {{-- <script defer src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script> --}}
     {{-- <script defer src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script> --}}
-    <script src="https://cdn.datatables.net/plug-ins/1.10.16/dataRender/ellipsis.js"></script>
+    <script src="{{ asset('arfa/vendor/datatables.net-ellipsis/js/ellipsis.js') }}"></script>
     <script src="{{ asset('arfa/vendor/sweetalert2/sweetalert2.js') }}"></script>
     <script src="{{ asset('arfa/vendor/izitoast/js/iziToast.min.js') }}"></script>
     <script src="{{ asset('arfa/assets/js/pages/datatables.min.js') }}"></script>
