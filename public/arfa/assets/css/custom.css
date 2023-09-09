@@ -8,6 +8,9 @@
     --gps-btn-danger-border-color: #dc3545;
     --gps-btn-danger-color: #bcc1c6;
     --gps-btn-danger-hover-color: #dc3545;
+
+    --gps-btn-success-bg: #28c76f;
+    --gps-btn-success-color: #fff;
 }
 
 .main-content,
@@ -417,4 +420,77 @@ body {
     }
 }
 /* preloader end */
+
+/* connection status start */
+.connection-status {
+    position: fixed;
+    width: 100%;
+    z-index: 9999999999;
+    top: 0;
+    right: 0;
+}
+
+.connection-status::after {
+    position: absolute;
+    color: #fff;
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+}
+
+.connection-status.offline::after {
+    content: 'Offline';
+    background: var(--gps-btn-danger-bg);
+    top: 0;
+    animation: connection-status-slide-down 1s;
+    -webkit-animation: connection-status-slide-down 1s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+
+.connection-status.online::after {
+    content: 'Online';
+    background: var(--gps-btn-success-bg);
+    top: 0;
+    animation: connection-status-slide-up 1s;
+    -webkit-animation: connection-status-slide-up 1s;
+    animation-iteration-count: 1;
+    animation-delay: 3s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes connection-status-slide-up {
+    from {
+        transform: translateY(0%);
+        -webkit-transform: translateY(0%);
+        -moz-transform: translateY(0%);
+        -ms-transform: translateY(0%);
+        -o-transform: translateY(0%);
+    }
+    to {
+        transform: translateY(-100%);
+        -webkit-transform: translateY(-100%);
+        -moz-transform: translateY(-100%);
+        -ms-transform: translateY(-100%);
+        -o-transform: translateY(-100%);
+    }
+}
+
+@keyframes connection-status-slide-down {
+    from {
+        transform: translateY(-100%);
+        -webkit-transform: translateY(-100%);
+        -moz-transform: translateY(-100%);
+        -ms-transform: translateY(-100%);
+        -o-transform: translateY(-100%);
+    }
+    to {
+        transform: translateY(0%);
+        -webkit-transform: translateY(0%);
+        -moz-transform: translateY(0%);
+        -ms-transform: translateY(0%);
+        -o-transform: translateY(0%);
+    }
+}
+/* connection status end */
 

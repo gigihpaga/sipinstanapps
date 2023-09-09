@@ -66,9 +66,21 @@ const Loader = {
 // ============ EVENT LISTENER ============
 
 // event when no connection ofline
-window.onoffline = () => modules_toastr.notif('Connection', 'Sedang offline', 'error');
+window.onoffline = () => {
+    let conStatus = document.querySelector('.connection-status');
+    if (conStatus.className.includes('online')) {
+        conStatus.classList.remove('online');
+    }
+    conStatus.classList.add('offline');
+};
 // event when connection online
-window.ononline = () => modules_toastr.notif('Connection', 'Kembali online', 'success');
+window.ononline = () => {
+    let conStatus = document.querySelector('.connection-status');
+    if (conStatus.className.includes('offline')) {
+        conStatus.classList.remove('offline');
+    }
+    conStatus.classList.add('online');
+};
 // catch all error on windows (gak usah digunain malah errornya gak bisa di click haha)
 // window.onerror = (a, b, c, d, e) => {
 //     console.table({ message: a, source: b, lineno: c, colno: d, error: e });

@@ -40,6 +40,7 @@
         </div>
     </div>
     <div id="app">
+        <div class="connection-status"></div>
         <div class="shadow-header"></div>
         {{-- header --}}
         @include('layouts.header')
