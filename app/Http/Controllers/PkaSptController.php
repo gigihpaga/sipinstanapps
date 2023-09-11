@@ -32,6 +32,9 @@ class PkaSptController extends Controller
         $model = Spt::with('user')->with('lastStatusHistory')->get();
         return DataTables::of($model)
             ->addIndexColumn()
+            ->addColumn('control_collapse', function ($row) {
+                return view('pages.pkaspt.pkaspt-button-control-collapse')->with(['data' => $row]);
+            })
             ->addColumn('action', function ($row) {
                 return view('pages.pkaspt.pkaspt-button')->with(['data' => $row]);
             })

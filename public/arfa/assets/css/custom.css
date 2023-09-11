@@ -101,7 +101,26 @@ hr {
     padding: 0.3rem 0.3rem;
 }
 
-body table.table-stripped tbody tr.odd {
+table button.control-collapse {
+    height: 25px;
+    width: 25px;
+    padding: 0;
+}
+
+table tr.shown button.control-collapse i {
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+}
+
+table button.control-collapse i {
+    line-height: 1.9;
+}
+
+body table.table-stripped tbody tr.odd,
+body table.table-stripped tbody tr.odd.details-row {
     color: #464453;
     background-color: rgba(0, 0, 0, 0.025);
 }
@@ -126,6 +145,15 @@ div .dataTables_processing.card {
 
 div.dataTables_processing > div:last-child {
     margin: auto auto !important;
+}
+
+/* dropdown */
+a.dropdown-item:active {
+    background-color: #d4d4d4;
+}
+
+.btn.btn-outline-secondary.show {
+    color: #fff;
 }
 
 /* select2 */

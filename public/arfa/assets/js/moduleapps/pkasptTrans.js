@@ -36,6 +36,16 @@ $(document).ready(function () {
             URL.revokeObjectURL(modalPdfEl.querySelector('#pdf-object-wrapper').dataset['urlPdf']);
         });
 
+        // tracking dropdown on hide
+        let drowDownIsShowStore;
+        $(document).on('hide.bs.dropdown', function () {
+            // delete all event listener on a , event listener add on button[typeaction == 'update_status_spt'] on table spt child
+            drowDownIsShowStore
+                .siblings('ul.dropdown-menu')
+                .find('li a.dropdown-item')
+                .unbind('click.update_status_spt');
+        });
+
         // https://jsfiddle.net/thnex9ad/
         $(document).on('show.bs.modal', '.modal', function () {
             const zIndex = 1040 + 10 * $('.modal:visible').length;
@@ -62,14 +72,20 @@ $(document).ready(function () {
                 });
         }
 
-        // datatable
+        // datatable start
         const listColums = [
             {
-                data: 'action',
-                name: 'action',
+                data: 'control_collapse',
+                name: 'control_collapse',
                 orderable: false,
                 searchable: false,
             },
+            // {
+            //     data: 'action',
+            //     name: 'action',
+            //     orderable: false,
+            //     searchable: false,
+            // },
             {
                 data: 'DT_RowIndex',
                 name: 'DT_RowIndex',
@@ -87,12 +103,12 @@ $(document).ready(function () {
                 data: 'sifat_tugas',
                 name: 'sifat_tugas',
             },
-            {
-                data: 'pka',
-                name: 'pka',
-                orderable: false,
-                searchable: false,
-            },
+            // {
+            //     data: 'pka',
+            //     name: 'pka',
+            //     orderable: false,
+            //     searchable: false,
+            // },
             {
                 data: 'nomor_pengajuan',
                 name: 'nomor_pengajuan',
@@ -167,7 +183,7 @@ $(document).ready(function () {
             },
         };
         const renderPillStatusBuat = {
-            targets: 6, // kolom statusbuat (6 dari kanan)
+            targets: 5, // kolom statusbuat (5 dari kanan)
             render: function (data, type, row) {
                 if (!row.status_buat) {
                     return '';
@@ -179,10 +195,159 @@ $(document).ready(function () {
                 return '<span style="background-color:#d8ffdc;" class="badge rounded-pill text-dark"><i style="color:#28c76f;" class="ti-check-box"></i>&nbspSelesai</span>';
             },
         };
+        const templateTableSptChild = document.getElementById('template_tabel_spt_child');
+        const templateTableButtonLampiranPka = document.getElementById(
+            'template_tabel_spt_view_button_lampiran_pka'
+        );
+        const templateTableButtonUpdateSpt = document.querySelector(
+            '#template_tabel_spt_button_update_status_spt'
+        );
+
+        //
+        function renderChildTable(dataRowDT) {
+            /**
+             * [1] manipulation element <template> #template_tabel_spt_child
+             * [2] loop element has data-child-wrapper from template, e.g: data-child-wrapper="button-pka"
+             * [3] inject element button (string html) from dataTable to <template> #template_tabel_spt_child, e.g: dataRowDT.action
+             * [3] convert DOM Html to String Html which will use jquery dataTable
+             */
+            let templateTableSptChildContent = templateTableSptChild.content.cloneNode(true);
+            let templateTableButtonLampiranPkaContent =
+                templateTableButtonLampiranPka.content.cloneNode(true);
+            let templateTableButtonUpdateSptContent =
+                templateTableButtonUpdateSpt.content.cloneNode(true);
+
+            templateTableSptChildContent
+                .querySelectorAll('[data-child-wrapper]')
+                .forEach((element) => {
+                    let dummyDiv = document.createElement('div');
+                    let dataSetchildWrapper = element.dataset['childWrapper'];
+                    if (dataSetchildWrapper === 'button-spt') {
+                        // convert string html button spt to Node Html
+                        dummyDiv.innerHTML = dataRowDT.action;
+                    } else if (dataSetchildWrapper === 'button-pka') {
+                        // convert string html button pka to Node Html
+                        dummyDiv.innerHTML = dataRowDT.pka;
+                    } else if (dataSetchildWrapper === 'button-lampiran-pka') {
+                        dummyDiv.append(templateTableButtonLampiranPkaContent);
+                    } else if (dataSetchildWrapper === 'button-update-spt') {
+                        dummyDiv.append(templateTableButtonUpdateSptContent);
+                    }
+                    // append Node Html button to element wrapper
+                    element.append(dummyDiv.firstElementChild);
+                });
+            // button lampiran grab
+            let buttonLampiran = templateTableSptChildContent.querySelector(
+                'a[data-typeaction="view_lampiran_pka"]'
+            );
+            // button lampiran set href, replace href buttonLampiran, e.g: from http://127.0.0.1:8000/dokumen/pkaspt/pka/_REPLACE_ID_PKA/file_pdf?encode=yes to http://127.0.0.1:8000/dokumen/pkaspt/pka/18/file_pdf?encode=yes
+            buttonLampiran.href = buttonLampiran.href.replace('_REPLACE_ID_PKA', dataRowDT.pka_id);
+            // button update status spt set dataset data-id-spt
+            templateTableSptChildContent.querySelector(
+                'button[data-typeaction="update_status_spt"]'
+            ).dataset['idSpt'] = dataRowDT.id;
+
+            const serializer = new XMLSerializer();
+            // convert html <template> #template_tabel_spt_child to string Html
+            const domString = serializer
+                .serializeToString(templateTableSptChildContent)
+                ?.replace('xmlns="http://www.w3.org/1999/xhtml"', '');
+            return domString;
+        }
+        //
+        function handleButtonCollapse(buttonCollapse) {
+            //
+            const tr = buttonCollapse.closest('tr');
+            const row = table.row(tr);
+            const isOpen = row.child.isShown();
+
+            // close all tr and delete all child open on table
+            table.rows('tr.shown').every(function (rowIdx, tableLoop, rowLoop) {
+                const rowX = this;
+                if (rowX.child.isShown()) {
+                    rowX.child.hide();
+                    $(this.node()).removeClass('shown');
+                    $(this.node())
+                        .find('button[data-typeaction="control_collapse"] i')
+                        .removeClass('ti-angle-down')
+                        .addClass('ti-angle-right');
+                }
+            });
+
+            if (isOpen === false) {
+                const typeRow = tr[0].className.includes('odd') ? 'odd' : 'even';
+                row.child(renderChildTable(row.data()), `${typeRow} details-row`).show();
+                tr.addClass('shown');
+                buttonCollapse.find('i').removeClass('ti-angle-right').addClass('ti-angle-down'); //     const typeRow = tr[0].className.includes('odd') ? 'odd' : 'even';
+                row.child(renderChildTable(row.data()), `${typeRow} details-row`).show();
+                tr.addClass('shown');
+                buttonCollapse.find('i').removeClass('ti-angle-right').addClass('ti-angle-down');
+            }
+
+            // // if want to can open all child row, use that
+            // const tr = buttonCollapse.closest('tr');
+            // const row = table.row(tr);
+
+            // if (row.child.isShown()) {
+            //     // This row is already open - close it
+            //     row.child.hide();
+            //     tr.removeClass('shown');
+            //     buttonCollapse.find('i').removeClass('ti-angle-down').addClass('ti-angle-right');
+            // } else {
+            //     // Open this row
+            //     const typeRow = tr[0].className.includes('odd') ? 'odd' : 'even';
+            //     row.child(renderChildTable(row.data()), `${typeRow} details-row`).show();
+            //     tr.addClass('shown');
+            //     buttonCollapse.find('i').removeClass('ti-angle-right').addClass('ti-angle-down');
+            // }
+        }
+        //
+        function handleChildTableButtonLampiranPka(buttonViewLampiranPka) {
+            const urlFile = buttonViewLampiranPka.getAttribute('href');
+            const pdfWrapper = modalPdfEl.querySelector('#pdf-object-wrapper');
+            const btnNewtab = modalPdfEl.querySelector('#btn_view_on_new_tab');
+            const modalFileName = modalPdfEl.querySelector('#modal-pdf-filename');
+            $.ajax({
+                type: 'GET',
+                url: urlFile,
+                processData: false,
+                contentType: false,
+                success: function (resBase64, textStatus, request) {
+                    const blob = base64ToBlob(resBase64, 'application/pdf');
+                    const urlBlob = URL.createObjectURL(blob); // for bigger pdf file (> 2mb)
+                    let embedPdf = PDFObject.embed(urlBlob, '#pdf-object-wrapper', {
+                        height: '70vh',
+                        pdfOpenParams: { view: 'FitV', page: '1' },
+                    });
+                    pdfWrapper.dataset['urlPdf'] = urlBlob;
+                    btnNewtab.setAttribute('href', urlBlob);
+                    modalFileName.innerText = request
+                        .getResponseHeader('Content-Location')
+                        ?.split('/')
+                        .pop();
+                    modalPdf.show();
+                },
+                error: function (err) {
+                    console.log('[Log On] >> [roles-index.blade] -> [err] : ', err);
+                },
+            });
+        }
+        // datatable end
 
         // generate random string with datenow
         function generateRandomString() {
             return Math.floor(Math.random() * Date.now()).toString(36);
+        }
+        // convert binary file base64 to blob
+        function base64ToBlob(base64, type = 'application/octet-stream') {
+            const binStr = atob(base64);
+            const len = binStr.length;
+            const arr = new Uint8Array(len);
+            for (let i = 0; i < len; i++) {
+                arr[i] = binStr.charCodeAt(i);
+            }
+
+            return new Blob([arr], { type: type });
         }
 
         // format from dd-mm-yyyy to yyyy-mm-dd
@@ -228,16 +393,16 @@ $(document).ready(function () {
             columnDefs: [
                 //
                 {
-                    targets: 2,
+                    targets: -2, // keterangan tugas 2 dari kanan
                     render: function (data, type, row) {
                         if (type === 'display') {
-                            renderedData = $.fn.dataTable.render.ellipsis(15)(data, type, row);
+                            renderedData = $.fn.dataTable.render.ellipsis(25)(data, type, row);
                             return renderedData;
                         }
                         return data;
                     },
                 },
-                { className: 'dt-nowrap text-capitalize', targets: [2, 3, 5, 7, 8, 9, -2, -1] },
+                { className: 'dt-nowrap text-capitalize', targets: '_all' },
                 // pill status buat spt
                 renderPillStatusBuat,
                 // pill status spt approval
@@ -259,7 +424,7 @@ $(document).ready(function () {
         // ===========>>>>>>>>> ini utuk uncolapse text end
 
         // ====== button in datatable ======
-        $('#tabel').on('click', '.btn-action', function () {
+        $('#tabel').on('click', '.btn-action', function (event) {
             let data = $(this).data();
             let id = data.id;
             let typeaction = data.typeaction;
@@ -269,73 +434,97 @@ $(document).ready(function () {
                 formUrl = `${urlBaseModulPKA}/spt/${id}/edit`;
             } else if (typeaction == 'edit_pka') {
                 formUrl = `${urlBaseModulPKA}/pka/${id}/edit`;
+            } else if (typeaction == 'control_collapse') {
+                handleButtonCollapse($(this));
+                $(this).tooltip('hide');
+            } else if (typeaction == 'view_lampiran_pka') {
+                event.preventDefault();
+                handleChildTableButtonLampiranPka(this);
+            } else if (typeaction == 'update_status_spt') {
+                // storing this element, when dropdown close. will delete all event listener on a
+                drowDownIsShowStore = $(this);
+                $(this)
+                    .siblings('ul.dropdown-menu.show')
+                    .find('li a.dropdown-item')
+                    .bind('click.update_status_spt', function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log(e);
+                        return false;
+                    });
             }
 
-            $.ajax({
-                type: 'GET',
-                url: formUrl,
-                // data: "data",
-                // dataType: "dataType",
-                success: function (resHtlm) {
-                    // set content modal from response
-                    let modRes = $('#modal-action').find('.modal-dialog').html(resHtlm);
+            if (formUrl) {
+                $.ajax({
+                    type: 'GET',
+                    url: formUrl,
+                    // data: "data",
+                    // dataType: "dataType",
+                    success: function (resHtlm) {
+                        // set content modal from response
+                        let modRes = $('#modal-action').find('.modal-dialog').html(resHtlm);
 
-                    if (typeaction == 'edit_spt') {
-                        // get tanggalMulaiSpt
-                        let tanggalMulaiSpt = modRes.find('input#tanggalmulaispt').val();
-                        // get tanggalSelesaiSpt
-                        let tanggalSelesaiSpt = modRes.find('input#tanggalselesaispt').val();
-                        // formatdate tanggalMulaiSpt yyyy-mm-dd to dd-mm-yyyy
-                        modRes
-                            .find('input#tanggalmulaispt')
-                            .val(
-                                tanggalMulaiSpt ? moment(tanggalMulaiSpt).format('DD-MM-YYYY') : ''
-                            );
-                        // formatdate tanggalSelesaiSpt yyyy-mm-dd to dd-mm-yyyy
-                        modRes
-                            .find('input#tanggalselesaispt')
-                            .val(
-                                tanggalSelesaiSpt
-                                    ? moment(tanggalSelesaiSpt).format('DD-MM-YYYY')
-                                    : ''
-                            );
-                    } else if (typeaction == 'edit_pka') {
-                        // get tanggalMulaiPka
-                        let tanggalMulaiPka = modRes.find('input#tanggalmulaipka').val();
-                        // get tanggalSelesaiPka
-                        let tanggalSelesaiPka = modRes.find('input#tanggalselesaipka').val();
-                        // formatdate tanggalMulaiPka yyyy-mm-dd to dd-mm-yyyy
-                        modRes
-                            .find('input#tanggalmulaipka')
-                            .val(
-                                tanggalMulaiPka ? moment(tanggalMulaiPka).format('DD-MM-YYYY') : ''
-                            );
-                        // formatdate tanggalSelesaiPka yyyy-mm-dd to dd-mm-yyyy
-                        modRes
-                            .find('input#tanggalselesaipka')
-                            .val(
-                                tanggalSelesaiPka
-                                    ? moment(tanggalSelesaiPka).format('DD-MM-YYYY')
-                                    : ''
-                            );
-                    }
-                    // show modified modal
-                    modalAction.show();
-                    // initial datePicker
-                    initialDatePicker();
-                    // prepare for execution save
-                    if (typeaction == 'edit_spt') {
-                        handleUpdateSpt();
-                        handleDasarTugas();
-                        handleAnggota();
-                    } else if (typeaction == 'edit_pka') {
-                        handleUpdatePka();
-                    }
-                },
-                error: function (err) {
-                    console.log('[Log On] >> [roles-index.blade] -> [err] : ', err);
-                },
-            });
+                        if (typeaction == 'edit_spt') {
+                            // get tanggalMulaiSpt
+                            let tanggalMulaiSpt = modRes.find('input#tanggalmulaispt').val();
+                            // get tanggalSelesaiSpt
+                            let tanggalSelesaiSpt = modRes.find('input#tanggalselesaispt').val();
+                            // formatdate tanggalMulaiSpt yyyy-mm-dd to dd-mm-yyyy
+                            modRes
+                                .find('input#tanggalmulaispt')
+                                .val(
+                                    tanggalMulaiSpt
+                                        ? moment(tanggalMulaiSpt).format('DD-MM-YYYY')
+                                        : ''
+                                );
+                            // formatdate tanggalSelesaiSpt yyyy-mm-dd to dd-mm-yyyy
+                            modRes
+                                .find('input#tanggalselesaispt')
+                                .val(
+                                    tanggalSelesaiSpt
+                                        ? moment(tanggalSelesaiSpt).format('DD-MM-YYYY')
+                                        : ''
+                                );
+                        } else if (typeaction == 'edit_pka') {
+                            // get tanggalMulaiPka
+                            let tanggalMulaiPka = modRes.find('input#tanggalmulaipka').val();
+                            // get tanggalSelesaiPka
+                            let tanggalSelesaiPka = modRes.find('input#tanggalselesaipka').val();
+                            // formatdate tanggalMulaiPka yyyy-mm-dd to dd-mm-yyyy
+                            modRes
+                                .find('input#tanggalmulaipka')
+                                .val(
+                                    tanggalMulaiPka
+                                        ? moment(tanggalMulaiPka).format('DD-MM-YYYY')
+                                        : ''
+                                );
+                            // formatdate tanggalSelesaiPka yyyy-mm-dd to dd-mm-yyyy
+                            modRes
+                                .find('input#tanggalselesaipka')
+                                .val(
+                                    tanggalSelesaiPka
+                                        ? moment(tanggalSelesaiPka).format('DD-MM-YYYY')
+                                        : ''
+                                );
+                        }
+                        // show modified modal
+                        modalAction.show();
+                        // initial datePicker
+                        initialDatePicker();
+                        // prepare for execution save
+                        if (typeaction == 'edit_spt') {
+                            handleUpdateSpt();
+                            handleDasarTugas();
+                            handleAnggota();
+                        } else if (typeaction == 'edit_pka') {
+                            handleUpdatePka();
+                        }
+                    },
+                    error: function (err) {
+                        console.log('[Log On] >> [roles-index.blade] -> [err] : ', err);
+                    },
+                });
+            }
         });
         // ====== button in datatable ======
 
@@ -588,17 +777,6 @@ $(document).ready(function () {
 
             let reader = new FileReader();
             // let readerLampiran = new FileReader();
-
-            function base64ToBlob(base64, type = 'application/octet-stream') {
-                const binStr = atob(base64);
-                const len = binStr.length;
-                const arr = new Uint8Array(len);
-                for (let i = 0; i < len; i++) {
-                    arr[i] = binStr.charCodeAt(i);
-                }
-
-                return new Blob([arr], { type: type });
-            }
 
             btnLampiran.addEventListener('click', function (e) {
                 return;

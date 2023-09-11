@@ -50,11 +50,10 @@
                                 <table id="tabel" class="table table-stripped table-hover" width="100%">
                                     <thead>
                                         <tr>
-                                            <th>action</th>
+                                            <th></th>
                                             <th>No.</th>
                                             <th>pemohon spt</th>
                                             <th>sifat tugas</th>
-                                            <th>PKA</th>
                                             <th>nomor pengajuan</th>
                                             <th>status buat</th>
                                             <th>tanggal mulai</th>
@@ -116,6 +115,85 @@
             </div>
         </div>
         {{-- modal pdf end --}}
+
+        {{-- template for tabel spt start --}}
+
+        {{-- template for tabel spt (child table) --}}
+        <template id="template_tabel_spt_child">
+            <div class="details-container px-4 py-0 mb-3">
+                <div class="row mb-2">
+                    <div class="col-auto" data-child-wrapper="button-spt">
+                        <label class="form-label">View and Edit SPT</label>
+                    </div>
+                    <div class="col-auto" data-child-wrapper="button-pka">
+                        <label class="form-label">View and Edit PKA</label>
+                    </div>
+                    <div class="col-auto" data-child-wrapper="button-lampiran-pka">
+                        <label class="form-label">View Lampiran PKA</label>
+                    </div>
+                    <div class="col-auto" data-child-wrapper="button-update-spt">
+                        <label class="form-label">Update Status SPT</label>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        {{-- template for tabel spt (button view pdf) --}}
+        <template id="template_tabel_spt_view_button_lampiran_pka">
+            <div class="d-flex">
+                <a href="{{ route('pkaspt.pka.filepdf', '_REPLACE_ID_PKA') }}?encode=yes" data-id=""
+                    data-typeaction="view_lampiran_pka" data-bs-toggle="tooltip" data-bs-placement="top"
+                    title="View Lampiran" data-bs-original-title="View Lampiran"
+                    class="btn btn-action btn-sm btn-outline-danger icon-left">
+                    <i class="ti-zip"></i>
+                    PDF
+                </a>
+            </div>
+        </template>
+
+        {{-- template for tabel spt (button update status spt) --}}
+        <template id="template_tabel_spt_button_update_status_spt">
+            <div class="d-flex">
+                <div class="btn-group">
+                    <button type="button" data-id-spt=""
+                        class="btn btn-action btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown"
+                        aria-expanded="false" data-typeaction="update_status_spt">
+                        Update Status
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item text-warning" style="font-size: 14px" href="#">
+                                <i class="ti-settings"></i>
+                                Revision
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" style="font-size: 14px; color:#9a43ff;" href="#">
+                                <i class="ti-check-box"></i>
+                                Verified
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item text-danger" style="font-size: 14px" href="#">
+                                <i class="ti-na"></i>
+                                Rejected
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item text-success" style="font-size: 14px" href="#">
+                                <i class="ti-stamp"></i>
+                                Approved
+                            </a>
+                        <li>
+                            <hr class="text-white dropdown-divider">
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </template>
+
+        {{-- template for tabel spt end --}}
+
     </div>
 @endsection
 
