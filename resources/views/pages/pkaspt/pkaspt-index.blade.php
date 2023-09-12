@@ -45,6 +45,37 @@
                             <h6 class="card-title">Daftar Pengajuan SPT</h6>
                         </div>
                         <div class="card-body">
+                            <div class="form-filter row mb-2">
+                                <h2 class="fs-6 mb-1">Filter</h2>
+                                <div class="form-group form-control-sm col-md-4 col-sm-4">
+                                    <label for="cmb_pemohon_spt" class="form-label">Pemohon SPT</label>
+                                    <select class="cmb_filter_dt cmb_select2 form-select form-select-sm"
+                                        name="cmb_pemohon_spt">
+                                        <option></option>
+                                        {{-- render data ajax here --}}
+                                    </select>
+                                    <span class="help-block"></span>
+                                </div>
+                                <div class="form-group form-control-sm col-md-3 col-sm-4">
+                                    <label for="cmb_sifat_tugas" class="form-label">Sifat Tugas</label>
+                                    <select class="cmb_filter_dt cmb_select2 form-select form-select-sm"
+                                        name="cmb_sifat_tugas">
+                                        <option></option>
+                                        {{-- render data ajax here --}}
+                                    </select>
+                                    <span class="help-block"></span>
+                                </div>
+                                <div class="form-group form-control-sm col-md-3 col-sm-4">
+                                    <label for="cmb_last_status_history" class="form-label">Status SPT</label>
+                                    <select class="cmb_filter_dt cmb_select2 form-select form-select-sm"
+                                        name="cmb_last_status_history">
+                                        <option></option>
+                                        {{-- render data ajax here --}}
+                                    </select>
+                                    <span class="help-block"></span>
+                                </div>
+                                <div class="divider"></div>
+                            </div>
                             {{--  --}}
                             <div class="dt-responsive">
                                 <table id="tabel" class="table table-stripped table-hover" width="100%">

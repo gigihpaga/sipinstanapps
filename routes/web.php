@@ -53,7 +53,8 @@ Route::middleware(['auth'])->group(function () {
 
     // pkaspt
     Route::get('dokumen/pkaspt', [PkaSptController::class, 'index'])->name('pkaspt.index');
-    Route::get('dokumen/pkaspt/loadData', [PkaSptController::class, 'loadData'])->name('pkaspt.loadData');
+    Route::post('dokumen/pkaspt/loadData', [PkaSptController::class, 'loadData'])->name('pkaspt.loadData');
+    Route::get('dokumen/pkaspt/pemohon_spt', [PkaSptController::class, 'loadPemohonSpt'])->name('pkaspt.pemohon_spt');
     Route::get('dokumen/pkaspt/create', [PkaSptController::class, 'create'])->name('pkaspt.create');
     Route::get('dokumen/pkaspt/pka/{pka}/edit', [PkaSptController::class, 'edit'])->name('pkaspt.pka.edit');
     Route::get('dokumen/pkaspt/pka/{id}/file_pdf', [PkaSptController::class, 'filePdf'])->name('pkaspt.pka.filepdf');

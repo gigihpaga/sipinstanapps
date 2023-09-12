@@ -17,6 +17,18 @@ $(document).ready(function () {
             { id: '3', nama: 'Ketua Tim' },
             { id: '4', nama: 'Anggota' },
         ];
+        const dataSifatTugasSpt = [
+            { id: 'PKPT', name: 'PKPT' },
+            { id: 'Non-PKPT', name: 'Non-PKPT' },
+        ];
+        const dataStatusHistorySpt = [
+            { id: 1, value: 'created' },
+            { id: 2, value: 'revision' },
+            { id: 3, value: 'updated' },
+            { id: 4, value: 'verified' },
+            { id: 5, value: 'rejected' },
+            { id: 6, value: 'approved' },
+        ];
 
         const myModalEl = document.getElementById('modal-action');
         // tracking modal on hide
@@ -202,6 +214,15 @@ $(document).ready(function () {
         const templateTableButtonUpdateSpt = document.querySelector(
             '#template_tabel_spt_button_update_status_spt'
         );
+        const cmbPemohonSpt = $('select[name="cmb_pemohon_spt"]');
+        const cmbSifatTugas = $('select[name="cmb_sifat_tugas"]');
+        const cmbLastStatusHistory = $('select[name="cmb_last_status_history"]');
+        // define variable to storing value combobox filter and passing to parameter datatable
+        let [cmbPemohonSptValue, cmbSifatTugasValue, cmbLastStatusHistoryValue] = [
+            null,
+            null,
+            null,
+        ];
 
         //
         function renderChildTable(dataRowDT) {
@@ -388,7 +409,15 @@ $(document).ready(function () {
             ajax: {
                 // url: "{{ route('pkaspt.loadData') }}",
                 url: `${urlBaseModulPKA}/loadData`,
-                type: 'GET',
+                type: 'POST',
+                data: function (d) {
+                    (d.f_pemohon_spt = cmbPemohonSptValue),
+                        (d.f_sifat_tugas = cmbSifatTugasValue),
+                        (d.f_last_status_history = cmbLastStatusHistoryValue);
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                },
             },
             columnDefs: [
                 //
@@ -604,6 +633,39 @@ $(document).ready(function () {
             });
         });
 
+        // build combobox start
+        cmbSifatTugas.css('width', '100%').select2({
+            placeholder: 'Pilih salah satu',
+            theme: 'bootstrap-5',
+            allowClear: true,
+            data: $.map(dataSifatTugasSpt, function (obj) {
+                obj.id = obj.id;
+                obj.text = obj.name;
+                return obj;
+            }),
+        });
+
+        cmbLastStatusHistory.css('width', '100%').select2({
+            placeholder: 'Pilih salah satu',
+            theme: 'bootstrap-5',
+            allowClear: true,
+            data: $.map(dataStatusHistorySpt, function (obj) {
+                obj.id = obj.id;
+                obj.text = obj.value;
+                return obj;
+            }),
+        });
+
+        // handle all filter combobox on change
+        $('.cmb_filter_dt').on('change', function (e) {
+            cmbPemohonSptValue = cmbPemohonSpt.val();
+            cmbSifatTugasValue = cmbSifatTugas.val();
+            cmbLastStatusHistoryValue = cmbLastStatusHistory.val();
+            // force reload table
+            table.ajax.reload(null, false);
+        });
+        // build combobox start
+
         // handle button save on form action
         function handleSubmit() {
             $('#next-btn-modal').on('click', function (e) {
@@ -745,6 +807,35 @@ $(document).ready(function () {
                 elmButton.button('reset');
             });
         }
+
+        (function loadComboBoxPemohonSPt() {
+            $.ajax({
+                type: 'GET',
+                url: `${urlBaseModulPKA}/pemohon_spt`,
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                },
+                processData: false,
+                contentType: false,
+                dataType: 'JSON',
+                success: function (response) {
+                    // set response data to comboox cmb_pemohon_spt
+                    cmbPemohonSpt.css('width', '100%').select2({
+                        placeholder: 'Pilih salah satu',
+                        theme: 'bootstrap-5',
+                        allowClear: true,
+                        data: $.map(response.data, function (obj) {
+                            obj.id = obj.id;
+                            obj.text = obj.name;
+                            return obj;
+                        }),
+                    });
+                },
+                error: function (resErr) {
+                    console.log('[Log On] >> [pkasptTrans] -> [loadComboBoxPemohonSPt] : ', resErr);
+                },
+            });
+        })();
 
         // form spt update
         function handleUpdateSpt() {

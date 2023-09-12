@@ -9,6 +9,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 // use Yajra\DataTables\DataTables;
 use Yajra\DataTables\Facades\DataTables;
 // use PDF;
@@ -29,7 +30,11 @@ class PkaSptController extends Controller
 
     public function loadData()
     {
-        $model = Spt::with('user')->with('lastStatusHistory')->get();
+        $model = Spt::query()
+            ->filter(request(['f_pemohon_spt', 'f_sifat_tugas', 'f_last_status_history']))
+            ->with('user')
+            ->with('lastStatusHistory')
+            ->get();
         return DataTables::of($model)
             ->addIndexColumn()
             ->addColumn('control_collapse', function ($row) {
@@ -42,6 +47,26 @@ class PkaSptController extends Controller
                 return view('pages.pkaspt.pkaspt-button-pka')->with(['data' => $row]);
             })
             ->make(true);
+    }
+
+    /**
+     * load data pemohon spt distinct.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function loadPemohonSpt()
+    {
+        $model = DB::table('spt')
+            ->join('users', 'users.id', '=', 'spt.pemohon_spt')
+            ->select('spt.pemohon_spt', 'users.id', 'users.name')
+            ->groupBy('spt.pemohon_spt', 'users.id', 'users.name')
+            ->orderBy('users.name')
+            ->get();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Get data successfully',
+            'data' => $model,
+        ]);
     }
 
     /**
