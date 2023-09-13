@@ -640,6 +640,11 @@ $(document).ready(function () {
             });
         });
 
+        // forces the dropdown to not close when clicked on the dropdown
+        $('#btn-descriptions-status-spt .dropdown-item').on('click', function (e) {
+            e.stopPropagation();
+        });
+
         // build combobox start
         cmbSifatTugas.css('width', '100%').select2({
             placeholder: 'Pilih salah satu',

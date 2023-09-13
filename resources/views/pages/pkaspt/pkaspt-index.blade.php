@@ -42,7 +42,14 @@
                     </div>
                     <div class="card">
                         <div class="card-header">
-                            <h6 class="card-title">Daftar Pengajuan SPT</h6>
+                            <div class="row d-flex justify-evenly">
+                                <div class="col">
+                                    <h6 class="card-title">Daftar Pengajuan SPT</h6>
+                                </div>
+                                <div class="col-2">
+                                    <x-button-descriptions-status-spt />
+                                </div>
+                            </div>
                         </div>
                         <div class="card-body">
                             <div class="form-filter row mb-2">

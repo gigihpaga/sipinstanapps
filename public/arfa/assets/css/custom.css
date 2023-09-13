@@ -178,6 +178,28 @@ div.dropdown-item:active {
     color: #fff;
 }
 
+/* button dropdown for description status spt */
+#btn-descriptions-status-spt button[data-bs-toggle='dropdown'] {
+    padding: 0.1rem 0.3rem 0.1rem 0.3rem;
+}
+
+#btn-descriptions-status-spt button[data-bs-toggle='dropdown'] i {
+    font-size: 0.8em;
+}
+
+#btn-descriptions-status-spt .dropdown-menu .menu-header {
+    font-size: 14px;
+}
+
+#btn-descriptions-status-spt li.menu-content button.nav-link {
+    padding: 0.2rem 0.3rem 0.2rem 0.3rem;
+    font-size: 12px;
+}
+
+#btn-descriptions-status-spt li.menu-content div.tab-content {
+    font-size: 12px;
+}
+
 /* divider */
 .divider {
     width: 100%;
