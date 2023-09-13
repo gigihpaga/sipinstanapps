@@ -152,6 +152,28 @@ a.dropdown-item:active {
     background-color: #d4d4d4;
 }
 
+div.dropdown-item {
+    font-size: 14px;
+}
+
+div.dropdown-item:hover {
+    background-color: #d4d4d41b;
+}
+
+div.dropdown-item:active {
+    background-color: #d4d4d41b;
+    color: #625f6e;
+}
+
+#btn-controll-column .dropdown-menu {
+    max-height: 14rem;
+    overflow-y: scroll;
+}
+
+#btn-controll-column .dropdown-menu input[type='checkbox']:hover {
+    cursor: pointer;
+}
+
 .btn.btn-outline-secondary.show {
     color: #fff;
 }

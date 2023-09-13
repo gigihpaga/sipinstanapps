@@ -52,10 +52,12 @@ $(document).ready(function () {
         let drowDownIsShowStore;
         $(document).on('hide.bs.dropdown', function () {
             // delete all event listener on a , event listener add on button[typeaction == 'update_status_spt'] on table spt child
-            drowDownIsShowStore
-                .siblings('ul.dropdown-menu')
-                .find('li a.dropdown-item')
-                .unbind('click.update_status_spt');
+            if (drowDownIsShowStore) {
+                drowDownIsShowStore
+                    .siblings('ul.dropdown-menu')
+                    .find('li a.dropdown-item')
+                    .unbind('click.update_status_spt');
+            }
         });
 
         // https://jsfiddle.net/thnex9ad/
@@ -84,6 +86,9 @@ $(document).ready(function () {
                 });
         }
 
+        // retrieve table information that I have defined before manipulating the datatable
+        const thTableOriginal = document.querySelectorAll('table#tabel th');
+
         // datatable start
         const listColums = [
             {
@@ -91,6 +96,7 @@ $(document).ready(function () {
                 name: 'control_collapse',
                 orderable: false,
                 searchable: false,
+                width: '5%',
             },
             // {
             //     data: 'action',
@@ -401,6 +407,7 @@ $(document).ready(function () {
             processing: true,
             serverSide: true,
             scrollX: true,
+            stateSave: true,
             // autoWidth: true,
             language: {
                 processing:
@@ -665,6 +672,67 @@ $(document).ready(function () {
             table.ajax.reload(null, false);
         });
         // build combobox start
+
+        // $('#btn-controll-column');
+        (function buttonControlColumn() {
+            const buttonControlColumn = document.querySelector('#btn-controll-column');
+            const buttonControlColumnLi = buttonControlColumn.querySelector('li');
+            const ulElement = buttonControlColumn.querySelector('ul');
+            /**
+             * trying read datatable setting on local storage browser,
+             * e.g key: DataTables_tabel_/dokumen/pkaspt (google chrome dev tool, tab aplication, Local Storaage)
+             * datatable will save status on local storage when properti ===> "stateSave: true" <===
+             * i can using index column in thead (define in html before datatable draw), because datatables will draw with reference to my thead
+             */
+            const localStorageDT = localStorage.getItem(
+                `DataTables_tabel_${window.location.pathname}`
+            );
+            const localStorageDTObj = localStorageDT ? JSON.parse(localStorageDT) : false;
+
+            thTableOriginal.forEach((item, index, arr) => {
+                // thead with innerText = '' && innerText = "No.". not included in the control column list
+                if (item.innerText != '' && item.innerText != 'No.') {
+                    // cloning first element on ul button controll collumn
+                    let liClone = buttonControlColumnLi.cloneNode(true);
+                    let prefixButtonControl = `list-controll-column-${generateRandomString()}`;
+
+                    // set original text thead to label dropdown, and add prefix
+                    let labelCheck = liClone.querySelector('label');
+                    labelCheck.innerText = item.innerText;
+                    labelCheck.setAttribute('for', prefixButtonControl);
+
+                    // set original index thead to checkbox dropdown, and add prefix
+                    let inputCheck = liClone.querySelector('input[type="checkbox"]');
+                    inputCheck.setAttribute('data-idx-column', index);
+                    inputCheck.setAttribute('id', prefixButtonControl);
+
+                    if (localStorageDTObj) {
+                        // syncronize status column visible in localstorage with controll column input checkbox
+                        inputCheck.checked = localStorageDTObj.columns[index].visible;
+                    } else {
+                        inputCheck.checked = true;
+                    }
+
+                    ulElement.append(liClone);
+                }
+            });
+            // delete the first element li in ul, because the first element is only a reference for easy manipulation
+            ulElement.removeChild(ulElement.firstElementChild);
+
+            // add event listener to controll column visible || not visible
+            ulElement.querySelectorAll('input[type="checkbox"]').forEach((elmCheck) => {
+                elmCheck.addEventListener('click', function (e) {
+                    let columnIdx = e.target.getAttribute('data-idx-column');
+                    let column = table.column(columnIdx);
+                    // status visible column will be save in localStorage via dataTables, if properti dataTables ===> "stateSave: true" <===
+                    if (e.target.checked) {
+                        column.visible(true);
+                    } else {
+                        column.visible(false);
+                    }
+                });
+            });
+        })();
 
         // handle button save on form action
         function handleSubmit() {

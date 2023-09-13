@@ -74,6 +74,31 @@
                                     </select>
                                     <span class="help-block"></span>
                                 </div>
+                                <div class="form-group form-control-sm col-md-2 col-sm-4">
+                                    <div class="row">
+                                        <label for="" class="form-label">Atur Kolom</label>
+                                        <div id="btn-controll-column" class="btn-group">
+                                            <button type="button" role="button" data-bs-toggle="dropdown"
+                                                aria-expanded="false"
+                                                class="btn btn-sm btn-outline-secondary dropdown-toggle">
+                                                Kolom
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <div class="dropdown-item">
+                                                        <div class="form-check">
+                                                            <input id="" class="form-check-input"
+                                                                data-idx-column="" type="checkbox" value="">
+                                                            <label for="" class="form-check-label">
+                                                                Default checkbox
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="divider"></div>
                             </div>
                             {{--  --}}
