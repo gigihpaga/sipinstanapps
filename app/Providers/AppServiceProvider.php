@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Macros\ResponseJsonMacro;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -14,6 +16,8 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         //
+        // custome Response Json
+        Response::mixin(new ResponseJsonMacro());
     }
 
     /**
