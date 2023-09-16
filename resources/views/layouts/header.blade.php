@@ -31,11 +31,15 @@
                                      alt="user1">
                              </div>
                              <div class="message-content">
-                                 <div class="subject">Michele</div>
+                                 <div class="subject">
+                                     Michele
+                                 </div>
                                  <div class="body">
                                      Please come to my party
                                  </div>
-                                 <div class="time">3 hours ago</div>
+                                 <div class="time">
+                                     3 hours ago
+                                 </div>
                              </div>
                          </a>
                          <a href="#">
@@ -50,7 +54,9 @@
                                  <div class="body">
                                      I have something to discuss, please call me soon
                                  </div>
-                                 <div class="time">3 hours ago</div>
+                                 <div class="time">
+                                     3 hours ago
+                                 </div>
                              </div>
                          </a>
                          <a href="#">
@@ -65,7 +71,9 @@
                                  <div class="body">
                                      Sorry i'm late
                                  </div>
-                                 <div class="time">8 hours ago</div>
+                                 <div class="time">
+                                     8 hours ago
+                                 </div>
                              </div>
                          </a>
                          <a href="#">
@@ -80,7 +88,9 @@
                                  <div class="body">
                                      Please answer my question last night
                                  </div>
-                                 <div class="time">Last month</div>
+                                 <div class="time">
+                                     Last month
+                                 </div>
                              </div>
                          </a>
                      </li>
@@ -93,7 +103,9 @@
                  </a>
                  <ul class="dropdown-menu medium">
                      <li class="menu-header">
-                         <a class="dropdown-item" href="#">Notification</a>
+                         <a class="dropdown-item" href="#">
+                             Notification
+                         </a>
                      </li>
                      <li class="menu-content ps-menu">
                          <a href="#">
@@ -104,7 +116,9 @@
                                  <div class="body">
                                      There's incoming event, don't miss it!!
                                  </div>
-                                 <div class="time">Just now</div>
+                                 <div class="time">
+                                     Just now
+                                 </div>
                              </div>
                          </a>
                          <a href="#">
@@ -115,7 +129,9 @@
                                  <div class="body">
                                      Your licence will expired soon
                                  </div>
-                                 <div class="time">3 hours ago</div>
+                                 <div class="time">
+                                     3 hours ago
+                                 </div>
                              </div>
                          </a>
                          <a href="#">
@@ -126,7 +142,9 @@
                                  <div class="body">
                                      Successfully register new user
                                  </div>
-                                 <div class="time">8 hours ago</div>
+                                 <div class="time">
+                                     8 hours ago
+                                 </div>
                              </div>
                          </a>
                      </li>
@@ -148,12 +166,14 @@
                      <li class="menu-content ps-menu">
                          <a href="#">
                              <div class="description">
-                                 <i class="ti-user"></i> Profile
+                                 <i class="ti-user"></i>
+                                 Profile
                              </div>
                          </a>
                          <a href="#">
                              <div class="description">
-                                 <i class="ti-settings"></i> Setting
+                                 <i class="ti-settings"></i>
+                                 Setting
                              </div>
                          </a>
                          <a href="{{ route('logout') }}"

@@ -12,9 +12,9 @@
       <div class="sidebar-header">
           <div class="sidebar-title">
               <span class="image">
-                <a href="/">
-                    <img src="{{asset("favicon.ico")}}" alt="logo">
-                </a>
+                  <a href="/">
+                      <img src="{{ asset('favicon.ico') }}" alt="logo">
+                  </a>
               </span>
 
               <div class="sidebar-title-text text">
