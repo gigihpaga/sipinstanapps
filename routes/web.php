@@ -62,6 +62,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('dokumen/pkaspt/pka', [PkaSptController::class, 'store_pka'])->name('pkaspt.pka.store');
     Route::match(['PUT', 'PATCH'], 'dokumen/pkaspt/pka/{id}', [PkaSptController::class, 'update'])->name('pkaspt.pka.update');
     Route::resource('dokumen/pkaspt/spt', SptController::class);
+    Route::post('dokumen/pkaspt/spt/{spt}/update_status', [SptController::class, 'updateStatus'])->name('spt.updatestatus');
     Route::resource('dokumen/pkaspt/spt/dasartugas', DasarTugasController::class);
     Route::get('dokumen/pkaspt/spt/dasartugas/{spt}/dasartugas_by_spt', [DasarTugasController::class, 'loadDataBySpt'])->name('pkaspt.spt.dasartugas.byspt');
     Route::resource('dokumen/pkaspt/spt/anggota', AnggotaController::class);

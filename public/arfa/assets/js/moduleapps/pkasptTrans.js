@@ -8,6 +8,7 @@ $(document).ready(function () {
         // initial modal
         const modalAction = new bootstrap.Modal($('#modal-action'));
         const modalPdf = new bootstrap.Modal($('#modal-pdf'));
+        const modalKeteranganUpdateStatusSpt = new bootstrap.Modal($('#modal-update-status-spt'));
 
         // data pegawai
         let dataPegawai = []; // can be set from function loadDataPegawai()
@@ -48,6 +49,28 @@ $(document).ready(function () {
             URL.revokeObjectURL(modalPdfEl.querySelector('#pdf-object-wrapper').dataset['urlPdf']);
         });
 
+        /** modal update status spt */
+        // keep original url form, for reset the form
+        const _ORIGINAL_URL_UPDATE_STATUS_SPT = modalKeteranganUpdateStatusSpt._element
+            .querySelector('form#form-update-status-spt')
+            .getAttribute('action');
+
+        modalKeteranganUpdateStatusSpt._element.addEventListener('hide.bs.modal', function (e) {
+            // delete event listener
+            $(e.target).find('button#update-status-spt').unbind('click');
+            // reset form
+            let form = $(e.target).find('form#form-update-status-spt');
+            form.attr('action', _ORIGINAL_URL_UPDATE_STATUS_SPT);
+            form.find('input[name="spt_id"]').val('');
+            form.find('input[name="status"]').val('');
+            form.find('textarea[name="keterangan"]').val('').removeClass('is-invalid');
+            form.find('.text-danger.text-small').remove();
+        });
+
+        modalKeteranganUpdateStatusSpt._element.addEventListener('shown.bs.modal', function (e) {
+            $(e.target).find('textarea[name="keterangan"]').trigger('focus');
+        });
+
         // tracking dropdown on hide
         let drowDownIsShowStore;
         $(document).on('hide.bs.dropdown', function () {
@@ -55,8 +78,8 @@ $(document).ready(function () {
             if (drowDownIsShowStore) {
                 drowDownIsShowStore
                     .siblings('ul.dropdown-menu')
-                    .find('li a.dropdown-item')
-                    .unbind('click.update_status_spt');
+                    .find('li button.dropdown-item')
+                    .unbind('click.child_dropdown_update_status_spt');
             }
         });
 
@@ -243,6 +266,7 @@ $(document).ready(function () {
                 templateTableButtonLampiranPka.content.cloneNode(true);
             let templateTableButtonUpdateSptContent =
                 templateTableButtonUpdateSpt.content.cloneNode(true);
+            let buttonUpdateStatusSptWrapperIsAvailable = false;
 
             templateTableSptChildContent
                 .querySelectorAll('[data-child-wrapper]')
@@ -256,9 +280,12 @@ $(document).ready(function () {
                         // convert string html button pka to Node Html
                         dummyDiv.innerHTML = dataRowDT.pka;
                     } else if (dataSetchildWrapper === 'button-lampiran-pka') {
-                        dummyDiv.append(templateTableButtonLampiranPkaContent);
+                        element.append(templateTableButtonLampiranPkaContent);
+                        return;
                     } else if (dataSetchildWrapper === 'button-update-spt') {
-                        dummyDiv.append(templateTableButtonUpdateSptContent);
+                        element.append(templateTableButtonUpdateSptContent);
+                        buttonUpdateStatusSptWrapperIsAvailable = true;
+                        return;
                     }
                     // append Node Html button to element wrapper
                     element.append(dummyDiv.firstElementChild);
@@ -269,10 +296,65 @@ $(document).ready(function () {
             );
             // button lampiran set href, replace href buttonLampiran, e.g: from http://127.0.0.1:8000/dokumen/pkaspt/pka/_REPLACE_ID_PKA/file_pdf?encode=yes to http://127.0.0.1:8000/dokumen/pkaspt/pka/18/file_pdf?encode=yes
             buttonLampiran.href = buttonLampiran.href.replace('_REPLACE_ID_PKA', dataRowDT.pka_id);
-            // button update status spt set dataset data-id-spt
-            templateTableSptChildContent.querySelector(
-                'button[data-typeaction="update_status_spt"]'
-            ).dataset['idSpt'] = dataRowDT.id;
+
+            // manipulation ke 2 (manipulation button update status spt sesuai dengan alur bisnis)
+            if (buttonUpdateStatusSptWrapperIsAvailable) {
+                const _rowStatusBuatSpt = dataRowDT.status_buat;
+                const rowStatusLastSpt = dataRowDT.last_status_history?.status;
+                console.log();
+
+                const buttonUpdateSptWrapper = templateTableSptChildContent.querySelector(
+                    'div[data-child-wrapper="button-update-spt"]'
+                );
+                // button update status spt set dataset data-id-spt
+                buttonUpdateSptWrapper.querySelector(
+                    'button[data-typeaction="update_status_spt"]'
+                ).dataset['idSpt'] = dataRowDT.id;
+
+                const arrListAStatusSpt = templateTableSptChildContent.querySelectorAll(
+                    'li button[data-status-spt]'
+                );
+
+                if (
+                    /**
+                     * jika pada row tables spt mempunya statusBuat: 0 draft/belum selesai
+                     * jika pada row tables spt mempunya statusLastSpt 2: revision || 5: rejected || 6: approved
+                     * maka tombol ubah status tidak tampil
+                     */
+                    _rowStatusBuatSpt == 0 ||
+                    rowStatusLastSpt == 2 ||
+                    rowStatusLastSpt == 5 ||
+                    rowStatusLastSpt == 6 ||
+                    typeof rowStatusLastSpt === 'undefined' ||
+                    typeof rowStatusLastSpt === 'null'
+                ) {
+                    buttonUpdateSptWrapper.remove();
+                } else if (rowStatusLastSpt == 1 || rowStatusLastSpt == 3) {
+                    /** 1: created || 3:updated
+                     * jika pada row tables spt mempunya status 1: created || 3:updated
+                     * maka tombol ubah status hanya menampilkan perubahan untuk 2: revision & 4: verified
+                     */
+                    arrListAStatusSpt.forEach((element, index, arr) => {
+                        let _status_spt = element.getAttribute('data-status-spt');
+                        // 5: rejected 6: approved, remove()
+                        if (_status_spt == 5 || _status_spt == 6) {
+                            element.closest('li').remove();
+                        }
+                    });
+                } else if (rowStatusLastSpt == 4) {
+                    /** 4: verified
+                     * jika pada row tables spt mempunya status 4: verified
+                     * maka tombol ubah status hanya menampilkan perubahan untuk 5: rejected & 6: approved
+                     */
+                    arrListAStatusSpt.forEach((element, index, arr) => {
+                        let _status_spt = element.getAttribute('data-status-spt');
+                        // 2: revision || 4: verified
+                        if (_status_spt == 2 || _status_spt == 4) {
+                            element.closest('li').remove();
+                        }
+                    });
+                }
+            }
 
             const serializer = new XMLSerializer();
             // convert html <template> #template_tabel_spt_child to string Html
@@ -306,9 +388,6 @@ $(document).ready(function () {
                 row.child(renderChildTable(row.data()), `${typeRow} details-row`).show();
                 tr.addClass('shown');
                 buttonCollapse.find('i').removeClass('ti-angle-right').addClass('ti-angle-down'); //     const typeRow = tr[0].className.includes('odd') ? 'odd' : 'even';
-                row.child(renderChildTable(row.data()), `${typeRow} details-row`).show();
-                tr.addClass('shown');
-                buttonCollapse.find('i').removeClass('ti-angle-right').addClass('ti-angle-down');
             }
 
             // // if want to can open all child row, use that
@@ -357,6 +436,48 @@ $(document).ready(function () {
                 error: function (err) {
                     console.log('[Log On] >> [roles-index.blade] -> [err] : ', err);
                 },
+            });
+        }
+        // handle Child Table, Dropdown Update Status SPT
+        function handleChildTableDropdownUpdateStatusSpt(buttonDropdownUpdateStatus) {
+            let arrButtonChildDropdown = buttonDropdownUpdateStatus
+                .siblings('ul.dropdown-menu.show')
+                .find('li button.dropdown-item');
+
+            // addEventListener to all child dropdown
+            arrButtonChildDropdown.bind('click.child_dropdown_update_status_spt', function (e) {
+                e.stopPropagation();
+                const idSpt = e.target
+                    .closest('.btn-group')
+                    .querySelector('button[data-typeaction="update_status_spt"]')
+                    .getAttribute('data-id-spt');
+                const statusSpt = e.target.getAttribute('data-status-spt');
+
+                if (idSpt && statusSpt) {
+                    modalKeteranganUpdateStatusSpt.show();
+                    let modal = modalKeteranganUpdateStatusSpt._element;
+                    let form = $(modal).find('form#form-update-status-spt');
+                    let originalUrl = form.attr('action');
+
+                    form.attr('action', originalUrl.replace('_ID_SPT', idSpt));
+                    form.find('input[name="spt_id"]').val(idSpt);
+                    form.find('input[name="status"]').val(statusSpt);
+
+                    let buttonUpdateStatus = $(modal).find('button#update-status-spt');
+                    buttonUpdateStatus.on('click', function (e) {
+                        e.stopPropagation();
+                        buttonUpdateStatus.tooltip('hide');
+                        let formData = new FormData(form[0]);
+                        onUpdateStatusSpt(form[0], formData, buttonUpdateStatus);
+                    });
+                } else {
+                    modules_toastr.notif(
+                        'Warning',
+                        'Gagal membuka modal update status SPT, mohon diulangi',
+                        'warning'
+                    );
+                }
+                return false;
             });
         }
         // datatable end
@@ -477,17 +598,9 @@ $(document).ready(function () {
                 event.preventDefault();
                 handleChildTableButtonLampiranPka(this);
             } else if (typeaction == 'update_status_spt') {
-                // storing this element, when dropdown close. will delete all event listener on a
+                // storing this element, when dropdown close. will delete all event listener on all child dropdown
                 drowDownIsShowStore = $(this);
-                $(this)
-                    .siblings('ul.dropdown-menu.show')
-                    .find('li a.dropdown-item')
-                    .bind('click.update_status_spt', function (e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        console.log(e);
-                        return false;
-                    });
+                handleChildTableDropdownUpdateStatusSpt($(this));
             }
 
             if (formUrl) {
@@ -879,6 +992,57 @@ $(document).ready(function () {
             }).done(function (data) {
                 elmButton.button('reset');
             });
+        }
+
+        //
+        function onUpdateStatusSpt(targetForm, formData, elmButton) {
+            const formTarget = targetForm;
+            const urlForm = formTarget.getAttribute('action');
+            elmButton.button('loading');
+            $.ajax({
+                type: 'POST',
+                url: urlForm,
+                data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                },
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    modules_toastr.notif('Info', response.message, 'success');
+                    modalKeteranganUpdateStatusSpt.hide();
+                    reloadTable();
+                },
+                error: function (resErr) {
+                    if (resErr.status != 422) {
+                        modules_toastr.notif('Error', 'Terjadi kesalahan', 'error');
+                    }
+                    // get list field error from json response
+                    let listFieldError = resErr.responseJSON?.errors;
+                    // reset form
+                    elmButton.button('reset');
+                    $(formTarget).find('.text-danger.text-small').remove();
+                    $(formTarget).find('.form-control').removeClass('is-invalid');
+                    // $(formTarget).find('.form-control').addClass("is-valid")
+                    if (listFieldError) {
+                        // looping key object listFieldError
+                        for (const [key, value] of Object.entries(listFieldError)) {
+                            //   find field element form with object key
+                            $(`[name=${key}]`)
+                                .addClass('is-invalid')
+                                .parents('.form-group')
+                                .append(
+                                    `<span class="text-danger text-small">${value}&nbsp;</span>`
+                                );
+                        }
+                    }
+                },
+            }).done(function (data) {
+                elmButton.button('reset');
+            });
+            // .fail(function (e) {
+            //     console.log(e);
+            // })
         }
 
         (function loadComboBoxPemohonSPt() {

@@ -160,8 +160,9 @@ div.dropdown-item:hover {
     background-color: #d4d4d41b;
 }
 
-div.dropdown-item:active {
-    background-color: #d4d4d41b;
+div.dropdown-item:active,
+button.dropdown-item:active {
+    background-color: #7b7b7b17;
     color: #625f6e;
 }
 

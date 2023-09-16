@@ -179,6 +179,48 @@
         </div>
         {{-- modal pdf end --}}
 
+        {{-- modal keterangan update status --}}
+        <div id="modal-update-status-spt" data-bs-backdrop="static" class="modal fade" tabindex="-1"
+            aria-labelledby="modal-pdf-label" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="modal-pdf-label">Update Status SPT</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form-update-status-spt" action="{{ route('spt.updatestatus', '_ID_SPT') }}"
+                            method="POST">
+                            @csrf
+                            @method('POST')
+                            <input type="hidden" name="spt_id" value="">
+                            <input type="hidden" name="status" value="">
+                            <div class="row mb-2">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="keterangan" class="form-label">Keterangan</label>
+                                        <textarea class="form-control" id="keterangan" rows="4" name="keterangan"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">
+                            Close
+                        </button>
+                        <button id="update-status-spt" type="button" class="btn btn-sm btn-primary"
+                            data-bs-toggle="tooltip" data-bs-placement="top" title="Simpan Perubahan"
+                            data-bs-original-title="">
+                            <i class="ti-save"></i>
+                            &nbsp;Simpan
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{-- modal keterangan update status --}}
+
         {{-- template for tabel spt start --}}
 
         {{-- template for tabel spt (child table) --}}
@@ -225,28 +267,32 @@
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-                            <a class="dropdown-item text-warning" style="font-size: 14px" href="#">
+                            <button type="button" data-status-spt="2" class="dropdown-item text-warning"
+                                style="font-size: 14px" {{-- href="#" --}}>
                                 <i class="ti-settings"></i>
                                 Revision
-                            </a>
+                            </button>
                         </li>
                         <li>
-                            <a class="dropdown-item" style="font-size: 14px; color:#9a43ff;" href="#">
+                            <button type="button" data-status-spt="4" class="dropdown-item"
+                                style="font-size: 14px; color:#9a43ff;" {{-- href="#" --}}>
                                 <i class="ti-check-box"></i>
                                 Verified
-                            </a>
+                            </button>
                         </li>
                         <li>
-                            <a class="dropdown-item text-danger" style="font-size: 14px" href="#">
+                            <button type="button" data-status-spt="5" class="dropdown-item text-danger"
+                                style="font-size: 14px" {{-- href="#" --}}>
                                 <i class="ti-na"></i>
                                 Rejected
-                            </a>
+                            </button>
                         </li>
                         <li>
-                            <a class="dropdown-item text-success" style="font-size: 14px" href="#">
+                            <button type="button" data-status-spt="6" class="dropdown-item text-success"
+                                style="font-size: 14px" {{-- href="#" --}}>
                                 <i class="ti-stamp"></i>
                                 Approved
-                            </a>
+                            </button>
                         <li>
                             <hr class="text-white dropdown-divider">
                         </li>
