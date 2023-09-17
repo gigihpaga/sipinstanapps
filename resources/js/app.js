@@ -1,7 +1,10 @@
 import './bootstrap';
 
-import Alpine from 'alpinejs';
+import '../sass/app.scss';
 
-window.Alpine = Alpine;
+// import Alpine from 'alpinejs';
 
-Alpine.start();
+// window.Alpine = Alpine;
+
+// Alpine.start();
+
