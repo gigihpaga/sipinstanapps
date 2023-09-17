@@ -1,4 +1,4 @@
-<x-app-layout>
+{{-- <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('Dashboard') }}
@@ -13,5 +13,18 @@
                 </div>
             </div>
         </div>
+    </div>
+</x-app-layout> --}}
+
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="">
+            {{ __('Dashboard') }}
+        </h2>
+        <p class="lead text-secondary">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Veritatis dolorem
+            ratione reprehenderit distinctio beatae quisquam provident officiis sunt rem nemo?</p>
+    </x-slot>
+    <div class="container">
+        {{ __("You're logged in!") }}
     </div>
 </x-app-layout>
