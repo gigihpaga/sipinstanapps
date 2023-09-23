@@ -1,0 +1,43 @@
+/** modal login start
+*/
+
+#modal__login ::placeholder {
+    font-size: 0.65rem;
+}
+
+/* #modal__login .modal__box_area {} */
+
+#modal__login .modal__right_box {
+    padding: 30px 20px 30px 20px;
+}
+
+#modal__login .modal__left_box .featured-image img {
+    width: 350px;
+}
+
+@media only screen and (max-width: 767px) {
+    #modal__login .modal__box_area {
+        margin: 0 10px;
+    }
+
+    #modal__login .modal__left_box {
+        height: 100px;
+        overflow: hidden;
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    /* #modal__login .modal__left_box .featured-image {} */
+
+    #modal__login .modal__left_box .featured-image img {
+        margin-top: 70%;
+        scale: 1.25;
+    }
+
+    #modal__login .modal__right_box {
+        padding: 10px;
+    }
+}
+
+/** modal login end
+*/

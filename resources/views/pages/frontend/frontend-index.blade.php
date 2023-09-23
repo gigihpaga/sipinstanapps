@@ -15,18 +15,21 @@
     <title>Landing &mdash; {{ config('app.name', 'Laravel') }}</title>
 
     {{-- * Bootstrap core CSS  * --}}
-    <link rel="stylesheet" href="{{ asset('arfa/vendor/bootstrap/css/bootstrap.min.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('arfa/vendor/bootstrap/css/bootstrap.min.css') }}"> --}}
+    {{-- <link rel="stylesheet" href="{{ asset('frontend/vendor/bootstrap/css/bootstrap.min.css') }}"> --}}
+    {{-- use bootstrap vite npm --}}
+    @vite(['resources/js/app.js'])
 
     {{-- TemplateMo 570 Chain App Dev https://templatemo.com/tm-570-chain-app-dev --}}
 
     {{-- * Additional CSS Files * --}}
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
-        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ asset('arfa/vendor/themify-icons/themify-icons.css') }}">
     {{-- *! Vendor !* --}}
-    <link rel="stylesheet" href="{{ asset('frontend/vendor/jquery/plugin/owl-carousel/owl-carousel.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('frontend/vendor/jquery/plugin/owl-carousel/owl-carousel.css') }}"> --}}
     <link rel="stylesheet" href="{{ asset('frontend/vendor/wow-animate/wow-animate.css') }}">
 
     <link rel="stylesheet" href="{{ asset('frontend/assets/css/templatemo-chain-app-dev.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontend/assets/css/custom-landing-sipinstan.css') }}">
     <style>
         svg:hover {
             fill: red;
@@ -72,6 +75,7 @@
                             <li class="scroll-to-section"><a href="#clients">Clients</a></li>
                             <li class="scroll-to-section"><a href="#pricing">Pricing</a></li>
                             <li class="scroll-to-section"><a href="#newsletter">Newsletter</a></li>
+                            {{-- 
                             <li>
                                 <div class="gradient-button">
                                     <a id="modal_trigger" href="#modal">
@@ -80,6 +84,29 @@
                                     </a>
                                 </div>
                             </li>
+                            --}}
+                            @if (auth()->check())
+                                <li>
+                                    {{-- button navigation dashboard --}}
+                                    <div class="gradient-button">
+                                        <a id="" href="{{ route('dashboard') }}">
+                                            <i class="ti-world"></i>
+                                            Apps
+                                        </a>
+                                    </div>
+                                </li>
+                            @else
+                                <li>
+                                    {{-- button trigger modal bootstrap --}}
+                                    <div class="gradient-button">
+                                        <a id="" data-bs-toggle="modal" href="#"
+                                            data-bs-target="#modal__login">
+                                            <i class="ti-user"></i>
+                                            Sign In
+                                        </a>
+                                    </div>
+                                </li>
+                            @endif
                         </ul>
                         <a class='menu-trigger'>
                             <span>Menu</span>
@@ -95,7 +122,7 @@
     <div id="modal" class="popupContainer" style="display:none;">
         <div class="popupHeader">
             <span class="header_title">Login</span>
-            <span class="modal_close"><i class="fa fa-times"></i></span>
+            <span class="modal_close"><i class="ti-close"></i></span>
         </div>
 
         <section class="popupBody">
@@ -249,7 +276,7 @@
                         <h4>App Maintenance</h4>
                         <p>You are not allowed to redistribute this template ZIP file on any other website.</p>
                         <div class="text-button">
-                            <a href="#">Read More <i class="fa fa-arrow-right"></i></a>
+                            <a href="#">Read More <i class="ti-arrow-right"></i></a>
                         </div>
                     </div>
                 </div>
@@ -260,7 +287,7 @@
                         <p>You are allowed to use the Chain App Dev HTML template. Feel free to modify or edit this
                             layout.</p>
                         <div class="text-button">
-                            <a href="#">Read More <i class="fa fa-arrow-right"></i></a>
+                            <a href="#">Read More <i class="ti-arrow-right"></i></a>
                         </div>
                     </div>
                 </div>
@@ -272,7 +299,7 @@
                                 href="https://paypal.me/templatemo" target="_blank">a little via PayPal</a>. Thank
                             you.</p>
                         <div class="text-button">
-                            <a href="#">Read More <i class="fa fa-arrow-right"></i></a>
+                            <a href="#">Read More <i class="ti-arrow-right"></i></a>
                         </div>
                     </div>
                 </div>
@@ -283,7 +310,7 @@
                         <p>Lorem ipsum dolor consectetur adipiscing elit sedder williamsburg photo booth quinoa and
                             fashion axe.</p>
                         <div class="text-button">
-                            <a href="#">Read More <i class="fa fa-arrow-right"></i></a>
+                            <a href="#">Read More <i class="ti-arrow-right"></i></a>
                         </div>
                     </div>
                 </div>
@@ -789,6 +816,97 @@
             </div>
         </div>
     </footer>
+
+    {{-- ***** Modal Login Start ***** --}}
+    <div class="modal fade" id="modal__login" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                {{-- 
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div> 
+                --}}
+                {{-- border rounded-4 p-3 bg-white shadow --}}
+                {{-- d-flex justify-content-center align-items-center min-vh-100 --}}
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="modal__box_area row">
+
+                            {{-- left box --}}
+                            <div
+                                class="modal__left_box col-md-6 
+                                {{-- bg-danger bg-opacity-25  --}}
+                                rounded-4 d-flex justify-content-center align-items-center flex-column">
+                                <div class="featured-image mb-3">
+                                    <img src="{{ asset('frontend/assets/images/secure-login-crop.png') }}"
+                                        alt="" srcset="" class="img-fluid" style="">
+                                </div>
+                                <p class="text-white font-monospace"
+                                    style="font-size: 12px; font-weight: 700; line-height: 1">
+                                    Magni voluptate delectus ipsam.</p>
+                                <small class="text-white text-wrap text-center">Lorem, ipsum dolor sit amet consectetur
+                                    adipisicing elit.
+                                </small>
+                            </div>
+
+                            {{-- right box --}}
+                            {{-- bg-warning bg-opacity-25" --}}
+                            <div class="modal__right_box col-md-6">
+                                <div class="row align-items-center">
+                                    <div class="header-text mb-4">
+                                        <h2>Hello, Again</h2>
+                                        <p class="fs-6">We are happy to have you back.</p>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <input type="text" name="email" id="email"
+                                            class="form-control form-control-sm bg-light fs-6"
+                                            placeholder="Email address">
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <input type="password" name="password" id="password"
+                                            class="form-control form-control-sm bg-light fs-6" placeholder="Password">
+                                    </div>
+                                    <div class="input-group mb-5 d-flex justify-content-between">
+                                        <div class="form-check">
+                                            <input type="checkbox" name="remember" id="login__input_check"
+                                                class="form-check-input">
+                                            <label for="login__input_check"
+                                                class="form-check-label text-secondary"><em>Remember Me</em></label>
+                                        </div>
+                                        <div class="login__forgot"><a href="#">Forgot Password ?</a></div>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <button class="btn btn-sm btn-primary w-100 fs-6 bg-opacity-50">Login</button>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <button class="btn btn-sm btn-light w-100 fs-6">
+                                            <img src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg"
+                                                alt="logo google" srcset="" style="width: 20px;"
+                                                class="me-2">
+                                            <small>Sign In with Google</small>
+                                        </button>
+                                    </div>
+                                    <div class="row">
+                                        <small>Don't have account? <a href="#"> Sign Up</a></small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- 
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div> --}}
+
+            </div>
+        </div>
+    </div>
+    {{-- ***** Modal Login End ***** --}}
 
     {{-- Scripts --}}
 

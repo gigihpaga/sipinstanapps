@@ -30,6 +30,17 @@ font & reset css
 */
 /* 
 ---------------------------------------------
+root
+--------------------------------------------- 
+*/
+/* li:nth-child(6) */
+/* li:nth-child(--last-child-navbar) */
+:root {
+    --last-child-navbar: 7;
+    /* replace li:nth-child(6) to li:nth-child(--last-child-navbar) */
+}
+/* 
+---------------------------------------------
 reset
 --------------------------------------------- 
 */
@@ -170,6 +181,7 @@ body {
     -ms-text-size-adjust: 100%;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
 }
 
 a {
@@ -267,10 +279,10 @@ body {
     margin-top: 10px;
 }
 
-.show-up {
+/* .show-up {
     position: relative;
     z-index: 2;
-}
+} */
 
 .white-button a {
     display: inline-block !important;
@@ -326,7 +338,7 @@ body {
 .gradient-button a:hover {
     color: #fff !important;
     background: rgb(19, 175, 240);
-    background: linear-gradient(105deg, rgba(91, 104, 235, 1) 0%, rgba(40, 225, 253, 1) 100%);
+    background: linear-gradient(105deg, rgba(86, 98, 223, 1) 0%, rgba(36, 203, 229, 1) 100%);
 }
 
 .border-button a {
@@ -371,9 +383,10 @@ header
     color: #fff;
 }
 
+/*! tidak ada selector ini 
 .background-header .main-nav .nav li:hover a {
     color: #4b8ef1;
-}
+} */
 
 .background-header .nav li a.active {
     position: relative;
@@ -457,23 +470,23 @@ header
     padding-right: 20px;
 }
 
-.header-area .main-nav .nav li:nth-child(6) {
+.header-area .main-nav .nav li:nth-child(--last-child-navbar) {
     padding-right: 0px;
     padding-left: 40px;
 }
 
 .header-area .main-nav .nav li:last-child a,
 .background-header .main-nav .nav li:last-child a,
-.header-area .main-nav .nav li:nth-child(6) a,
-.background-header .main-nav .nav li:nth-child(6) a {
+.header-area .main-nav .nav li:nth-child(7) a,
+.background-header .main-nav .nav li:nth-child(7) a {
     padding: 0px 20px !important;
     font-weight: 400;
 }
 
 .header-area .main-nav .nav li:last-child a:hover,
 .background-header .main-nav .nav li:last-child a:hover,
-.header-area .main-nav .nav li:nth-child(6) a:hover,
-.background-header .main-nav .nav li:nth-child(6) a:hover {
+.header-area .main-nav .nav li:nth-child(--last-child-navbar) a:hover,
+.background-header .main-nav .nav li:nth-child(--last-child-navbar) a:hover {
     color: #fff !important;
 }
 
@@ -493,7 +506,8 @@ header
     letter-spacing: 1px;
 }
 
-.header-area .main-nav .nav li:hover a,
+/*? selector ===.header-area .main-nav .nav li:hover a === dicomment, sudah ada selector yang lain yaitu XXXX .header-area .main-nav .nav li.submenu ul li a (line:571) XXXXX  */
+/* .header-area .main-nav .nav li:hover a, */
 .header-area .main-nav .nav li a.active {
     color: #4b8ef1 !important;
 }
@@ -502,11 +516,14 @@ header
     color: #fff !important;
 }
 
+/*! !!! SELECTOR SAMA !!! [.background-header] DAN [.header-area] ITU ADA DI SATU DIV YANG SAMA, YANG MENGENERATE CLASS [.background-header] ADALAH JAVASCRIPT PLUGIN "WOW.JS"
 .background-header .main-nav .nav li:hover a,
 .background-header .main-nav .nav li a.active {
     color: #4b8ef1 !important;
+    color: red !important;
     opacity: 1;
 }
+*/
 
 .header-area .main-nav .nav li.submenu {
     position: relative;
@@ -564,9 +581,12 @@ header
     border-bottom: 1px solid #eee;
 }
 
+/*! SELECTOR SAMA  */
 .header-area .main-nav .nav li.submenu ul li a:hover {
-    background: #fff;
-    color: #4b8ef1 !important;
+    /* background: #fff; */
+    background: pink !important;
+    /* color: #4b8ef1 !important; */
+    color: chartreuse !important;
     padding-left: 25px;
 }
 
@@ -724,8 +744,8 @@ header
     .background-header .main-nav .nav li:last-child {
         color: #069;
     }
-    .header-area .main-nav .nav li:nth-child(6),
-    .background-header .main-nav .nav li:nth-child(6) {
+    .header-area .main-nav .nav li:nth-child(--last-child-navbar),
+    .background-header .main-nav .nav li:nth-child(--last-child-navbar) {
         padding-right: 0px;
     }
     .background-header .nav li a.active:after {
@@ -735,7 +755,7 @@ header
 
 @media (max-width: 767px) {
     .pre-header ul.info li:last-child,
-    .pre-header ul.info li:nth-child(6) {
+    .pre-header ul.info li:nth-child(--last-child-navbar) {
         display: none !important;
     }
     .background-header .main-nav .nav {
@@ -744,11 +764,14 @@ header
     .header-area .main-nav .logo {
         color: #1e1e1e;
     }
+    /*? SELECTOR SAMA LINE 570
     .header-area.header-sticky .nav li a:hover,
     .header-area.header-sticky .nav li a.active {
         color: #4b8ef1 !important;
+        color: magenta !important;
         opacity: 1;
     }
+    */
     .header-area.header-sticky .nav li.search-icon a {
         width: 100%;
     }
@@ -798,17 +821,19 @@ header
         padding-left: 0px !important;
         padding-right: 0px !important;
     }
-    .header-area .main-nav .nav li a {
+    /* .header-area .main-nav .nav li a { */
+    .header-area .main-nav .nav li {
         height: 50px !important;
         line-height: 50px !important;
         padding: 0px !important;
         border: none !important;
-        background: #f7f7f7 !important;
+        /* background: #f7f7f7 !important; */
         color: #191a20 !important;
     }
-    .header-area .main-nav .nav li a:hover {
+    /** oke solved, nanti tinggal hilangkan pinknya */
+    .header-area .main-nav .nav li:not(.gradient-button) > a:hover {
         background: #eee !important;
-        color: #4b8ef1 !important;
+        /* color: #4b8ef1 !important; */
     }
     .header-area .main-nav .nav li.submenu ul {
         position: relative;
@@ -1236,7 +1261,8 @@ The Clients
 */
 
 .the-clients {
-    margin-top: 130px;
+    margin-top: 60px;
+    padding-top: 130px;
 }
 
 .the-clients .section-heading {
@@ -1771,8 +1797,7 @@ PopUp
     background: #fff;
 }
 
-.btn {
-    padding: 10px 20px;
+.btn.btn-primary {
     background: #4b8ef1;
     color: #fff;
     transition: all 0.3s;
@@ -1783,8 +1808,8 @@ PopUp
     color: #fff;
 }
 
-.btn:hover {
-    background: #e4e4e2;
+.btn.btn-primary:hover {
+    background: #3a76d2;
 }
 
 .btn_red:hover {
