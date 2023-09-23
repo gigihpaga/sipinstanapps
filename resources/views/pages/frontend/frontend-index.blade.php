@@ -50,7 +50,8 @@
     {{-- ***** Preloader End ***** --}}
 
     {{-- ***** Header Area Start ***** --}}
-    <header class="header-area header-sticky wow slideInDown" data-wow-duration="0.75s" data-wow-delay="0s">
+    {{-- ? header di animate slideInDown  --}}
+    <header class="header-area header-sticky">
         <div class="container">
             <div class="row">
                 <div class="col-12">
@@ -68,6 +69,7 @@
                             <li class="scroll-to-section"><a href="#top" class="active">Home</a></li>
                             <li class="scroll-to-section"><a href="#services">Services</a></li>
                             <li class="scroll-to-section"><a href="#about">About</a></li>
+                            <li class="scroll-to-section"><a href="#clients">Clients</a></li>
                             <li class="scroll-to-section"><a href="#pricing">Pricing</a></li>
                             <li class="scroll-to-section"><a href="#newsletter">Newsletter</a></li>
                             <li>
@@ -180,14 +182,14 @@
         </section>
     </div>
 
-    <div id="top" class="main-banner wow fadeIn" data-wow-duration="1s" data-wow-delay="0.5s">
+    <div id="top" class="main-banner">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="row">
-                        <div class="col-lg-6 align-self-center">
-                            <div class="left-content show-up header-text wow fadeInLeft" data-wow-duration="1s"
-                                data-wow-delay="1s">
+                        <div class="col-lg-6 align-self-center animate__animated" data-animation="animate__fadeInLeft"
+                            style="z-index: 5;">
+                            <div class="left-content show-up header-text">
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <h2>Get The Latest App From App Stores</h2>
@@ -212,8 +214,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6">
-                            <div class="right-image wow fadeInRight" data-wow-duration="1s" data-wow-delay="0.5s">
+                        <div class="col-lg-6 animate__animated" data-animation="animate__fadeInRight"
+                            style="z-index: 5;">
+                            <div class="right-image">
                                 <img src="{{ asset('frontend/assets/images/slider-dec.png') }}" alt="">
                             </div>
                         </div>
@@ -227,7 +230,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 offset-lg-2">
-                    <div class="section-heading  wow fadeInDown" data-wow-duration="1s" data-wow-delay="0.5s">
+                    <div class="section-heading animate__animated" data-animation="animate__fadeInDown">
                         <h4>Amazing <em>Services &amp; Features</em> for you</h4>
                         <img src="{{ asset('frontend/assets/images/heading-line-dec.png') }}" alt="">
                         <p>If you need the greatest collection of HTML templates for your business, please visit <a
@@ -293,9 +296,11 @@
             <div class="row">
                 <div class="col-lg-6 align-self-center">
                     <div class="section-heading">
-                        <h4>About <em>What We Do</em> &amp; Who We Are</h4>
+                        <h4 class="animate__animated" data-animation="animate__fadeInLeft">About <em>What We Do</em>
+                            &amp; Who We Are</h4>
                         <img src="{{ asset('frontend/assets/images/heading-line-dec.png') }}" alt="">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eismod tempor incididunt ut
+                        <p class="animate__animated" data-animation="animate__fadeInRight">Lorem ipsum dolor sit amet,
+                            consectetur adipiscing elit, sed do eismod tempor incididunt ut
                             labore et dolore magna.</p>
                     </div>
                     <div class="row">
@@ -347,9 +352,11 @@
             <div class="row">
                 <div class="col-lg-8 offset-lg-2">
                     <div class="section-heading">
-                        <h4>Check What <em>The Clients Say</em> About Our App Dev</h4>
+                        <h4 class="animate__animated" data-animation="animate__fadeInRight">Check What <em>The Clients
+                                Say</em> About Our App Dev</h4>
                         <img src="{{ asset('frontend/assets/images/heading-line-dec.png') }}" alt="">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eismod tempor incididunt ut
+                        <p class="animate__animated" data-animation="animate__fadeInLeft">Lorem ipsum dolor sit amet,
+                            consectetur adipiscing elit, sed do eismod tempor incididunt ut
                             labore et dolore magna.</p>
                     </div>
                 </div>
@@ -617,7 +624,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 offset-lg-2">
-                    <div class="section-heading">
+                    <div class="section-heading animate__animated" data-animation="animate__slideInDown">
                         <h4>We Have The Best Pre-Order <em>Prices</em> You Can Get</h4>
                         <img src="{{ asset('frontend/assets/images/heading-line-dec.png') }}" alt="">
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eismod tempor incididunt ut
@@ -692,7 +699,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 offset-lg-2">
-                    <div class="section-heading">
+                    <div class="section-heading animate__animated" data-animation="animate__slideInUp">
                         <h4>Join our mailing list to receive the news &amp; latest trends</h4>
                     </div>
                 </div>
@@ -785,31 +792,17 @@
 
     {{-- Scripts --}}
 
-    <script src="{{ asset('arfa/vendor/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('arfa/vendor/bootstrap/js/bootstrap.bundle.js') }}"></script>
+    {{-- <script src="{{ asset('arfa/vendor/jquery/jquery.min.js') }}"></script> --}}
+    {{-- <script src="{{ asset('arfa/vendor/bootstrap/js/bootstrap.bundle.js') }}"></script> --}}
 
-    <script src="{{ asset('frontend/vendor/jquery/plugin/owl-carousel/owl-carousel.js') }}"></script>
-    <script src="{{ asset('frontend/vendor/jquery/plugin/js/images-loaded.js') }}"></script>
-    <script src="{{ asset('frontend/vendor/jquery/plugin/js/lean-modal.js') }}"></script>
+    {{-- <script src="{{ asset('frontend/vendor/jquery/plugin/owl-carousel/owl-carousel.js') }}"></script> --}}
+    {{-- <script src="{{ asset('frontend/vendor/jquery/plugin/js/images-loaded.js') }}"></script> --}}
+    {{-- <script src="{{ asset('frontend/vendor/jquery/plugin/js/lean-modal.js') }}"></script> --}}
 
-    <script src="{{ asset('frontend/vendor/wow-animate/wow-animate.js') }}"></script>
+    {{-- <script src="{{ asset('frontend/vendor/wow-animate/wow-animate.js') }}"></script> --}}
 
-    <script src="{{ asset('frontend/assets/js/custom.js') }}"></script>
+    {{-- <script src="{{ asset('frontend/assets/js/custom.js') }}"></script> --}}
+    <script src="{{ asset('frontend/assets/js/custom-landing-sipinstan.js') }}"></script>
 </body>
-<script>
-    $(document).ready(function() {
-        // $('ul.nacc').owlCarousel({
-        //     center: true,
-        //     items: 2,
-        //     loop: true,
-        //     margin: 10,
-        //     responsive: {
-        //         600: {
-        //             items: 4
-        //         }
-        //     }
-        // });
-    });
-</script>
 
 </html>
