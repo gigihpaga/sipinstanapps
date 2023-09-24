@@ -1,5 +1,8 @@
 /** modal login start
 */
+:root {
+    --delay-failed-message-email: 1s;
+}
 
 #modal__login ::placeholder {
     font-size: 0.65rem;
@@ -40,4 +43,24 @@
 }
 
 /** modal login end
+*/
+
+/** flash alert error email on modal start
+*/
+#failed-message-email.sipinstan__fadeOut {
+    animation: sipinstan__fadeOut 1s var(--delay-failed-message-email) forwards ease;
+    -webkit-animation: sipinstan__fadeOut 1s var(--delay-failed-message-email) forwards ease;
+}
+
+@keyframes sipinstan__fadeOut {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.1;
+        display: none;
+    }
+}
+/** flash alert error email on modal start
 */

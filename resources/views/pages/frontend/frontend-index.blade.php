@@ -18,7 +18,8 @@
     {{-- <link rel="stylesheet" href="{{ asset('arfa/vendor/bootstrap/css/bootstrap.min.css') }}"> --}}
     {{-- <link rel="stylesheet" href="{{ asset('frontend/vendor/bootstrap/css/bootstrap.min.css') }}"> --}}
     {{-- use bootstrap vite npm --}}
-    @vite(['resources/js/app.js'])
+    {{-- @vite(['resources/js/app.js']) --}}
+    @vite(['resources/js/app.css'])
 
     {{-- TemplateMo 570 Chain App Dev https://templatemo.com/tm-570-chain-app-dev --}}
 
@@ -854,44 +855,62 @@
                             {{-- right box --}}
                             {{-- bg-warning bg-opacity-25" --}}
                             <div class="modal__right_box col-md-6">
-                                <div class="row align-items-center">
-                                    <div class="header-text mb-4">
-                                        <h2>Hello, Again</h2>
-                                        <p class="fs-6">We are happy to have you back.</p>
-                                    </div>
-                                    <div class="input-group mb-3">
-                                        <input type="text" name="email" id="email"
-                                            class="form-control form-control-sm bg-light fs-6"
-                                            placeholder="Email address">
-                                    </div>
-                                    <div class="input-group mb-3">
-                                        <input type="password" name="password" id="password"
-                                            class="form-control form-control-sm bg-light fs-6" placeholder="Password">
-                                    </div>
-                                    <div class="input-group mb-5 d-flex justify-content-between">
-                                        <div class="form-check">
-                                            <input type="checkbox" name="remember" id="login__input_check"
-                                                class="form-check-input">
-                                            <label for="login__input_check"
-                                                class="form-check-label text-secondary"><em>Remember Me</em></label>
+                                <form method="POST" action="{{ route('login') }}">
+                                    @csrf
+                                    <div class="row align-items-center">
+                                        <div class="header-text mb-4">
+                                            <h2>Hello, Again</h2>
+                                            <p class="fs-6">We are happy to have you back.</p>
                                         </div>
-                                        <div class="login__forgot"><a href="#">Forgot Password ?</a></div>
+                                        <div class="input-group mb-3">
+                                            <input type="text" name="email" id="email"
+                                                class="form-control form-control-sm bg-light fs-6"
+                                                placeholder="Email address">
+                                        </div>
+                                        <div class="input-group mb-3">
+                                            <input type="password" name="password" id="password"
+                                                class="form-control form-control-sm bg-light fs-6"
+                                                placeholder="Password">
+                                        </div>
+                                        <div class="input-group mb-5 d-flex justify-content-between">
+                                            <div class="form-check">
+                                                <input type="checkbox" name="remember" id="login__input_check"
+                                                    class="form-check-input">
+                                                <label for="login__input_check"
+                                                    class="form-check-label text-secondary"><em>Remember
+                                                        Me</em></label>
+                                            </div>
+                                            <div class="login__forgot"><a href="#">Forgot Password ?</a></div>
+                                        </div>
+                                        @error('email')
+                                            <div id="failed-message-email"
+                                                class="alert alert-danger alert-dismissible fade show" data-delay="4s"
+                                                data-animation="sipinstan__fadeOut" role="alert">
+                                                <strong>Failed!</strong>&nbsp;{{ $message }}
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                    aria-label="Close">
+                                                </button>
+                                            </div>
+                                        @enderror
+                                        <div class="input-group mb-3">
+                                            <button type="submit"
+                                                class="btn btn-sm btn-primary w-100 fs-6 bg-opacity-50">
+                                                Login
+                                            </button>
+                                        </div>
+                                        <div class="input-group mb-3">
+                                            <button class="btn btn-sm btn-light w-100 fs-6">
+                                                <img src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg"
+                                                    alt="logo google" srcset="" style="width: 20px;"
+                                                    class="me-2">
+                                                <small>Sign In with Google</small>
+                                            </button>
+                                        </div>
+                                        <div class="row">
+                                            <small>Don't have account? <a href="#"> Sign Up</a></small>
+                                        </div>
                                     </div>
-                                    <div class="input-group mb-3">
-                                        <button class="btn btn-sm btn-primary w-100 fs-6 bg-opacity-50">Login</button>
-                                    </div>
-                                    <div class="input-group mb-3">
-                                        <button class="btn btn-sm btn-light w-100 fs-6">
-                                            <img src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg"
-                                                alt="logo google" srcset="" style="width: 20px;"
-                                                class="me-2">
-                                            <small>Sign In with Google</small>
-                                        </button>
-                                    </div>
-                                    <div class="row">
-                                        <small>Don't have account? <a href="#"> Sign Up</a></small>
-                                    </div>
-                                </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -911,7 +930,7 @@
     {{-- Scripts --}}
 
     {{-- <script src="{{ asset('arfa/vendor/jquery/jquery.min.js') }}"></script> --}}
-    {{-- <script src="{{ asset('arfa/vendor/bootstrap/js/bootstrap.bundle.js') }}"></script> --}}
+    <script src="{{ asset('arfa/vendor/bootstrap/js/bootstrap.bundle.js') }}"></script>
 
     {{-- <script src="{{ asset('frontend/vendor/jquery/plugin/owl-carousel/owl-carousel.js') }}"></script> --}}
     {{-- <script src="{{ asset('frontend/vendor/jquery/plugin/js/images-loaded.js') }}"></script> --}}
@@ -921,6 +940,11 @@
 
     {{-- <script src="{{ asset('frontend/assets/js/custom.js') }}"></script> --}}
     <script src="{{ asset('frontend/assets/js/custom-landing-sipinstan.js') }}"></script>
+    <script>
+        /** {{-- this varible will use on custom-landing-sipinstan.js, get error php and save to varivle javascript --}} */
+        var globalErrorLaravel =
+            `@error('email') {{ $message }} @enderror`;
+    </script>
 </body>
 
 </html>

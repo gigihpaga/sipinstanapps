@@ -129,6 +129,32 @@
                 nav.style.display = 'none';
             }
         });
+
+        // modalLogin
+        const myModalLogin = new bootstrap.Modal('#modal__login', {});
+        myModalLogin._element.addEventListener('shown.bs.modal', function (e) {
+            // set focus input email when modal open
+            e.target.querySelector('input[name="email"]').focus();
+        });
+
+        // variable globalErrorLaravel is define in file frontend-index.blade.php
+        if (globalErrorLaravel.length > 0) {
+            myModalLogin.show();
+            document.querySelector('input[name="email"]').classList.add('is-invalid');
+            // element flash message
+            let msg = document.querySelector('#failed-message-email');
+            // assign data-delay to varible css using file.css to object
+            document.documentElement.style.setProperty(
+                '--delay-failed-message-email',
+                msg.getAttribute('data-delay')
+            );
+            // assign data-delay to varible css using inline style on html
+            // msg.style = `--delay-failed-message-email: ${msg.getAttribute('data-delay')};`;
+
+            // add class animation
+            msg.classList.add(msg.getAttribute('data-animation'));
+        }
+        // myModalLogin.show();
         // ==================== DOMContentLoaded end ====================
     });
     // ================================= Anonymous block end =================================
