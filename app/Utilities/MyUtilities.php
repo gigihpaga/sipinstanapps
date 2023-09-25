@@ -130,10 +130,12 @@ class MyUtilities
      */
     public static function terbilang($angka = 0)
     {
-        if ($angka < 0) {
+        if (is_numeric($angka) && $angka < 0) {
             $hasil = "minus " . trim(self::penyebut($angka));
-        } else {
+        } else if (is_numeric($angka)) {
             $hasil = trim(self::penyebut($angka));
+        } else {
+            $hasil = trim(self::penyebut(0));
         }
         return ucwords($hasil);
     }
