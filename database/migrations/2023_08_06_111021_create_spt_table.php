@@ -26,6 +26,7 @@ return new class extends Migration
             $table->unsignedTinyInteger('lama_penugasan')->nullable();
             $table->date('tanggal_mulai')->nullable();
             $table->date('tanggal_selesai')->nullable();
+            $table->string('file_pengajuan_spt', 255)->nullable();
             $table->longText('keperluan_tugas')->nullable();
             $table->longText('keterangan_tugas')->nullable();
             $table->mediumText('note')->nullable();

@@ -276,6 +276,9 @@ $(document).ready(function () {
                     if (dataSetchildWrapper === 'button-spt') {
                         // convert string html button spt to Node Html
                         dummyDiv.innerHTML = dataRowDT.action;
+                    } else if (dataSetchildWrapper === 'button-spt-document') {
+                        // convert string html button pka to Node Html
+                        dummyDiv.innerHTML = dataRowDT.spt_document;
                     } else if (dataSetchildWrapper === 'button-pka') {
                         // convert string html button pka to Node Html
                         dummyDiv.innerHTML = dataRowDT.pka;

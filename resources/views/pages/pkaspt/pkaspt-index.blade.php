@@ -230,6 +230,9 @@
                     <div class="col-auto" data-child-wrapper="button-spt">
                         <label class="form-label">View and Edit SPT</label>
                     </div>
+                    <div class="col-auto" data-child-wrapper="button-spt-document">
+                        <label class="form-label">File Pengajuan SPT</label>
+                    </div>
                     <div class="col-auto" data-child-wrapper="button-pka">
                         <label class="form-label">View and Edit PKA</label>
                     </div>

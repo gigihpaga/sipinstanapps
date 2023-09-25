@@ -46,6 +46,9 @@ class PkaSptController extends Controller
             ->addColumn('pka', function ($row) {
                 return view('pages.pkaspt.pkaspt-button-pka')->with(['data' => $row]);
             })
+            ->addColumn('spt_document', function ($row) {
+                return view('pages.pkaspt.pkaspt-button-spt-document')->with(['data' => $row]);
+            })
             ->make(true);
     }
 

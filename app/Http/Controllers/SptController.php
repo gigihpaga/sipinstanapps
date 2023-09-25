@@ -4,11 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SptRequest;
 use App\Http\Requests\SptStatusHistoryRequest;
+use App\Models\Anggota;
+use App\Models\DasarTugas;
 use App\Models\Spt;
 use App\Models\SptStatusHistory;
+use App\Utilities\MyUtilities;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\TemplateProcessor;
 
 class SptController extends Controller
 {
@@ -129,6 +134,13 @@ class SptController extends Controller
             return $dataHistoryCreated;
         }
 
+        function updateFilePengajuanSpt($spt_id)
+        {
+            $modelSptUpdate = Spt::find($spt_id);
+            $modelSptUpdate->file_pengajuan_spt = SptController::generateWordSpt($spt_id);
+            $modelSptUpdate->save();
+        }
+
         // check model spt is available
         if ($modelSpt->count() == 0) {
             return response()->failedJson(404);
@@ -171,7 +183,13 @@ class SptController extends Controller
                  * hanya bisa diganti ke status 3: updated** || 5: rejected || 6: approved
                  * hanya bisa diganti ke 3: updated** menggunakan function update() yang ada di atas function ini, itu pun tidak menambah history perubahan spt
                  * selain itu return BAD REQUST
+                 * jika status yang dikirim == 6 (approve), maka update file_pengajuan_spt
                  */
+
+                if ($reqStatus == 6) {
+                    updateFilePengajuanSpt($idSpt);
+                }
+
                 $historyCreated = createHistory($arrSpt['id'], $reqStatus, $reqKeterangan);
                 return response()->successJson($historyCreated, 'update data');
             }
@@ -196,5 +214,122 @@ class SptController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    static function generateWordSpt($spt_id)
+    {
+        try {
+            $fileTemplateName = "Template SPT.docx";
+            $fileTemplateFolder = "dokumen/spt";
+            $fileTemplatePath = public_path("$fileTemplateFolder/$fileTemplateName");
+
+            $enum_jabatan = [1 => 'penanggungjawab', 2 => 'pengawas', 3 => 'ketua tim', 4 => 'anggota'];
+            $model_spt = Spt::where('id', $spt_id)->get();
+            $model_dasar_tugas = DasarTugas::where('spt_id', '=', $spt_id)->get()->toArray();
+            $model_anggota = Anggota::where('spt_id', '=', $spt_id)->with('pegawai')->get()->toArray();
+            // dd([$model_spt, $model_dasar_tugas,   $model_anggota]);
+
+            // ================================ Tabel Dasar Tugas [start] ========================================
+            $document_with_table2 = new PhpWord();
+            $section_dasar = $document_with_table2->addSection();
+            $tbl_dasar = $section_dasar->addTable();
+            $table_style_dasar = array(
+                'borderColor' => 'FFFFFF',
+                'borderSize'  => 0,
+                'cellMargin'  => 20
+            );
+            if (count($model_dasar_tugas) > 0) {
+                for ($r = 0; $r <= count($model_dasar_tugas) - 1; $r++) {
+                    $data_row_dasar = $model_dasar_tugas[$r];
+                    $tbl_dasar->addRow();
+                    $tbl_dasar->addCell(500, $table_style_dasar)->addText($r + 1);
+                    $tbl_dasar->addCell(8500, $table_style_dasar)->addText($data_row_dasar['dasar_tugas']);
+                }
+            } else {
+                $tbl_dasar->addRow();
+                $tbl_dasar->addCell(500, $table_style_dasar)->addText(0);
+                $tbl_dasar->addCell(8500, $table_style_dasar)->addText('Tidak ada data');
+            }
+            // Create writer to convert document to xml
+            $obj_writer_dasar = \PhpOffice\PhpWord\IOFactory::createWriter($document_with_table2, 'Word2007');
+            // Get all document xml code
+            $full_xml_dasar = $obj_writer_dasar->getWriterPart('Document')->write();
+            // Get only table xml code
+            $table_xml_dasar = preg_replace('/^[\s\S]*(<w:tbl\b.*<\/w:tbl>).*/', '$1', $full_xml_dasar);
+
+            // ================================ Tabel Dasar Tugas [end] ========================================
+
+
+            // ================================ Tabel Anggota [start] ========================================
+            // Creating the new document...
+            // jika ada error edit file php.ini di apache server, set short_open_tag=On
+            //Create table
+            $document_table_anggota = new PhpWord();
+            $section_anggota = $document_table_anggota->addSection();
+            $tbl_anggota = $section_anggota->addTable();
+            $tbl_style_anggota = array(
+                'borderColor' => '00000',
+                'borderSize'  => 1,
+                'cellMargin'  => 20,
+                'align' => 'centered',
+                'align' => 'center',
+                'alignment' => 'centered',
+                'alignment' => 'center'
+            );
+            $document_table_anggota->addFontStyle('r2Style', array('bold' => false, 'italic' => false, 'size' => 12));
+            $document_table_anggota->addParagraphStyle('p2Style', array('align' => 'both', 'spaceAfter' => 100));
+
+            $sss = array('bold' => true, 'align' => 'centered', 'alignment' => 'centered', 'align' => 'both');
+
+            $tbl_anggota->addRow();
+            $tbl_anggota->addCell(500, $tbl_style_anggota)->addText('No', $sss);
+            $tbl_anggota->addCell(4500, $tbl_style_anggota)->addText('Nama', $sss);
+            $tbl_anggota->addCell(1750, $tbl_style_anggota)->addText('Keterangan', $sss);
+            $tbl_anggota->addCell(1750, $tbl_style_anggota)->addText('Jangka Waktu', $sss);
+
+            for ($r = 0; $r <= count($model_anggota) - 1; $r++) {
+                $data_row_anggota = $model_anggota[$r];
+                $tbl_anggota->addRow();
+                $tbl_anggota->addCell(500, $tbl_style_anggota)->addText($r + 1);
+                $tbl_anggota->addCell(4500, $tbl_style_anggota)->addText($data_row_anggota['pegawai']['nama']);
+                $tbl_anggota->addCell(1750, $tbl_style_anggota)->addText($enum_jabatan[$data_row_anggota['jabatan_penugasan']]);
+                $tbl_anggota->addCell(1750, $tbl_style_anggota)->addText($data_row_anggota['lama_tugas'] . ' hari');
+            }
+            // Create writer to convert document to xml
+            $obj_writer_anggota = \PhpOffice\PhpWord\IOFactory::createWriter($document_table_anggota, 'Word2007');
+            // Get all document xml code
+            $full_xml_anggota = $obj_writer_anggota->getWriterPart('Document')->write();
+            // Get only table xml code
+            $table_xml_anggota = preg_replace('/^[\s\S]*(<w:tbl\b.*<\/w:tbl>).*/', '$1', $full_xml_anggota);
+
+            // ================================ Tabel Anggota [end] ========================================
+            $phpWord = new TemplateProcessor($fileTemplatePath);
+
+            // assign value to variable template word
+            $phpWord->setValues([
+                'nomorPengajuan' => $model_spt->value('nomor_pengajuan'),
+                'tanggalBuat' => $model_spt->value('tanggal_buat'),
+                'lamaPenugasan' =>  $model_spt->value('lama_penugasan'),
+                'lamaPenugasanTerbilang' =>  MyUtilities::terbilang($model_spt->value('lama_penugasan')),
+                'tanggalMulai' => MyUtilities::dateMySqlToIndo($model_spt->value('tanggal_mulai')),
+                'tanggalSelesai' => MyUtilities::dateMySqlToIndo($model_spt->value('tanggal_selesai')),
+                'keperluanTugas' => $model_spt->value('keperluan_tugas'),
+                'keteranganTugas' => $model_spt->value('keterangan_tugas'),
+                'penandatangan' => $model_spt->value('penyusun'),
+                'dateNow' => date('F, Y'),
+                'tableDasar' => $table_xml_dasar,
+                'tableAnggota'  => $table_xml_anggota,
+            ]);
+
+            // EXPORT-PENG-DEV-09-45-NupKA_240923_5247
+            $fileExportName = 'EXPORT-' . preg_replace('/[^A-Za-z0-9\-]/', '-', $model_spt->value('nomor_pengajuan')) . '_' . date_format(now(), 'dmy_is');
+            // save the document to
+            $phpWord->saveAs("$fileTemplateFolder/$fileExportName" . ".docx");
+
+            // return $this->redirect($redirectUrl, "Record exported");
+            return $fileExportName . '.docx';
+        } catch (\Throwable $th) {
+            dd($th);
+        }
     }
 }
