@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-16"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Creator: CorelDRAW 2020 (64-Bit) -->
 <svg {{ $attributes }} xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="446px" height="446px" version="1.1"
