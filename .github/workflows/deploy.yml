@@ -31,4 +31,4 @@ jobs:
           cd ${{ secrets.REMOTE_PATH }}
           pwd
           #git pull origin main
-          #git status
+          git status
