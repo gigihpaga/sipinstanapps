@@ -24,9 +24,10 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.PORT }}
          # will put all file under this path
-        local_path: ./* # default is ./*
+        # local_path: ./* # default is ./*
           # files will copy to under remote_path eg: /home/usernameserver/laravelcodebase....
-        remote_path: ${{ secrets.REMOTE_PATH }} 
+        # remote_path: ${{ secrets.REMOTE_PATH }} 
         script: |
-          git pull origin main
-          git status
+          echo ${{ secrets.REMOTE_PATH }} 
+          #git pull origin main
+          #git status
