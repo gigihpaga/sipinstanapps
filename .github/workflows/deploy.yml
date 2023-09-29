@@ -29,6 +29,7 @@ jobs:
         # remote_path: ${{ secrets.REMOTE_PATH }} 
         script: |
           cd ${{ secrets.REMOTE_PATH }}
-          #pwd
-          git pull origin master
-          git status
+          pwd
+          whoami
+          #git pull origin master
+          #git status
