@@ -15,11 +15,11 @@
     <title>Landing &mdash; {{ config('app.name', 'Laravel') }}</title>
 
     {{-- * Bootstrap core CSS  * --}}
-    {{-- <link rel="stylesheet" href="{{ asset('arfa/vendor/bootstrap/css/bootstrap.min.css') }}"> --}}
+    <link rel="stylesheet" href="{{ asset('arfa/vendor/bootstrap/css/bootstrap.min.css') }}">
     {{-- <link rel="stylesheet" href="{{ asset('frontend/vendor/bootstrap/css/bootstrap.min.css') }}"> --}}
     {{-- use bootstrap vite npm --}}
     {{-- @vite(['resources/js/app.js']) --}}
-    @vite(['resources/js/app.css'])
+    {{-- @vite(['resources/js/app.css']) --}}
 
     {{-- TemplateMo 570 Chain App Dev https://templatemo.com/tm-570-chain-app-dev --}}
 
@@ -220,7 +220,7 @@
                             <div class="left-content show-up header-text">
                                 <div class="row">
                                     <div class="col-lg-12">
-                                        <h2>Get The Latest App From App Stores</h2>
+                                        <h2>Get The Latest Updates From App</h2>
 
                                         @php
                                             $www = '<p>halo <em>paga</em></p>';
