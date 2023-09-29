@@ -21,15 +21,20 @@ jobs:
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.PORT }}
-         # will put all file under this path
-        # local_path: ./* # default is ./*
-          # files will copy to under remote_path eg: /home/usernameserver/laravelcodebase....
-        # remote_path: ${{ secrets.REMOTE_PATH }} 
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        #REMOTE_PATH
+        #/home/usernameserver/codebase.... 
         script: |
+          #pwd
+          #whoami
           cd ${{ secrets.REMOTE_PATH }}
-          pwd
-          whoami
-          #git pull origin master
-          #git status
+          git fetch -v
+          git status
+          git pull origin master
+          git status
+          php artisan cache:clear
+          php artisan view:clear
+          php artisan route:clear
+          php artisan config:cache
+          php artisan config:clear
