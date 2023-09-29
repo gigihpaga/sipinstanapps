@@ -26,13 +26,13 @@ jobs:
         #REMOTE_PATH
         #/home/usernameserver/codebase.... 
         script: |
-          pwd
-          whoami
-          cd ${{ secrets.REMOTE_PATH }}
-          git fetch -v
-          git status
-          git pull origin master
-          git status
+          #pwd
+          #whoami
+          #cd ${{ secrets.REMOTE_PATH }}
+          sudo -u ${{ secrets.USERNAME }} git fetch -v
+          sudo -u ${{ secrets.USERNAME }} git status
+          sudo -u ${{ secrets.USERNAME }} git pull origin master
+          sudo -u ${{ secrets.USERNAME }} git status
           sudo php artisan cache:clear
           sudo php artisan view:clear
           sudo php artisan route:clear
