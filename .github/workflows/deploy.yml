@@ -26,8 +26,8 @@ jobs:
         #REMOTE_PATH
         #/home/usernameserver/codebase.... 
         script: |
-          #pwd
-          #whoami
+          pwd
+          whoami
           cd ${{ secrets.REMOTE_PATH }}
           git fetch -v
           git status
