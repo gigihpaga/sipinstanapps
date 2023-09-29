@@ -28,6 +28,5 @@ jobs:
           # files will copy to under remote_path eg: /home/usernameserver/laravelcodebase....
         remote_path: ${{ secrets.REMOTE_PATH }} 
         script: |
-          #git pull origin main
-          #git status
-          pwd
+          git pull origin main
+          git status
