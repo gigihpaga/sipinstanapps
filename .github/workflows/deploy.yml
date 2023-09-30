@@ -28,11 +28,11 @@ jobs:
         script: |
           #pwd
           #whoami
-          #cd ${{ secrets.REMOTE_PATH }}
-          sudo -u ${{ secrets.USERNAME }} git fetch -v
-          sudo -u ${{ secrets.USERNAME }} git status
-          sudo -u ${{ secrets.USERNAME }} git pull origin master
-          sudo -u ${{ secrets.USERNAME }} git status
+          sudo cd ${{ secrets.REMOTE_PATH }}
+          sudo git fetch -v
+          sudo git status
+          sudo git pull origin master
+          sudo git status
           sudo php artisan cache:clear
           sudo php artisan view:clear
           sudo php artisan route:clear
