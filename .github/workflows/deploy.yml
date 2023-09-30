@@ -29,10 +29,10 @@ jobs:
           #pwd
           #whoami
           cd ${{ secrets.REMOTE_PATH }}
-          sudo git fetch -v
-          sudo git status
+          #sudo git fetch -v
+          #sudo git status
           sudo git pull origin master
-          sudo git status
+          #sudo git status
           sudo php artisan cache:clear
           sudo php artisan view:clear
           sudo php artisan route:clear
