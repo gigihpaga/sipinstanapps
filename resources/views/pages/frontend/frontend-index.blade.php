@@ -220,7 +220,7 @@
                             <div class="left-content show-up header-text">
                                 <div class="row">
                                     <div class="col-lg-12">
-                                        <h2>Get The Awesome From App</h2>
+                                        <h2>Get The Knowledges From App</h2>
 
                                         @php
                                             $www = '<p>halo <em>paga</em></p>';
