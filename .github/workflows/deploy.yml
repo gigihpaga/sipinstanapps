@@ -28,7 +28,7 @@ jobs:
         script: |
           #pwd
           #whoami
-          sudo cd ${{ secrets.REMOTE_PATH }}
+          cd ${{ secrets.REMOTE_PATH }}
           sudo git fetch -v
           sudo git status
           sudo git pull origin master
